@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Header } from './components/Header';
 import { MainMenu } from './components/MainMenu';
 import { Fragment } from 'react';
@@ -17,20 +17,30 @@ import { RecurringItems } from './views/RecurringItems';
 import { SummaryReport } from './views/SummaryReport';
 import { Welcome } from './views/Welcome';
 
+import Login from './views/Login';
+
 import {
   BrowserRouter as Router,
   Route,
   Routes
 } from "react-router-dom";
 
+import useToken from './useToken';
+
 function App() {
+  const { token, setToken } = useToken();
+
+  if(!token) {
+    return <Login setToken={setToken} />
+  }
+
   return (
-    <Fragment>
+    <div style={{ margin: 'auto' }}>
       <Header />
       <div className="row">
         <Router>
           <MainMenu />
-          <div className="col s10">
+          <div className="col s9">
             <Routes>
               <Route path="/" element={<Welcome />} />
               <Route path="/despesas" element={<Expenses />} />
@@ -49,7 +59,7 @@ function App() {
           </div>
         </Router>
       </div>
-    </Fragment>
+    </div>
   );
 }
 
