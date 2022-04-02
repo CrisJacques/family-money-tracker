@@ -19,6 +19,8 @@ import { Welcome } from './views/Welcome';
 
 import Login from './views/Login';
 
+import styled from 'styled-components';
+
 import {
   BrowserRouter as Router,
   Route,
@@ -35,7 +37,7 @@ function App() {
   }
 
   return (
-    <div style={{ margin: 'auto' }}>
+    <AppContainer>
       <Header />
       <div className="row">
         <Router>
@@ -59,9 +61,14 @@ function App() {
           </div>
         </Router>
       </div>
-    </div>
+    </AppContainer>
   );
 }
+
+const AppContainer = styled.div`
+    max-width: 1438px;
+    margin: auto
+`
 
 export default App;
 

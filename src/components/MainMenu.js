@@ -36,7 +36,3 @@ export const MainMenu = () => (
     </div>  
 );
 
-function logout() {
-    localStorage.clear();
-    return <Accounts />
-}
