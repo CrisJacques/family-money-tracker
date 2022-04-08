@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Header } from './components/Header';
 import { MainMenu } from './components/MainMenu';
-import { Fragment } from 'react';
 
 import { Categories } from './views/Categories';
 import { Accounts } from './views/Accounts';
@@ -17,9 +16,16 @@ import { RecurringItems } from './views/RecurringItems';
 import { SummaryReport } from './views/SummaryReport';
 import { Welcome } from './views/Welcome';
 
-import Login from './views/Login';
+import Login from "./views/Login";
+
+import { logout } from "./actions/auth";
+import { clearMessage } from "./actions/message";
+import { history } from "./helpers/history";
 
 import styled from 'styled-components';
+
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
 
 import {
   BrowserRouter as Router,
@@ -27,20 +33,13 @@ import {
   Routes
 } from "react-router-dom";
 
-import useToken from './useToken';
 
 function App() {
-  const { token, setToken } = useToken();
-
-  if(!token) {
-    return <Login setToken={setToken} />
-  }
-
   return (
     <AppContainer>
       <Header />
       <div className="row">
-        <Router>
+        <Router history={history}>
           <MainMenu />
           <div className="col s9">
             <Routes>

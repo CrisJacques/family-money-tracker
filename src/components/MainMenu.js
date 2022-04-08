@@ -1,10 +1,5 @@
 import React from "react";
-import { Fragment } from 'react';
-import { Link } from "react-router-dom"
 import { MenuItem } from './MenuItem'
-import { LogoutMenuItem } from './LogoutMenuItem'
-
-import { Accounts } from '../views/Accounts';
 
 export const MainMenu = () => (
     <div className="col s3">
@@ -31,7 +26,7 @@ export const MainMenu = () => (
         <div className="section">
             <MenuItem name="Meu perfil" addressPage="meu_perfil" iconName="account_circle"/>
             <MenuItem name="Ajuda e feedback" addressPage="ajuda" iconName="help"/>
-            <LogoutMenuItem name="Sair" addressPage="" iconName="logout"/>
+            <MenuItem name="Sair" addressPage="" iconName="logout"/>
         </div> 
     </div>  
 );
