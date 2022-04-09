@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
+
 import { Header } from './components/Header';
 import { MainMenu } from './components/MainMenu';
 
@@ -16,14 +17,14 @@ import { MyProfile } from './views/MyProfile';
 import { RecurringItems } from './views/RecurringItems';
 import { SummaryReport } from './views/SummaryReport';
 import { Welcome } from './views/Welcome';
-
 import Login from "./views/Login";
 
 import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
+
 import { history } from "./helpers/history";
 
-import styled from 'styled-components';
+import AppContainer from './styles/AppContainer'
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
@@ -31,8 +32,7 @@ import "./App.css";
 import {
   BrowserRouter as Router,
   Route,
-  Routes,
-  Navigate
+  Routes
 } from "react-router-dom";
 
 
@@ -41,27 +41,20 @@ function App() {
   console.log(currentUser);
 
   const dispatch = useDispatch();
+
   useEffect(() => {
     history.listen((location) => {
       dispatch(clearMessage()); // clear message when changing location
     });
   }, [dispatch]);
-  /*useEffect(() => {
-    if (!currentUser) {
-      alert("passou aqui!");
-      carregarLogin();
-    }}, [currentUser]);*/
 
     if (!currentUser) {
-      return <Login />;}
+      return <Login />;
+    };
 
   const logOut = () => {
     dispatch(logout());
   };
-
-  const carregarLogin = () =>{
-    alert("carregar login!");
-  }
 
   return (
     <AppContainer>
@@ -93,11 +86,6 @@ function App() {
     </AppContainer>
   );
 }
-
-const AppContainer = styled.div`
-    max-width: 1438px;
-    margin: auto
-`
 
 export default App;
 

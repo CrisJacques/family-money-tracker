@@ -4,7 +4,9 @@ import { Navigate } from 'react-router-dom';
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
+
 import { login } from "../actions/auth";
+
 const required = (value) => {
   if (!value) {
     return (
@@ -14,6 +16,7 @@ const required = (value) => {
     );
   }
 };
+
 const Login = (props) => {
   const form = useRef();
   const checkBtn = useRef();
@@ -22,15 +25,19 @@ const Login = (props) => {
   const [loading, setLoading] = useState(false);
   const { isLoggedIn } = useSelector(state => state.auth);
   const { message } = useSelector(state => state.message);
+
   const dispatch = useDispatch();
+
   const onChangeUsername = (e) => {
     const username = e.target.value;
     setUsername(username);
   };
+
   const onChangePassword = (e) => {
     const password = e.target.value;
     setPassword(password);
   };
+
   const handleLogin = (e) => {
     e.preventDefault();
     setLoading(true);
@@ -44,13 +51,16 @@ const Login = (props) => {
         .catch(() => {
           setLoading(false);
         });
-    } else {
+    } 
+    else {
       setLoading(false);
     }
   };
+
   if (isLoggedIn) {
     return <Navigate to="/meu_perfil" />;
   }
+
   return (
     <div className="col-md-12">
       <div className="card card-container">
@@ -103,4 +113,5 @@ const Login = (props) => {
     </div>
   );
 };
+
 export default Login;
