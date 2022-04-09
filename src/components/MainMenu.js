@@ -6,14 +6,14 @@ export const MainMenu = () => (
         <div className="section">
             <MenuItem name="Início" addressPage="" iconName="home" />
         </div>
-        <div class="divider"></div>
+        <div className="divider"></div>
         <div className="section">
             <MenuItem name="Despesas" addressPage="despesas" iconName="trending_down"/>
             <MenuItem name="Receitas" addressPage="receitas" iconName="trending_up"/>
             <MenuItem name="Pagamento de parcelas / faturas" addressPage="pagamento_parcelas" iconName="credit_score"/>
             <MenuItem name="Relatório de Resumo" addressPage="relatorio_resumo" iconName="table_chart"/>
         </div>
-        <div class="divider"></div>
+        <div className="divider"></div>
         <div className="section">
             <MenuItem name="Contas" addressPage="contas" iconName="account_balance"/>
             <MenuItem name="Cartões de Crédito" addressPage="cartoes_credito" iconName="payment"/>
@@ -22,11 +22,11 @@ export const MainMenu = () => (
             <MenuItem name="Itens recorrentes" addressPage="itens_recorrentes" iconName="history"/>
             <MenuItem name="Relatórios gerenciais" addressPage="relatorios_gerenciais" iconName="assessment"/>
         </div>
-        <div class="divider"></div>
+        <div className="divider"></div>
         <div className="section">
             <MenuItem name="Meu perfil" addressPage="meu_perfil" iconName="account_circle"/>
             <MenuItem name="Ajuda e feedback" addressPage="ajuda" iconName="help"/>
-            <MenuItem name="Sair" addressPage="" iconName="logout"/>
+            <MenuItem name="Sair" addressPage="login" iconName="logout"/>
         </div> 
     </div>  
 );

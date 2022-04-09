@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from "react-redux";
 import { Header } from './components/Header';
 import { MainMenu } from './components/MainMenu';
 
@@ -30,11 +31,38 @@ import "./App.css";
 import {
   BrowserRouter as Router,
   Route,
-  Routes
+  Routes,
+  Navigate
 } from "react-router-dom";
 
 
 function App() {
+  const { user: currentUser } = useSelector((state) => state.auth);
+  console.log(currentUser);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    history.listen((location) => {
+      dispatch(clearMessage()); // clear message when changing location
+    });
+  }, [dispatch]);
+  /*useEffect(() => {
+    if (!currentUser) {
+      alert("passou aqui!");
+      carregarLogin();
+    }}, [currentUser]);*/
+
+    if (!currentUser) {
+      return <Login />;}
+
+  const logOut = () => {
+    dispatch(logout());
+  };
+
+  const carregarLogin = () =>{
+    alert("carregar login!");
+  }
+
   return (
     <AppContainer>
       <Header />
@@ -56,10 +84,12 @@ function App() {
               <Route path="/relatorios_gerenciais" element={<ManagementReports />} />
               <Route path="/meu_perfil" element={<MyProfile />} />
               <Route path="/ajuda" element={<Help />} />
+              <Route path="/login" element={<Login />} />
             </Routes>
           </div>
         </Router>
       </div>
+      <button onClick={logOut}>Teste</button>
     </AppContainer>
   );
 }
