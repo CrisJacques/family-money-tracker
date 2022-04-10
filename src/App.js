@@ -17,7 +17,7 @@ import { MyProfile } from './views/MyProfile';
 import { RecurringItems } from './views/RecurringItems';
 import { SummaryReport } from './views/SummaryReport';
 import { Welcome } from './views/Welcome';
-import Login from "./views/Login";
+import Login2 from "./views/Login2";
 
 import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
@@ -26,7 +26,7 @@ import { history } from "./helpers/history";
 
 import AppContainer from './styles/AppContainer'
 
-import "bootstrap/dist/css/bootstrap.min.css";
+//import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 import {
@@ -49,7 +49,7 @@ function App() {
   }, [dispatch]);
 
     if (!currentUser) {
-      return <Login />;
+      return <Login2 />;
     };
 
   const logOut = () => {
@@ -77,7 +77,7 @@ function App() {
               <Route path="/relatorios_gerenciais" element={<ManagementReports />} />
               <Route path="/meu_perfil" element={<MyProfile />} />
               <Route path="/ajuda" element={<Help />} />
-              <Route path="/login" element={<Login />} />
+              <Route path="/login" element={<Login2 />} />
             </Routes>
           </div>
         </Router>
