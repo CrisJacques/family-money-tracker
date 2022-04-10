@@ -9,10 +9,14 @@ import { login } from "../actions/auth";
 
 import LoginContainer from "../styles/LoginContainer";
 
+import { InputField } from "../components/InputField";
+import { PrimaryButton } from "../components/PrimaryButton";
+import { SecondaryButton } from "../components/SecondaryButton";
+
 const required = (value) => {
   if (!value) {
     return (
-      <div className="alert alert-danger" role="alert">
+      <div role="alert">
         This field is required!
       </div>
     );
@@ -29,11 +33,6 @@ const Login2 = (props) => {
   const { message } = useSelector(state => state.message);
 
   const dispatch = useDispatch();
-
-  const onChangeUsername = (e) => {
-    const username = e.target.value;
-    setUsername(username);
-  };
 
   const onChangePassword = (e) => {
     const password = e.target.value;
@@ -65,36 +64,20 @@ const Login2 = (props) => {
 
   return (
     <LoginContainer>
-        <div>
-          <Form onSubmit={handleLogin} ref={form}>
-            <div>
-              <label htmlFor="username">Username</label>
-              <Input
-                type="text"
-                className="form-control"
-                name="username"
-                value={username}
-                onChange={onChangeUsername}
-                validations={[required]}
-              />
+      <div className="row">
+        <PrimaryButton name="Login"/>
+        <SecondaryButton name="Cadastrar"/>
+      </div>
+        <div className="row">
+          <form className="col s12" onSubmit={handleLogin}>
+            <div className="row">
+              <InputField name="Username" id="username" type="text" placeholder="Username Here" htmlFor="username"/>
+            </div>
+            <div className="row">
+              <InputField name="Password" id="password" type="password" placeholder="Password Here" htmlFor="password"/>
             </div>
             <div>
-              <label htmlFor="password">Password</label>
-              <Input
-                type="password"
-                name="password"
-                value={password}
-                onChange={onChangePassword}
-                validations={[required]}
-              />
-            </div>
-            <div>
-              <button disabled={loading}>
-                {loading && (
-                  <span></span>
-                )}
-                <span>Login</span>
-              </button>
+              <PrimaryButton name="Entrar"/>
             </div>
             {message && (
               <div>
@@ -103,8 +86,7 @@ const Login2 = (props) => {
                 </div>
               </div>
             )}
-            <CheckButton style={{ display: "none" }} ref={checkBtn} />
-          </Form>
+          </form>
         </div>
     </LoginContainer>
   );
