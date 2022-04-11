@@ -1,25 +1,24 @@
 import React, { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 
 import { login } from "../actions/auth";
 
-import LoginContainer from "../styles/LoginContainer";
+import LoginPageContainer from "../styles/LoginPageContainer";
+import LoginFormContainer from "../styles/LoginFormContainer";
+
 
 import { InputField } from "../components/InputField";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { SecondaryButton } from "../components/SecondaryButton";
+import { AppHeader } from "../components/AppHeader";
 
 const required = (value) => {
   if (!value) {
-    return (
-      <div role="alert">
-        This field is required!
-      </div>
-    );
+    return <div role="alert">This field is required!</div>;
   }
 };
 
@@ -29,8 +28,8 @@ const Login2 = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const { isLoggedIn } = useSelector(state => state.auth);
-  const { message } = useSelector(state => state.message);
+  const { isLoggedIn } = useSelector((state) => state.auth);
+  const { message } = useSelector((state) => state.message);
 
   const dispatch = useDispatch();
 
@@ -52,8 +51,7 @@ const Login2 = (props) => {
         .catch(() => {
           setLoading(false);
         });
-    } 
-    else {
+    } else {
       setLoading(false);
     }
   };
@@ -63,32 +61,39 @@ const Login2 = (props) => {
   }
 
   return (
-    <LoginContainer>
-      <div className="row">
-        <PrimaryButton name="Login"/>
-        <SecondaryButton name="Cadastrar"/>
-      </div>
-        <div className="row">
-          <form className="col s12" onSubmit={handleLogin}>
-            <div className="row">
-              <InputField name="Username" id="username" type="text" placeholder="Username Here" htmlFor="username"/>
-            </div>
-            <div className="row">
-              <InputField name="Password" id="password" type="password" placeholder="Password Here" htmlFor="password"/>
-            </div>
-            <div>
-              <PrimaryButton name="Entrar"/>
-            </div>
-            {message && (
-              <div>
-                <div role="alert">
-                  {message}
-                </div>
-              </div>
-            )}
-          </form>
+    <LoginPageContainer>
+      <LoginFormContainer>
+        <AppHeader />
+        <div style={{ "text-align": "center" }}>
+          <PrimaryButton name="Login" />
+          <SecondaryButton name="Cadastrar" />
         </div>
-    </LoginContainer>
+        <form onSubmit={handleLogin}>
+          <InputField
+            name="E-mail"
+            id="email"
+            type="text"
+            placeholder=""
+            htmlFor="email"
+          />
+          <InputField
+            name="Senha"
+            id="senha"
+            type="password"
+            placeholder=""
+            htmlFor="senha"
+          />
+          <div style={{ "text-align": "center" }}>
+            <PrimaryButton name="Entrar" />
+          </div>
+          {message && (
+            <div>
+              <div role="alert">{message}</div>
+            </div>
+          )}
+        </form>
+      </LoginFormContainer>
+    </LoginPageContainer>
   );
 };
 
