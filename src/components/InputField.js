@@ -1,25 +1,13 @@
 import React, { useState } from "react";
 
-export const InputField = ({ name, id, type, placeholder, htmlFor }) => {
-    const [field, setField] = useState("");
-
-    const onChangeField = (e) => {
-        const field = e.target.value;
-        setField(field);
-    };
-
+export const InputField = ({ fieldName, htmlFor }) => {
     return (
     <div className="input-field col s12">
+        <label style={{ color: 'black', 'font-weight': 'bold', 'padding-top': '1.3em' }} htmlFor={ `${htmlFor}` }>{fieldName}</label>
         <input
-            id={ `${id}` }
-            type={ `${type}` }
-            placeholder={ `${placeholder}` }
-            className="validate"
-            value={field}
-            onChange={onChangeField}
+            className="form-control"
             style={{ background: 'white', padding: '0.5em' , 'padding-top': '0.7em', border: '1.5px solid black', 'border-radius': '8px'}}
         />
-        <label style={{ color: 'black', padding: '0.5em', 'font-weight': 'bold' }} htmlFor={ `${htmlFor}` }>{name}</label>
     </div>
     );
 };

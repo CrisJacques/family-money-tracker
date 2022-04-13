@@ -4,6 +4,7 @@ import { Navigate } from "react-router-dom";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
+import { Field, reduxForm } from 'redux-form';
 
 import { login } from "../actions/auth";
 
@@ -16,6 +17,8 @@ import { SecondaryButton } from "../components/SecondaryButton";
 import { AppHeader } from "../components/AppHeader";
 
 const Login2 = (props) => {
+  const { handleSubmit, pristine, reset, submitting } = props;
+
   const form = useRef();
   const checkBtn = useRef();
   const [username, setUsername] = useState("");
@@ -34,7 +37,7 @@ const Login2 = (props) => {
   const handleLogin = (e) => {
     e.preventDefault();
     setLoading(true);
-    dispatch(login("mod", "12345678"))//username e password não estão sendo passados aqui, por isso o login não funciona
+    dispatch(login("mod", "12345678")) //username e password não estão sendo passados aqui, por isso o login não funciona
       .then(() => {
         props.history.push("/meu_perfil");
         window.location.reload();
@@ -56,21 +59,27 @@ const Login2 = (props) => {
           <PrimaryButton name="Login" />
           <SecondaryButton name="Cadastrar" />
         </div>
-        <form onSubmit={handleLogin}>
-          <InputField
-            name="E-mail"
-            id="email"
-            type="text"
-            placeholder=""
-            htmlFor="email"
-          />
-          <InputField
-            name="Senha"
-            id="senha"
-            type="password"
-            placeholder=""
-            htmlFor="senha"
-          />
+        <form onSubmit={handleSubmit}>
+          <div>
+            <Field
+              name="firstName"
+              htmlFor="firstName"
+              fieldName="First Name 1"
+              component={InputField}
+              type="text"
+              placeholder="First Name"
+            />
+          </div>
+          <div>
+            <Field
+              name="lastName"
+              htmlFor="firstName"
+              fieldName="Last Name 1"
+              component={InputField}
+              type="text"
+              placeholder="Last Name"
+            />
+          </div>
           <div style={{ "text-align": "center" }}>
             <PrimaryButton name="Entrar" />
           </div>
@@ -85,4 +94,7 @@ const Login2 = (props) => {
   );
 };
 
-export default Login2;
+
+export default reduxForm({
+  form: 'simple', // a unique identifier for this form
+})(Login2);
