@@ -16,6 +16,8 @@ import { PrimaryButton } from "../components/PrimaryButton";
 import { SecondaryButton } from "../components/SecondaryButton";
 import { AppHeader } from "../components/AppHeader";
 
+
+
 const Login2 = (props) => {
   const { handleSubmit, pristine, reset, submitting } = props;
 
@@ -88,9 +90,11 @@ const Login2 = (props) => {
               <div role="alert">{message}</div>
             </div>
           )}
+          <button type="submit" disabled={pristine || submitting}>Submit</button>
         </form>
       </LoginFormContainer>
     </LoginPageContainer>
+    
   );
 };
 
