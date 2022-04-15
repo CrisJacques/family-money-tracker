@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+/* O objetivo deste styled component é padronizar o aspecto visual de todos os botões principais da aplicação */
 const PrimaryButtonContainer = styled.button`
     background-color: #00675B;
     color: white;

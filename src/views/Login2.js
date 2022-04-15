@@ -13,10 +13,9 @@ import LoginFormContainer from "../styles/LoginFormContainer";
 import InputFieldContainer from "../styles/InputFieldContainer";
 import LabelFieldContainer from "../styles/LabelFieldContainer";
 
-import { InputField } from "../components/InputField";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { SecondaryButton } from "../components/SecondaryButton";
-import { AppHeader } from "../components/AppHeader";
+import { LoginHeader } from "../components/LoginHeader";
 import { RequiredFieldAlert } from "../components/RequiredFieldAlert";
 import { alphanumeric } from "validator/lib/alpha";
 
@@ -75,7 +74,7 @@ const Login2 = (props) => {
   return (
     <LoginPageContainer>
       <LoginFormContainer>
-        <AppHeader />
+        <LoginHeader />
         <div style={{ "text-align": "center" }}>
           <PrimaryButton name="Login" />
           <SecondaryButton name="Cadastrar" />
