@@ -63,9 +63,9 @@ const CreateEdit_Expense = (props) => {
       <PageTitleContainer>Cadastrar Despesa</PageTitleContainer>
       <Form onSubmit={handleSubmit} ref={form}>
         <div className="row">
-          <div className="input-field col s12 l6">
-            <InputLabel id="value" name="Valor" />
+          <div className="col s12 l6">
             <InputFieldContainer>
+              <InputLabel id="value" name="Valor" />
               <Input
                 type="text"
                 className="validate"
@@ -76,9 +76,9 @@ const CreateEdit_Expense = (props) => {
               />
             </InputFieldContainer>
           </div>
-          <div className="input-field col s12 l6">
-            <InputLabel id="description" name="Descrição" />
+          <div className="col s12 l6">
             <InputFieldContainer>
+              <InputLabel id="description" name="Descrição" />
               <Input
                 type="text"
                 className="validate"
@@ -91,9 +91,46 @@ const CreateEdit_Expense = (props) => {
           </div>
         </div>
         <div className="row">
-          <div className="input-field col s12 l6">
-            <InputLabel id="registerDate" name="Data" />
+          <div className="col s12 l6">
             <InputFieldContainer>
+              <InputLabel id="paymentType" name="Forma de pagamento" />
+              <select
+                className="browser-default"
+                name="paymentType"
+                value={paymentType}
+                onChange={onChangePaymentType}
+                validations={[requiredValidation]}
+              >
+                <option value="">Selecione uma forma de pagamento...</option>
+                <option value="1">Cartão Crédito Banco 1</option>
+                <option value="2">Cartão Crédito Banco 2</option>
+                <option value="3">Dinheiro</option>
+                <option value="4">Cartão Débito Banco 2</option>
+              </select>
+            </InputFieldContainer>
+          </div>
+          <div className="col s12 l6">
+            <InputFieldContainer>
+              <InputLabel id="category" name="Categoria" />
+              <select
+                className="browser-default"
+                name="category"
+                value={category}
+                onChange={onChangeCategory}
+                validations={[requiredValidation]}
+              >
+                <option value="">Selecione uma categoria...</option>
+                <option value="1">Lazer</option>
+                <option value="2">Saúde</option>
+                <option value="3">Supermercado</option>
+              </select>
+            </InputFieldContainer>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col s12 l6">
+            <InputFieldContainer>
+              <InputLabel id="registerDate" name="Data" />
               <Input
                 type="date"
                 className="validate"
@@ -104,40 +141,17 @@ const CreateEdit_Expense = (props) => {
               />
             </InputFieldContainer>
           </div>
-          <div className="input-field col s12 l6">
-            <InputLabel id="category" name="Categoria" />
-            <InputFieldContainer>
-              <Input
-                type="text"
-                className="validate"
-                name="category"
-                value={category}
-                onChange={onChangeCategory}
-                validations={[requiredValidation]}
-              />
-            </InputFieldContainer>
+          <div className="col s12" style={{ "text-align": "right" }}>
+            <SecondaryButtonContainer
+              type="button"
+              onClick={onClickCancelButton}
+            >
+              Cancelar
+            </SecondaryButtonContainer>
+            <PrimaryButtonContainer type="submit">
+              Salvar
+            </PrimaryButtonContainer>
           </div>
-        </div>
-        <div className="row">
-          <div className="input-field col s12 l6">
-            <InputLabel id="paymentType" name="Forma de pagamento" />
-            <InputFieldContainer>
-              <Input
-                type="text"
-                className="validate"
-                name="paymentType"
-                value={paymentType}
-                onChange={onChangePaymentType}
-                validations={[requiredValidation]}
-              />
-            </InputFieldContainer>
-          </div>
-          </div>
-        <div className="col s12" style={{ "text-align": "right" }}>
-          <SecondaryButtonContainer type="button" onClick={onClickCancelButton}>
-            Cancelar
-          </SecondaryButtonContainer>
-          <PrimaryButtonContainer type="submit">Salvar</PrimaryButtonContainer>
         </div>
       </Form>
     </div>

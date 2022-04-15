@@ -80,9 +80,9 @@ const Login2 = (props) => {
         </div>
         <Form onSubmit={handleLogin} ref={form}>
           <div className="row">
-            <div className="input-field col s12">
-              <InputLabel id="username" name="E-mail" />
+            <div className="col s12">
               <InputFieldContainer>
+                <InputLabel id="username" name="E-mail" />
                 <Input
                   type="text"
                   className="validate"
@@ -95,9 +95,9 @@ const Login2 = (props) => {
             </div>
           </div>
           <div className="row">
-            <div className="input-field col s12">
-              <InputLabel id="password" name="Senha" />
+            <div className="col s12">
               <InputFieldContainer>
+                <InputLabel id="password" name="Senha" />
                 <Input
                   type="password"
                   className="validate"
