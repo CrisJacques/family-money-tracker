@@ -2,7 +2,7 @@ import React from "react";
 import { MenuItem } from './MenuItem'
 
 export const MainMenu = () => (
-    <div className="col s3">
+    <div>
         <div className="section">
             <MenuItem name="Início" addressPage="" iconName="home" />
         </div>
@@ -27,6 +27,7 @@ export const MainMenu = () => (
             <MenuItem name="Meu perfil" addressPage="meu_perfil" iconName="account_circle"/>
             <MenuItem name="Ajuda e feedback" addressPage="ajuda" iconName="help"/>
         </div> 
+        <div className="divider"></div>
     </div>  
 );
 

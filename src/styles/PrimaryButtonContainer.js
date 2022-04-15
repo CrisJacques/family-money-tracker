@@ -8,6 +8,7 @@ const PrimaryButtonContainer = styled.button`
     padding: 0.4em 2em;
     border: 1.5px solid black;
     border-radius: 15px;
+    cursor: pointer
 `;
 
 export default PrimaryButtonContainer;

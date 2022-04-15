@@ -62,21 +62,34 @@ function App() {
       <Header />
       <div className="row">
         <Router history={history}>
-          <MainMenu />
-          <LogoutButtonContainer onClick={logOut}>Sair</LogoutButtonContainer>
+          <div className="col s3">
+            <MainMenu />
+            <div style={{ "display": "flex", "padding-top": "0.7em", "padding-left": "0.25em" }}>
+              <i className="material-icons">logout</i>
+              <LogoutButtonContainer onClick={logOut}>
+                Sair
+              </LogoutButtonContainer>
+            </div>
+          </div>
           <div className="col s9">
             <Routes>
               <Route path="/" element={<Welcome />} />
               <Route path="/despesas" element={<Expenses />} />
               <Route path="/receitas" element={<Incomes />} />
-              <Route path="/pagamento_parcelas" element={<CreditCardPayments />} />
+              <Route
+                path="/pagamento_parcelas"
+                element={<CreditCardPayments />}
+              />
               <Route path="/relatorio_resumo" element={<SummaryReport />} />
               <Route path="/contas" element={<Accounts />} />
               <Route path="/cartoes_credito" element={<CreditCards />} />
               <Route path="/categorias" element={<Categories />} />
               <Route path="/contas_a_pagar_futuras" element={<FutureBills />} />
               <Route path="/itens_recorrentes" element={<RecurringItems />} />
-              <Route path="/relatorios_gerenciais" element={<ManagementReports />} />
+              <Route
+                path="/relatorios_gerenciais"
+                element={<ManagementReports />}
+              />
               <Route path="/meu_perfil" element={<MyProfile />} />
               <Route path="/ajuda" element={<Help />} />
               <Route path="/Login2" element={<Login2 />} />
