@@ -11,12 +11,12 @@ import LoginPageContainer from "../styles/LoginPageContainer";
 import LoginFormContainer from "../styles/LoginFormContainer";
 
 import InputFieldContainer from "../styles/InputFieldContainer";
-import LabelFieldContainer from "../styles/LabelFieldContainer";
+import PrimaryButtonContainer from '../styles/PrimaryButtonContainer';
+import SecondaryButtonContainer from '../styles/SecondaryButtonContainer';
 
-import { PrimaryButton } from "../components/PrimaryButton";
-import { SecondaryButton } from "../components/SecondaryButton";
-import { LoginHeader } from "../components/LoginHeader";
-import { RequiredFieldAlert } from "../components/RequiredFieldAlert";
+import LoginHeader from "../components/LoginHeader";
+import RequiredFieldAlert from "../components/RequiredFieldAlert";
+import InputLabel from "../components/InputLabel";
 import { alphanumeric } from "validator/lib/alpha";
 
 const required = (value) => {
@@ -33,8 +33,8 @@ const Login2 = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const { isLoggedIn } = useSelector(state => state.auth);
-  const { message } = useSelector(state => state.message);
+  const { isLoggedIn } = useSelector((state) => state.auth);
+  const { message } = useSelector((state) => state.message);
 
   const dispatch = useDispatch();
 
@@ -61,8 +61,7 @@ const Login2 = (props) => {
         .catch(() => {
           setLoading(false);
         });
-    } 
-    else {
+    } else {
       setLoading(false);
     }
   };
@@ -76,15 +75,13 @@ const Login2 = (props) => {
       <LoginFormContainer>
         <LoginHeader />
         <div style={{ "text-align": "center" }}>
-          <PrimaryButton name="Login" />
-          <SecondaryButton name="Cadastrar" />
+          <PrimaryButtonContainer>Login</PrimaryButtonContainer>
+          <SecondaryButtonContainer>Cadastrar</SecondaryButtonContainer>
         </div>
         <Form onSubmit={handleLogin} ref={form}>
           <div className="row">
             <div className="input-field col s12">
-              <LabelFieldContainer>
-                <label htmlFor="username">E-mail</label>
-              </LabelFieldContainer>
+              <InputLabel id="username" name="E-mail" />
               <InputFieldContainer>
                 <Input
                   type="text"
@@ -99,9 +96,7 @@ const Login2 = (props) => {
           </div>
           <div className="row">
             <div className="input-field col s12">
-              <LabelFieldContainer>
-                <label htmlFor="password">Senha</label>
-              </LabelFieldContainer>
+              <InputLabel id="password" name="Senha" />
               <InputFieldContainer>
                 <Input
                   type="password"
@@ -115,8 +110,8 @@ const Login2 = (props) => {
             </div>
           </div>
           <div style={{ "text-align": "center" }}>
-            <PrimaryButton name="Entrar" />
-        </div>
+            <PrimaryButtonContainer>Entrar</PrimaryButtonContainer>
+          </div>
           {message && (
             <div className="form-group">
               <div className="alert alert-danger" role="alert">
@@ -130,4 +125,5 @@ const Login2 = (props) => {
     </LoginPageContainer>
   );
 };
+
 export default Login2;

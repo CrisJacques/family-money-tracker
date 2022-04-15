@@ -2,7 +2,7 @@ import React from "react";
 import PageTitleContainer from "../styles/PageTitleContainer";
 import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 
-export const CreditCardPayments = () => (
+const CreditCardPayments = () => (
   <div>
     <PageTitleContainer>Pagamento de parcelas / faturas</PageTitleContainer>
     <PageContentSectionContainer>
@@ -16,3 +16,5 @@ export const CreditCardPayments = () => (
     </PageContentSectionContainer>
   </div>
 );
+
+export default CreditCardPayments;

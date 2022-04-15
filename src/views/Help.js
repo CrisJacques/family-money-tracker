@@ -2,7 +2,7 @@ import React from "react";
 import PageTitleContainer from "../styles/PageTitleContainer";
 import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 
-export const Help = () => (
+const Help = () => (
   <div>
     <PageTitleContainer>Ajuda e feedback</PageTitleContainer>
     <PageContentSectionContainer>
@@ -15,3 +15,5 @@ export const Help = () => (
     </PageContentSectionContainer>
   </div>
 );
+
+export default Help;

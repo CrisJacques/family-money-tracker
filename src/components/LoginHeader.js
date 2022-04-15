@@ -2,7 +2,7 @@ import React from "react";
 import LoginHeaderContainer from "../styles/LoginHeaderContainer";
 import AppTitleContainer from "../styles/AppTitleContainer";
 
-export const LoginHeader = () => (
+const LoginHeader = () => (
   <LoginHeaderContainer>
     <img
       className="responsive-img"
@@ -12,4 +12,6 @@ export const LoginHeader = () => (
     <AppTitleContainer>Family Money Tracker</AppTitleContainer>
   </LoginHeaderContainer>
 );
+
+export default LoginHeader;
 

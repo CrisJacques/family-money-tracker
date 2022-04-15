@@ -2,7 +2,7 @@ import React from "react";
 import PageTitleContainer from "../styles/PageTitleContainer";
 import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 
-export const FutureBills = () => (
+const FutureBills = () => (
   <div>
     <PageTitleContainer>Contas a pagar futuras</PageTitleContainer>
     <PageContentSectionContainer>
@@ -15,3 +15,5 @@ export const FutureBills = () => (
     </PageContentSectionContainer>
   </div>
 );
+
+export default FutureBills;

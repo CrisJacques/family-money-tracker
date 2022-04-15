@@ -2,7 +2,7 @@ import React from "react";
 import PageTitleContainer from "../styles/PageTitleContainer";
 import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 
-export const Welcome = () => (
+const Welcome = () => (
   <div>
     <PageTitleContainer>Início</PageTitleContainer>
     <PageContentSectionContainer>
@@ -15,3 +15,5 @@ export const Welcome = () => (
     </PageContentSectionContainer>
   </div>
 );
+
+export default Welcome;

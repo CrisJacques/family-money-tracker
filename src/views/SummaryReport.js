@@ -2,7 +2,7 @@ import React from "react";
 import PageTitleContainer from "../styles/PageTitleContainer";
 import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 
-export const SummaryReport = () => (
+const SummaryReport = () => (
   <div>
     <PageTitleContainer>Relatório de Resumo</PageTitleContainer>
     <PageContentSectionContainer>
@@ -14,3 +14,5 @@ export const SummaryReport = () => (
     </PageContentSectionContainer>
   </div>
 );
+
+export default SummaryReport;

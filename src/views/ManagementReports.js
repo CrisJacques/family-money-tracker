@@ -3,7 +3,7 @@ import PageTitleContainer from "../styles/PageTitleContainer";
 import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 import ListItemContainer from "../styles/ListItemContainer";
 
-export const ManagementReports = () => (
+const ManagementReports = () => (
   <div>
     <PageTitleContainer>Relatórios gerenciais</PageTitleContainer>
     <PageContentSectionContainer>
@@ -42,3 +42,5 @@ export const ManagementReports = () => (
     </PageContentSectionContainer>
   </div>
 );
+
+export default ManagementReports;

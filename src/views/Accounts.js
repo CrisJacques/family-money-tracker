@@ -2,7 +2,7 @@ import React from "react";
 import PageTitleContainer from "../styles/PageTitleContainer";
 import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 
-export const Accounts = () => (
+const Accounts = () => (
   <div>
     <PageTitleContainer>Contas</PageTitleContainer>
     <PageContentSectionContainer>
@@ -15,3 +15,5 @@ export const Accounts = () => (
     </PageContentSectionContainer>
   </div>
 );
+
+export default Accounts;

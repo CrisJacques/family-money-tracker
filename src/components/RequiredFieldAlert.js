@@ -1,10 +1,12 @@
 
 import React from "react";
 
-export const RequiredFieldAlert = () => (
+const RequiredFieldAlert = () => (
   <div style={{ color: 'red' }} role="alert">
     Este campo é obrigatório
   </div>
 );
+
+export default RequiredFieldAlert;
 
 

@@ -2,7 +2,7 @@ import React from "react";
 import PageTitleContainer from "../styles/PageTitleContainer";
 import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 
-export const CreateEdit_Income = () => (
+const CreateEdit_Income = () => (
   <div>
     <PageTitleContainer>Receitas</PageTitleContainer>
     <PageContentSectionContainer>
@@ -13,3 +13,5 @@ export const CreateEdit_Income = () => (
     </PageContentSectionContainer>
   </div>
 );
+
+export default CreateEdit_Income;

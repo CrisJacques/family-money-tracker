@@ -2,7 +2,7 @@ import React from "react";
 import PageTitleContainer from "../styles/PageTitleContainer";
 import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 
-export const RecurringItems = () => (
+const RecurringItems = () => (
   <div>
     <PageTitleContainer>Itens recorrentes</PageTitleContainer>
     <PageContentSectionContainer>
@@ -16,3 +16,5 @@ export const RecurringItems = () => (
     </PageContentSectionContainer>
   </div>
 );
+
+export default RecurringItems;

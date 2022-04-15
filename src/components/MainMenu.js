@@ -1,7 +1,7 @@
 import React from "react";
-import { MenuItem } from './MenuItem'
+import MenuItem from './MenuItem'
 
-export const MainMenu = () => (
+const MainMenu = () => (
     <div>
         <div className="section">
             <MenuItem name="Início" addressPage="" iconName="home" />
@@ -30,4 +30,6 @@ export const MainMenu = () => (
         <div className="divider"></div>
     </div>  
 );
+
+export default MainMenu;
 

@@ -2,7 +2,7 @@ import React from "react";
 import PageTitleContainer from "../styles/PageTitleContainer";
 import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 
-export const Categories = () => (
+const Categories = () => (
   <div>
     <PageTitleContainer>Categorias</PageTitleContainer>
     <PageContentSectionContainer>
@@ -16,3 +16,5 @@ export const Categories = () => (
     </PageContentSectionContainer>
   </div>
 );
+
+export default Categories;

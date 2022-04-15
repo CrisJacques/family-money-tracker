@@ -2,7 +2,7 @@ import React from "react";
 import PageTitleContainer from "../styles/PageTitleContainer";
 import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 
-export const MyProfile = () => (
+const MyProfile = () => (
   <div>
     <PageTitleContainer>Meu perfil</PageTitleContainer>
     <PageContentSectionContainer>
@@ -13,3 +13,5 @@ export const MyProfile = () => (
     </PageContentSectionContainer>
   </div>
 );
+
+export default MyProfile;
