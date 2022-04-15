@@ -4,32 +4,45 @@ import { Navigate } from "react-router-dom";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
-import { Field, reduxForm } from 'redux-form';
 
 import { login } from "../actions/auth";
 
 import LoginPageContainer from "../styles/LoginPageContainer";
 import LoginFormContainer from "../styles/LoginFormContainer";
 
+import InputFieldContainer from "../styles/InputFieldContainer";
+import LabelFieldContainer from "../styles/LabelFieldContainer";
+
 import { InputField } from "../components/InputField";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { SecondaryButton } from "../components/SecondaryButton";
 import { AppHeader } from "../components/AppHeader";
+import { RequiredFieldAlert } from "../components/RequiredFieldAlert";
+import { alphanumeric } from "validator/lib/alpha";
 
-
+const required = (value) => {
+  if (!value) {
+    return (
+      <RequiredFieldAlert />
+    );
+  }
+};
 
 const Login2 = (props) => {
-  const { handleSubmit, pristine, reset, submitting } = props;
-
   const form = useRef();
   const checkBtn = useRef();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const { isLoggedIn } = useSelector((state) => state.auth);
-  const { message } = useSelector((state) => state.message);
+  const { isLoggedIn } = useSelector(state => state.auth);
+  const { message } = useSelector(state => state.message);
 
   const dispatch = useDispatch();
+
+  const onChangeUsername = (e) => {
+    const username = e.target.value;
+    setUsername(username);
+  };
 
   const onChangePassword = (e) => {
     const password = e.target.value;
@@ -39,14 +52,20 @@ const Login2 = (props) => {
   const handleLogin = (e) => {
     e.preventDefault();
     setLoading(true);
-    dispatch(login("mod", "12345678")) //username e password não estão sendo passados aqui, por isso o login não funciona
-      .then(() => {
-        props.history.push("/meu_perfil");
-        window.location.reload();
-      })
-      .catch(() => {
-        setLoading(false);
-      });
+    form.current.validateAll();
+    if (checkBtn.current.context._errors.length === 0) {
+      dispatch(login(username, password))
+        .then(() => {
+          props.history.push("/meu_perfil");
+          window.location.reload();
+        })
+        .catch(() => {
+          setLoading(false);
+        });
+    } 
+    else {
+      setLoading(false);
+    }
   };
 
   if (isLoggedIn) {
@@ -61,44 +80,55 @@ const Login2 = (props) => {
           <PrimaryButton name="Login" />
           <SecondaryButton name="Cadastrar" />
         </div>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <Field
-              name="firstName"
-              htmlFor="firstName"
-              fieldName="First Name 1"
-              component={InputField}
-              type="text"
-              placeholder="First Name"
-            />
+        <Form onSubmit={handleLogin} ref={form}>
+          <div className="row">
+            <div className="input-field col s12">
+              <LabelFieldContainer>
+                <label htmlFor="username">E-mail</label>
+              </LabelFieldContainer>
+              <InputFieldContainer>
+                <Input
+                  type="text"
+                  className="validate"
+                  name="username"
+                  value={username}
+                  onChange={onChangeUsername}
+                  validations={[required]}
+                />
+              </InputFieldContainer>
+            </div>
           </div>
-          <div>
-            <Field
-              name="lastName"
-              htmlFor="firstName"
-              fieldName="Last Name 1"
-              component={InputField}
-              type="text"
-              placeholder="Last Name"
-            />
+          <div className="row">
+            <div className="input-field col s12">
+              <LabelFieldContainer>
+                <label htmlFor="password">Senha</label>
+              </LabelFieldContainer>
+              <InputFieldContainer>
+                <Input
+                  type="password"
+                  className="validate"
+                  name="password"
+                  value={password}
+                  onChange={onChangePassword}
+                  validations={[required]}
+                />
+              </InputFieldContainer>
+            </div>
           </div>
           <div style={{ "text-align": "center" }}>
             <PrimaryButton name="Entrar" />
-          </div>
+        </div>
           {message && (
-            <div>
-              <div role="alert">{message}</div>
+            <div className="form-group">
+              <div className="alert alert-danger" role="alert">
+                {message}
+              </div>
             </div>
           )}
-          <button type="submit" disabled={pristine || submitting}>Submit</button>
-        </form>
+          <CheckButton style={{ display: "none" }} ref={checkBtn} />
+        </Form>
       </LoginFormContainer>
     </LoginPageContainer>
-    
   );
 };
-
-
-export default reduxForm({
-  form: 'simple', // a unique identifier for this form
-})(Login2);
+export default Login2;

@@ -26,7 +26,6 @@ export const MainMenu = () => (
         <div className="section">
             <MenuItem name="Meu perfil" addressPage="meu_perfil" iconName="account_circle"/>
             <MenuItem name="Ajuda e feedback" addressPage="ajuda" iconName="help"/>
-            <MenuItem name="Sair" addressPage="login" iconName="logout"/>
         </div> 
     </div>  
 );

@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+/* O objetivo deste styled component é configurar a imagem de fundo da tela de login */
 const LoginPageContainer = styled.div`
     position: relative;
     background-image: url(${require(`../images/background.jpg`)});
