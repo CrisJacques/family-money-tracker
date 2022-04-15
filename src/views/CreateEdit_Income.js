@@ -1,5 +1,15 @@
 import React from "react";
+import PageTitleContainer from "../styles/PageTitleContainer";
+import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 
 export const CreateEdit_Income = () => (
-    <h1>Esta página permitir a criação e edição de receitas</h1>
+  <div>
+    <PageTitleContainer>Receitas</PageTitleContainer>
+    <PageContentSectionContainer>
+      <p>
+        Esta página irá permitir o cadastro (e posteriormente listagem e edição)
+        de receitas. Todos os perfis de usuário poderão acessar esta página.
+      </p>
+    </PageContentSectionContainer>
+  </div>
 );

@@ -1,5 +1,17 @@
 import React from "react";
+import PageTitleContainer from "../styles/PageTitleContainer";
+import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 
 export const Help = () => (
-    <h1>Esta página vai exibir a ajuda ao usuário</h1>
+  <div>
+    <PageTitleContainer>Ajuda e feedback</PageTitleContainer>
+    <PageContentSectionContainer>
+      <p>
+        Esta página irá permitir o acesso ao tutorial com orientações de como
+        utilizar o sistema. Todos os perfis de usuário poderão acessar esta
+        página. O administrador do grupo também poderá enviar feedbacks ao
+        desenvolvedor da ferramenta através desta página.
+      </p>
+    </PageContentSectionContainer>
+  </div>
 );

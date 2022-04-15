@@ -8,10 +8,10 @@ import { Categories } from './views/Categories';
 import { Accounts } from './views/Accounts';
 import { CreditCardPayments } from './views/CreditCardPayments';
 import { CreditCards } from './views/CreditCards';
-import { Expenses } from './views/Expenses';
+import { CreateEdit_Expense } from './views/CreateEdit_Expense';
 import { FutureBills } from './views/FutureBills';
 import { Help } from './views/Help';
-import { Incomes } from './views/Incomes';
+import { CreateEdit_Income } from './views/CreateEdit_Income';
 import { ManagementReports } from './views/ManagementReports';
 import { MyProfile } from './views/MyProfile';
 import { RecurringItems } from './views/RecurringItems';
@@ -74,8 +74,8 @@ function App() {
           <div className="col s9">
             <Routes>
               <Route path="/" element={<Welcome />} />
-              <Route path="/despesas" element={<Expenses />} />
-              <Route path="/receitas" element={<Incomes />} />
+              <Route path="/despesas" element={<CreateEdit_Expense />} />
+              <Route path="/receitas" element={<CreateEdit_Income />} />
               <Route
                 path="/pagamento_parcelas"
                 element={<CreditCardPayments />}

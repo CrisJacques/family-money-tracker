@@ -1,5 +1,17 @@
 import React from "react";
+import PageTitleContainer from "../styles/PageTitleContainer";
+import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 
 export const FutureBills = () => (
-    <h1>Esta página vai permitir o gerenciamento de contas a pagar futuras</h1>
+  <div>
+    <PageTitleContainer>Contas a pagar futuras</PageTitleContainer>
+    <PageContentSectionContainer>
+      <p>
+        Esta página irá permitir o cadastro, listagem, edição e exclusão de
+        contas a pagar futuras por parte do administrador do grupo. O intuito
+        desta funcionalidade é auxiliar o usuário a não esquecer de pagar
+        nenhuma conta, permitindo a configuração de lembretes de pagamento.
+      </p>
+    </PageContentSectionContainer>
+  </div>
 );
