@@ -30,7 +30,7 @@ const required = (value) => {
 const Login2 = (props) => {
   const form = useRef();
   const checkBtn = useRef();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const { isLoggedIn } = useSelector((state) => state.auth);
@@ -38,9 +38,9 @@ const Login2 = (props) => {
 
   const dispatch = useDispatch();
 
-  const onChangeUsername = (e) => {
-    const username = e.target.value;
-    setUsername(username);
+  const onChangeEmail = (e) => {
+    const email = e.target.value;
+    setEmail(email);
   };
 
   const onChangePassword = (e) => {
@@ -53,7 +53,7 @@ const Login2 = (props) => {
     setLoading(true);
     form.current.validateAll();
     if (checkBtn.current.context._errors.length === 0) {
-      dispatch(login(username, password))
+      dispatch(login(email, password))
         .then(() => {
           props.history.push("/meu_perfil");
           window.location.reload();
@@ -82,13 +82,13 @@ const Login2 = (props) => {
           <div className="row">
             <div className="col s12">
               <InputFieldContainer>
-                <InputLabel id="username" name="E-mail" />
+                <InputLabel id="email" name="E-mail" />
                 <Input
-                  type="text"
+                  type="email"
                   className="validate"
-                  name="username"
-                  value={username}
-                  onChange={onChangeUsername}
+                  name="email"
+                  value={email}
+                  onChange={onChangeEmail}
                   validations={[required]}
                 />
               </InputFieldContainer>

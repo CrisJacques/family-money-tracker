@@ -1,10 +1,10 @@
 import axios from "axios";
 import { API_URL_AUTH } from '../API_URLs';
 
-const login = (username, password) => {
+const login = (email, password) => {
   return axios
     .post(API_URL_AUTH + "signin", {
-      username,
+      email,
       password,
     })
     .then((response) => {
