@@ -53,7 +53,7 @@ function App() {
 
   useEffect(() => {
     if (currentUser) {
-      setIsAdmin(currentUser.roles.includes("ROLE_GROUP_ADMIN"));
+      setIsAdmin(currentUser.roles.includes("ADMIN_GRUPO"));
     } else {
       setIsAdmin(false);
     }
