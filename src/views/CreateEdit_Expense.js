@@ -1,7 +1,6 @@
 import React, { useState, useRef } from "react";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
-import Select from "react-validation/build/select";
 
 import PageTitleContainer from "../styles/PageTitleContainer";
 import InputFieldContainer from "../styles/InputFieldContainer";

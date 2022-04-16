@@ -6,7 +6,8 @@ const InputFieldContainer = styled.div`
     padding: 0.1em;
     padding-left: 0.3em;
     border: 1.5px solid black;
-    border-radius: 8px
+    border-radius: 8px;
+    margin: 0.3em
 `
 
 export default InputFieldContainer;

@@ -75,7 +75,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Welcome />} />
               <Route path="/despesas" element={<CreateEdit_Expense history={history}/>} />
-              <Route path="/receitas" element={<CreateEdit_Income />} />
+              <Route path="/receitas" element={<CreateEdit_Income history={history}/>} />
               <Route
                 path="/pagamento_parcelas"
                 element={<CreditCardPayments />}
