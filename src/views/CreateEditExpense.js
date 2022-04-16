@@ -11,7 +11,7 @@ import InputLabel from "../components/InputLabel";
 
 import requiredValidation from "../helpers/requiredValidation";
 
-const CreateEdit_Expense = (props) => {
+const CreateEditExpense = (props) => {
   const form = useRef();
 
   const [value, setValue] = useState("");
@@ -157,4 +157,4 @@ const CreateEdit_Expense = (props) => {
   );
 };
 
-export default CreateEdit_Expense;
+export default CreateEditExpense;

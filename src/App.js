@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 
 import Header from './components/Header';
@@ -8,10 +8,10 @@ import Categories from './views/Categories';
 import Accounts from './views/Accounts';
 import CreditCardPayments from './views/CreditCardPayments';
 import CreditCards from './views/CreditCards';
-import CreateEdit_Expense from './views/CreateEdit_Expense';
+import CreateEditExpense from './views/CreateEditExpense';
 import FutureBills from './views/FutureBills';
 import Help from './views/Help';
-import CreateEdit_Income from './views/CreateEdit_Income';
+import CreateEditIncome from './views/CreateEditIncome';
 import ManagementReports from './views/ManagementReports';
 import MyProfile from './views/MyProfile';
 import RecurringItems from './views/RecurringItems';
@@ -39,6 +39,8 @@ import {
 
 function App() {
   const { user: currentUser } = useSelector((state) => state.auth);
+  const [isAdmin, setIsAdmin] = useState(false);
+
   console.log(currentUser);
 
   const dispatch = useDispatch();
@@ -49,9 +51,17 @@ function App() {
     });
   }, [dispatch]);
 
-    if (!currentUser) {
-      return <Login2 />;
-    };
+  useEffect(() => {
+    if (currentUser) {
+      setIsAdmin(currentUser.roles.includes("ROLE_ADMIN"));
+    } else {
+      setIsAdmin(false);
+    }
+  }, [currentUser]);
+
+  if (!currentUser) {
+    return <Login2 />;
+  }
 
   const logOut = () => {
     dispatch(logout());
@@ -63,8 +73,14 @@ function App() {
       <div className="row">
         <Router history={history}>
           <div className="col s3">
-            <MainMenu />
-            <div style={{ "display": "flex", "padding-top": "0.7em", "padding-left": "0.25em" }}>
+            <MainMenu userIsAdmin={isAdmin} />
+            <div
+              style={{
+                display: "flex",
+                "padding-top": "0.7em",
+                "padding-left": "0.25em",
+              }}
+            >
               <i className="material-icons">logout</i>
               <LogoutButtonContainer onClick={logOut}>
                 Sair
@@ -74,8 +90,14 @@ function App() {
           <div className="col s9">
             <Routes>
               <Route path="/" element={<Welcome />} />
-              <Route path="/despesas" element={<CreateEdit_Expense history={history}/>} />
-              <Route path="/receitas" element={<CreateEdit_Income history={history}/>} />
+              <Route
+                path="/despesas"
+                element={<CreateEditExpense history={history} />}
+              />
+              <Route
+                path="/receitas"
+                element={<CreateEditIncome history={history} />}
+              />
               <Route
                 path="/pagamento_parcelas"
                 element={<CreditCardPayments />}
@@ -101,4 +123,3 @@ function App() {
 }
 
 export default App;
-
