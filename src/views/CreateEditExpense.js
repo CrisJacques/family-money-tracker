@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useSelector } from "react-redux";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 
@@ -21,17 +22,18 @@ const CreateEditExpense = (props) => {
   const [registerDate, setRegisterDate] = useState("");
   const [category, setCategory] = useState("");
   const [paymentType, setPaymentType] = useState("");
-  const [expenseCategories, setExpenseCategories] = useState([]);
+
+  const { user: currentUser } = useSelector((state) => state.auth);
+  const userToken = `${currentUser.tokenType} ${currentUser.accessToken}`;
 
   const fetchExpenseCategories = async () => {
-    const { data } = await CategoriasDespesasService.getCategoriasDespesas();
-    setExpenseCategories(data.results);
-    console.log(expenseCategories);
+    const { data } = await CategoriasDespesasService.getCategoriasDespesas(userToken);
+    console.log(data);
   };
 
   useEffect(() => {
     fetchExpenseCategories();
-  }, []);
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
