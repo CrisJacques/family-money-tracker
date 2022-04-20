@@ -22,18 +22,21 @@ const CreateEditExpense = (props) => {
   const [registerDate, setRegisterDate] = useState("");
   const [category, setCategory] = useState("");
   const [paymentType, setPaymentType] = useState("");
+  const [categoriasDespesas, setCategoriasDespesas] = useState([]);
 
   const { user: currentUser } = useSelector((state) => state.auth);
   const userToken = `${currentUser.tokenType} ${currentUser.accessToken}`;
 
   const fetchExpenseCategories = async () => {
-    const { data } = await CategoriasDespesasService.getCategoriasDespesas(userToken);
-    console.log(data);
+    const resposta = await CategoriasDespesasService.getCategoriasDespesas(
+      userToken
+    );
+    setCategoriasDespesas(resposta.data);
   };
 
   useEffect(() => {
     fetchExpenseCategories();
-  });
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -134,9 +137,7 @@ const CreateEditExpense = (props) => {
                 validations={[requiredValidation]}
               >
                 <option value="">Selecione uma categoria...</option>
-                <option value="1">Lazer</option>
-                <option value="2">Saúde</option>
-                <option value="3">Supermercado</option>
+                {categoriasDespesas.map((categoriaDespesa)=> <option value={categoriaDespesa.id}>{categoriaDespesa.nome}</option>)}
               </select>
             </InputFieldContainer>
           </div>
