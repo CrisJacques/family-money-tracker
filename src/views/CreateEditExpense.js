@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 
@@ -11,6 +11,8 @@ import InputLabel from "../components/InputLabel";
 
 import requiredValidation from "../helpers/requiredValidation";
 
+import CategoriasDespesasService from "../services/CategoriasDespesasService";
+
 const CreateEditExpense = (props) => {
   const form = useRef();
 
@@ -19,6 +21,17 @@ const CreateEditExpense = (props) => {
   const [registerDate, setRegisterDate] = useState("");
   const [category, setCategory] = useState("");
   const [paymentType, setPaymentType] = useState("");
+  const [expenseCategories, setExpenseCategories] = useState([]);
+
+  const fetchExpenseCategories = async () => {
+    const { data } = await CategoriasDespesasService.getCategoriasDespesas();
+    setExpenseCategories(data.results);
+    console.log(expenseCategories);
+  };
+
+  useEffect(() => {
+    fetchExpenseCategories();
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
