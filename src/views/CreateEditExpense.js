@@ -13,6 +13,7 @@ import InputLabel from "../components/InputLabel";
 import requiredValidation from "../helpers/requiredValidation";
 
 import CategoriasDespesasService from "../services/CategoriasDespesasService";
+import FormasDePagamentoService from "../services/FormasDePagamentoService";
 
 const CreateEditExpense = (props) => {
   const form = useRef();
@@ -23,9 +24,18 @@ const CreateEditExpense = (props) => {
   const [category, setCategory] = useState("");
   const [paymentType, setPaymentType] = useState("");
   const [categoriasDespesas, setCategoriasDespesas] = useState([]);
+  const [formasDePagamento, setFormasDePagamento] = useState([]);
 
   const { user: currentUser } = useSelector((state) => state.auth);
   const userToken = `${currentUser.tokenType} ${currentUser.accessToken}`;
+
+  const fetchPaymentTypes = async () => {
+    const resposta = await FormasDePagamentoService.getFormasDePagamento(
+      userToken
+    );
+    const result = Object.keys(resposta.data).map((key) => [resposta.data[key]]);
+    setFormasDePagamento(result);
+  };
 
   const fetchExpenseCategories = async () => {
     const resposta = await CategoriasDespesasService.getCategoriasDespesas(
@@ -33,6 +43,10 @@ const CreateEditExpense = (props) => {
     );
     setCategoriasDespesas(resposta.data);
   };
+
+  useEffect(() => {
+    fetchPaymentTypes();
+  }, []);
 
   useEffect(() => {
     fetchExpenseCategories();
@@ -119,10 +133,7 @@ const CreateEditExpense = (props) => {
                 validations={[requiredValidation]}
               >
                 <option value="">Selecione uma forma de pagamento...</option>
-                <option value="1">Cartão Crédito Banco 1</option>
-                <option value="2">Cartão Crédito Banco 2</option>
-                <option value="3">Dinheiro</option>
-                <option value="4">Cartão Débito Banco 2</option>
+                {formasDePagamento.map((formaDePagamento)=> <option key={formaDePagamento.cod} value={formaDePagamento.cod}>{formaDePagamento.descricao}</option>)}
               </select>
             </InputFieldContainer>
           </div>
@@ -137,7 +148,7 @@ const CreateEditExpense = (props) => {
                 validations={[requiredValidation]}
               >
                 <option value="">Selecione uma categoria...</option>
-                {categoriasDespesas.map((categoriaDespesa)=> <option value={categoriaDespesa.id}>{categoriaDespesa.nome}</option>)}
+                {categoriasDespesas.map((categoriaDespesa)=> <option key={categoriaDespesa.id} value={categoriaDespesa.id}>{categoriaDespesa.nome}</option>)}
               </select>
             </InputFieldContainer>
           </div>
