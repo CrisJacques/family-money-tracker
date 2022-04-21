@@ -1,4 +1,5 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { useSelector } from "react-redux";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 
@@ -11,6 +12,9 @@ import InputLabel from "../components/InputLabel";
 
 import requiredValidation from "../helpers/requiredValidation";
 
+import ContasService from "../services/ContasService";
+import CategoriasReceitasService from "../services/CategoriasReceitasService";
+
 const CreateEditIncome = (props) => {
   const form = useRef();
 
@@ -19,6 +23,31 @@ const CreateEditIncome = (props) => {
   const [registerDate, setRegisterDate] = useState("");
   const [category, setCategory] = useState("");
   const [account, setAccount] = useState("");
+  const [categoriasReceitas, setCategoriasReceitas] = useState([]);
+  const [contas, setContas] = useState([]);
+
+  const { user: currentUser } = useSelector((state) => state.auth);
+  const userToken = `${currentUser.tokenType} ${currentUser.accessToken}`;
+
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      const resposta = await ContasService.getContas(
+        userToken
+      );
+      setContas(resposta.data);
+    };
+    fetchAccounts();
+  }, [currentUser, userToken]);
+
+  useEffect(() => {
+    const fetchIncomeCategories = async () => {
+      const resposta = await CategoriasReceitasService.getCategoriasReceitas(
+        userToken
+      );
+      setCategoriasReceitas(resposta.data);
+    };
+    fetchIncomeCategories();
+  }, [currentUser, userToken]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -101,10 +130,7 @@ const CreateEditIncome = (props) => {
                 validations={[requiredValidation]}
               >
                 <option value="">Selecione uma conta...</option>
-                <option value="1">Carteira</option>
-                <option value="2">Conta Banco 2</option>
-                <option value="3">Poupança Banco 1</option>
-                <option value="4">Conta Banco 1</option>
+                {contas.map((conta)=> <option key={conta.id} value={conta.id}>{conta.nome}</option>)}
               </select>
             </InputFieldContainer>
           </div>
@@ -119,9 +145,7 @@ const CreateEditIncome = (props) => {
                 validations={[requiredValidation]}
               >
                 <option value="">Selecione uma categoria...</option>
-                <option value="1">Salário</option>
-                <option value="2">Benefício Mensal</option>
-                <option value="3">Renda Extra</option>
+                {categoriasReceitas.map((categoriaReceita)=> <option key={categoriaReceita.id} value={categoriaReceita.id}>{categoriaReceita.nome}</option>)}
               </select>
             </InputFieldContainer>
           </div>

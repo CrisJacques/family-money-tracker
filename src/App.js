@@ -36,7 +36,7 @@ import {
 } from "react-router-dom";
 
 
-export function App() {
+function App() {
   const { user: currentUser } = useSelector((state) => state.auth);
   const [isAdmin, setIsAdmin] = useState(false);
   console.log(currentUser);
@@ -113,3 +113,5 @@ export function App() {
     </AppContainer>
   );
 }
+
+export default App;
