@@ -20,7 +20,6 @@ import Welcome from './views/Welcome';
 import Login2 from "./views/Login2";
 
 import { logout } from "./actions/auth";
-import { clearMessage } from "./actions/message";
 
 import { history } from "./helpers/history";
 
@@ -37,19 +36,12 @@ import {
 } from "react-router-dom";
 
 
-function App() {
+export function App() {
   const { user: currentUser } = useSelector((state) => state.auth);
   const [isAdmin, setIsAdmin] = useState(false);
-
   console.log(currentUser);
 
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    history.listen((location) => {
-      dispatch(clearMessage()); // clear message when changing location
-    });
-  }, [dispatch]);
 
   useEffect(() => {
     if (currentUser) {
@@ -121,5 +113,3 @@ function App() {
     </AppContainer>
   );
 }
-
-export default App;

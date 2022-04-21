@@ -29,28 +29,29 @@ const CreateEditExpense = (props) => {
   const { user: currentUser } = useSelector((state) => state.auth);
   const userToken = `${currentUser.tokenType} ${currentUser.accessToken}`;
 
-  const fetchPaymentTypes = async () => {
-    const resposta = await FormasDePagamentoService.getFormasDePagamento(
-      userToken
-    );
-    const result = Object.keys(resposta.data).map((key) => [resposta.data[key]]);
-    setFormasDePagamento(result);
-  };
-
-  const fetchExpenseCategories = async () => {
-    const resposta = await CategoriasDespesasService.getCategoriasDespesas(
-      userToken
-    );
-    setCategoriasDespesas(resposta.data);
-  };
-
   useEffect(() => {
+    const fetchPaymentTypes = async () => {
+      const resposta = await FormasDePagamentoService.getFormasDePagamento(
+        userToken
+      );
+      const result = Object.keys(resposta.data).map((key) => [
+        resposta.data[key],
+      ]);
+      setFormasDePagamento(result);
+    };
     fetchPaymentTypes();
-  }, []);
+  }, [currentUser, userToken]);
 
   useEffect(() => {
+    const fetchExpenseCategories = async () => {
+      const resposta = await CategoriasDespesasService.getCategoriasDespesas(
+        userToken
+      );
+      setCategoriasDespesas(resposta.data);
+    };
     fetchExpenseCategories();
-  }, []);
+  }, [currentUser, userToken]);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -133,7 +134,7 @@ const CreateEditExpense = (props) => {
                 validations={[requiredValidation]}
               >
                 <option value="">Selecione uma forma de pagamento...</option>
-                {formasDePagamento.map((formaDePagamento)=> <option key={formaDePagamento.cod} value={formaDePagamento.cod}>{formaDePagamento.descricao}</option>)}
+                {formasDePagamento.map((formaDePagamento)=> <option key={formaDePagamento[0].cod} value={formaDePagamento[0].cod}>{formaDePagamento[0].descricao}</option>)}
               </select>
             </InputFieldContainer>
           </div>
