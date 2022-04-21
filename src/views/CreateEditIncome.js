@@ -51,18 +51,33 @@ const CreateEditIncome = (props) => {
   }, [currentUser, userToken]);
 
   const insertIncome = async () => {
-    const resultado = await ReceitasService.insertReceita(userToken, value, description, account, category, registerDate, currentUser.id);
-    if (resultado.status === 201){
-      toast.success("Receita registrada com sucesso.");
+    try {
+      const resultado = await ReceitasService.insertReceita(
+        userToken,
+        value,
+        description,
+        account,
+        category,
+        registerDate,
+        currentUser.id
+      );
+      if (resultado.status === 201) {
+        toast.success("Receita registrada com sucesso.");
 
-      setValue("");
-      setDescription("");
-      setAccount("");
-      setCategory("");
-      setRegisterDate("");
+        setValue("");
+        setDescription("");
+        setAccount("");
+        setCategory("");
+        setRegisterDate("");
     }else{
+      toast.info(
+        "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se o registro foi feito com sucesso."
+      );
+    }
+   }
+    catch (error) {
       toast.error(
-        "Houve um problema ao registrar a receita. Por favor, revise as informações inseridas e tente novamente."
+        `Houve um problema ao registrar a receita. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`
       );
     }
   };
