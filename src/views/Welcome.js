@@ -1,10 +1,13 @@
 import React from "react";
+import { ToastContainer } from 'react-toastify';
+
 import PageTitleContainer from "../styles/PageTitleContainer";
 import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 
 const Welcome = () => (
   <div>
     <PageTitleContainer>Início</PageTitleContainer>
+    <ToastContainer />
     <PageContentSectionContainer>
       <p>
         Esta página irá exibir a tela de boas vindas do sistema, contendo um

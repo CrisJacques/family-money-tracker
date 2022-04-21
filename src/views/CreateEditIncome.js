@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import PageTitleContainer from "../styles/PageTitleContainer";
 import InputFieldContainer from "../styles/InputFieldContainer";
@@ -10,10 +12,9 @@ import SecondaryButtonContainer from '../styles/SecondaryButtonContainer';
 
 import InputLabel from "../components/InputLabel";
 
-import requiredValidation from "../helpers/requiredValidation";
-
 import ContasService from "../services/ContasService";
 import CategoriasReceitasService from "../services/CategoriasReceitasService";
+import ReceitasService from "../services/ReceitasService";
 
 const CreateEditIncome = (props) => {
   const form = useRef();
@@ -49,11 +50,26 @@ const CreateEditIncome = (props) => {
     fetchIncomeCategories();
   }, [currentUser, userToken]);
 
+  const insertIncome = async () => {
+    const resultado = await ReceitasService.insertReceita(userToken, value, description, account, category, registerDate, currentUser.id);
+    if (resultado.status === 201){
+      toast.success("Receita registrada com sucesso.");
+
+      setValue("");
+      setDescription("");
+      setAccount("");
+      setCategory("");
+      setRegisterDate("");
+    }else{
+      toast.error(
+        "Houve um problema ao registrar a receita. Por favor, revise as informações inseridas e tente novamente."
+      );
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    form.current.validateAll();
-    alert(value);
-    alert(description);
+    insertIncome();
   };
 
   const onChangeValue = (e) => {
@@ -89,6 +105,7 @@ const CreateEditIncome = (props) => {
   return (
     <div>
       <PageTitleContainer>Cadastrar Receita</PageTitleContainer>
+      <ToastContainer />
       <Form onSubmit={handleSubmit} ref={form}>
         <div className="row">
           <div className="col s12 l6">
@@ -100,7 +117,6 @@ const CreateEditIncome = (props) => {
                 name="value"
                 value={value}
                 onChange={onChangeValue}
-                validations={[requiredValidation]}
               />
             </InputFieldContainer>
           </div>
@@ -113,7 +129,6 @@ const CreateEditIncome = (props) => {
                 name="description"
                 value={description}
                 onChange={onChangeDescription}
-                validations={[requiredValidation]}
               />
             </InputFieldContainer>
           </div>
@@ -127,7 +142,6 @@ const CreateEditIncome = (props) => {
                 name="account"
                 value={account}
                 onChange={onChangeAccount}
-                validations={[requiredValidation]}
               >
                 <option value="">Selecione uma conta...</option>
                 {contas.map((conta)=> <option key={conta.id} value={conta.id}>{conta.nome}</option>)}
@@ -142,7 +156,6 @@ const CreateEditIncome = (props) => {
                 name="category"
                 value={category}
                 onChange={onChangeCategory}
-                validations={[requiredValidation]}
               >
                 <option value="">Selecione uma categoria...</option>
                 {categoriasReceitas.map((categoriaReceita)=> <option key={categoriaReceita.id} value={categoriaReceita.id}>{categoriaReceita.nome}</option>)}
@@ -160,7 +173,6 @@ const CreateEditIncome = (props) => {
                 name="registerDate"
                 value={registerDate}
                 onChange={onChangeRegisterDate}
-                validations={[requiredValidation]}
               />
             </InputFieldContainer>
           </div>
