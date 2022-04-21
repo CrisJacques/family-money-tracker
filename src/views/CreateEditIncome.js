@@ -70,7 +70,7 @@ const CreateEditIncome = (props) => {
         setCategory("");
         setRegisterDate("");
     }else{
-      toast.info(
+      toast.warning(
         "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se o registro foi feito com sucesso."
       );
     }
