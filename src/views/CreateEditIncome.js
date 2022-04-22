@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
+import InputMask from 'react-input-mask';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -124,28 +125,30 @@ const CreateEditIncome = (props) => {
   return (
     <div>
       <PageTitleContainer>Cadastrar Receita</PageTitleContainer>
-      <ToastContainer />
-      <Form onSubmit={handleSubmit} ref={form}>
+      <ToastContainer theme="colored" />
+      <form onSubmit={handleSubmit} ref={form}>
         <div className="row">
           <div className="col s12 l6">
             <InputFieldContainer>
               <InputLabel id="value" name="Valor" />
-              <Input
-                type="text"
+              <InputMask
+                mask='99.99'
                 name="value"
                 value={value}
                 onChange={onChangeValue}
-              />
+                placeholder="00.00">
+              </InputMask>
             </InputFieldContainer>
           </div>
           <div className="col s12 l6">
             <InputFieldContainer>
               <InputLabel id="description" name="Descrição" />
-              <Input
+              <input
                 type="text"
                 name="description"
                 value={description}
                 onChange={onChangeDescription}
+                placeholder="Descrição da receita"
               />
             </InputFieldContainer>
           </div>
@@ -184,7 +187,7 @@ const CreateEditIncome = (props) => {
           <div className="col s12 l6">
             <InputFieldContainer>
               <InputLabel id="registerDate" name="Data" />
-              <Input
+              <input
                 type="date"
                 name="registerDate"
                 value={registerDate}
@@ -204,7 +207,7 @@ const CreateEditIncome = (props) => {
             </PrimaryButtonContainer>
           </div>
         </div>
-      </Form>
+      </form>
     </div>
   );
 };
