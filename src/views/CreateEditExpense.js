@@ -35,6 +35,10 @@ const CreateEditExpense = (props) => {
   const [bancos, setBancos] = useState([]);
   const [bank, setBank] = useState("");
   const [numberInstallments, setNumberInstallments] = useState("");
+  const [exibirConta, setExibirConta] = useState(false);
+  const [exibirCartaoCredito, setExibirCartaoCredito] = useState(false);
+  const [exibirBanco, setExibirBanco] = useState(false);
+  const [exibirNumParcelas, setExibirNumParcelas] = useState(false);
 
   const { user: currentUser } = useSelector((state) => state.auth);
   const userToken = `${currentUser.tokenType} ${currentUser.accessToken}`;
@@ -121,7 +125,28 @@ const CreateEditExpense = (props) => {
   const onChangePaymentType = (e) => {
     const paymentType = e.target.value;
     if (e.target.value !== "") {
-      console.log(formasDePagamento[e.target.value][0].descricao);
+      const opcaoFormaPagamento = formasDePagamento[e.target.value][0].descricao;
+      if(opcaoFormaPagamento === "Dinheiro" || opcaoFormaPagamento === "Débito"){
+        setExibirConta(true);
+        setExibirCartaoCredito(false);
+        setExibirBanco(false);
+        setExibirNumParcelas(false);
+      } else if(opcaoFormaPagamento === "Cartão de Crédito"){
+        setExibirConta(false);
+        setExibirCartaoCredito(true);
+        setExibirBanco(false);
+        setExibirNumParcelas(true);
+      } else{
+        setExibirConta(false);
+        setExibirCartaoCredito(false);
+        setExibirBanco(true);
+        setExibirNumParcelas(true);
+      }
+    }else{
+      setExibirConta(false);
+      setExibirCartaoCredito(false);
+      setExibirBanco(false);
+      setExibirNumParcelas(false);
     }
     setPaymentType(paymentType);
   };
@@ -244,7 +269,7 @@ const CreateEditExpense = (props) => {
           </div>
         </div>
         <div className="row">
-          <div className="col s12 l6">
+          {exibirCartaoCredito && <div className="col s12 l6">
             <InputFieldContainer>
               <InputLabel id="creditCard" name="Cartão de Crédito" />
               <select
@@ -261,8 +286,8 @@ const CreateEditExpense = (props) => {
                 ))}
               </select>
             </InputFieldContainer>
-          </div>
-          <div className="col s12 l6">
+          </div>}
+          {exibirBanco && <div className="col s12 l6">
             <InputFieldContainer>
               <InputLabel id="bank" name="Banco" />
               <select
@@ -279,9 +304,9 @@ const CreateEditExpense = (props) => {
                 ))}
               </select>
             </InputFieldContainer>
-          </div>
+          </div>}
         </div>
-        <div className="row">
+        {exibirNumParcelas && <div className="row">
           <div className="col s12 l6">
             <InputFieldContainer>
               <InputLabel id="numberInstallments" name="Número de parcelas" />
@@ -294,7 +319,7 @@ const CreateEditExpense = (props) => {
               />
             </InputFieldContainer>
           </div>
-        </div>
+        </div>}
         <div className="row">
           <div className="col s12 l6">
             <InputFieldContainer>
@@ -307,7 +332,7 @@ const CreateEditExpense = (props) => {
               />
             </InputFieldContainer>
           </div>
-          <div className="col s12 l6">
+          {exibirConta && <div className="col s12 l6">
             <InputFieldContainer>
               <InputLabel id="account" name="Conta" />
               <select
@@ -324,7 +349,7 @@ const CreateEditExpense = (props) => {
                 ))}
               </select>
             </InputFieldContainer>
-          </div>
+          </div>}
         </div>
         <div className="row">
           <div className="col s12" style={{ "text-align": "right" }}>
