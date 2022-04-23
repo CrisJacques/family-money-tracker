@@ -1,7 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
-import Form from "react-validation/build/form";
-import Input from "react-validation/build/input";
 import NumberFormat from 'react-number-format';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -146,7 +144,8 @@ const CreateEditIncome = (props) => {
                 name="value"
                 value={value}
                 onChange={onChangeValue}
-                format={currencyFormatter}/>
+                format={currencyFormatter}
+                placeholder="Valor da receita"/>
             </InputFieldContainer>
           </div>
           <div className="col s12 l6">
