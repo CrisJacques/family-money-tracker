@@ -16,6 +16,7 @@ import CategoriasDespesasService from "../services/CategoriasDespesasService";
 import FormasDePagamentoService from "../services/FormasDePagamentoService";
 import ContasService from "../services/ContasService";
 import CartoesDeCreditoService from "../services/CartoesDeCreditoService";
+import BancosService from "../services/BancosService";
 
 const CreateEditExpense = (props) => {
   const form = useRef();
@@ -31,6 +32,9 @@ const CreateEditExpense = (props) => {
   const [contas, setContas] = useState([]);
   const [cartoesDeCredito, setCartoesDeCredito] = useState([]);
   const [creditCard, setCreditCard] = useState("");
+  const [bancos, setBancos] = useState([]);
+  const [bank, setBank] = useState("");
+
 
   const { user: currentUser } = useSelector((state) => state.auth);
   const userToken = `${currentUser.tokenType} ${currentUser.accessToken}`;
@@ -62,6 +66,19 @@ const CreateEditExpense = (props) => {
       setFormasDePagamento(result);
     };
     fetchPaymentTypes();
+  }, [currentUser, userToken]);
+
+  useEffect(() => {
+    const fetchBanks = async () => {
+      const resposta = await BancosService.getBancos(
+        userToken
+      );
+      const result = Object.keys(resposta.data).map((key) => [
+        resposta.data[key],
+      ]);
+      setBancos(result);
+    };
+    fetchBanks();
   }, [currentUser, userToken]);
 
   useEffect(() => {
@@ -117,6 +134,11 @@ const CreateEditExpense = (props) => {
   const onChangeAccount = (e) => {
     const account = e.target.value;
     setAccount(account);
+  };
+
+  const onChangeBank = (e) => {
+    const bank = e.target.value;
+    setBank(bank);
   };
 
   const onClickCancelButton = () => {
@@ -253,6 +275,27 @@ const CreateEditExpense = (props) => {
                 {cartoesDeCredito.map((cartaoDeCredito) => (
                   <option key={cartaoDeCredito.id} value={cartaoDeCredito.id}>
                     {cartaoDeCredito.nome}
+                  </option>
+                ))}
+              </select>
+            </InputFieldContainer>
+          </div>
+          <div className="col s12 l6">
+            <InputFieldContainer>
+              <InputLabel id="bank" name="Banco" />
+              <select
+                className="browser-default"
+                name="bank"
+                value={bank}
+                onChange={onChangeBank}
+              >
+                <option value="">Selecione um banco...</option>
+                {bancos.map((banco) => (
+                  <option
+                    key={banco[0].cod}
+                    value={banco[0].cod}
+                  >
+                    {banco[0].descricao}
                   </option>
                 ))}
               </select>
