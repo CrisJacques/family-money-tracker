@@ -34,7 +34,7 @@ const CreateEditExpense = (props) => {
   const [creditCard, setCreditCard] = useState("");
   const [bancos, setBancos] = useState([]);
   const [bank, setBank] = useState("");
-
+  const [numberInstallments, setNumberInstallments] = useState("");
 
   const { user: currentUser } = useSelector((state) => state.auth);
   const userToken = `${currentUser.tokenType} ${currentUser.accessToken}`;
@@ -49,7 +49,9 @@ const CreateEditExpense = (props) => {
 
   useEffect(() => {
     const fetchCreditCards = async () => {
-      const resposta = await CartoesDeCreditoService.getCartoesDeCredito(userToken);
+      const resposta = await CartoesDeCreditoService.getCartoesDeCredito(
+        userToken
+      );
       setCartoesDeCredito(resposta.data);
     };
     fetchCreditCards();
@@ -70,9 +72,7 @@ const CreateEditExpense = (props) => {
 
   useEffect(() => {
     const fetchBanks = async () => {
-      const resposta = await BancosService.getBancos(
-        userToken
-      );
+      const resposta = await BancosService.getBancos(userToken);
       const result = Object.keys(resposta.data).map((key) => [
         resposta.data[key],
       ]);
@@ -141,6 +141,11 @@ const CreateEditExpense = (props) => {
     setBank(bank);
   };
 
+  const onChangeNumberInstallments = (e) => {
+    const numberInstallments = e.target.value;
+    setNumberInstallments(numberInstallments);
+  };
+
   const onClickCancelButton = () => {
     props.history.push("/");
     window.location.reload();
@@ -155,6 +160,14 @@ const CreateEditExpense = (props) => {
     }).format(value / 100);
 
     return `${amount}`;
+  }
+
+  function numberFormatter(value) {
+    if (!Number(value)) {
+      return "";
+    } else {
+      return value;
+    }
   }
 
   return (
@@ -233,37 +246,6 @@ const CreateEditExpense = (props) => {
         <div className="row">
           <div className="col s12 l6">
             <InputFieldContainer>
-              <InputLabel id="registerDate" name="Data" />
-              <input
-                type="date"
-                name="registerDate"
-                value={registerDate}
-                onChange={onChangeRegisterDate}
-              />
-            </InputFieldContainer>
-          </div>
-          <div className="col s12 l6">
-            <InputFieldContainer>
-              <InputLabel id="account" name="Conta" />
-              <select
-                className="browser-default"
-                name="account"
-                value={account}
-                onChange={onChangeAccount}
-              >
-                <option value="">Selecione uma conta...</option>
-                {contas.map((conta) => (
-                  <option key={conta.id} value={conta.id}>
-                    {conta.nome}
-                  </option>
-                ))}
-              </select>
-            </InputFieldContainer>
-          </div>
-        </div>
-        <div className="row">
-        <div className="col s12 l6">
-            <InputFieldContainer>
               <InputLabel id="creditCard" name="Cartão de Crédito" />
               <select
                 className="browser-default"
@@ -291,11 +273,53 @@ const CreateEditExpense = (props) => {
               >
                 <option value="">Selecione um banco...</option>
                 {bancos.map((banco) => (
-                  <option
-                    key={banco[0].cod}
-                    value={banco[0].cod}
-                  >
+                  <option key={banco[0].cod} value={banco[0].cod}>
                     {banco[0].descricao}
+                  </option>
+                ))}
+              </select>
+            </InputFieldContainer>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col s12 l6">
+            <InputFieldContainer>
+              <InputLabel id="numberInstallments" name="Número de parcelas" />
+              <NumberFormat
+                name="numberInstallments"
+                value={numberInstallments}
+                onChange={onChangeNumberInstallments}
+                format={numberFormatter}
+                placeholder="Digite o número de parcelas da despesa"
+              />
+            </InputFieldContainer>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col s12 l6">
+            <InputFieldContainer>
+              <InputLabel id="registerDate" name="Data" />
+              <input
+                type="date"
+                name="registerDate"
+                value={registerDate}
+                onChange={onChangeRegisterDate}
+              />
+            </InputFieldContainer>
+          </div>
+          <div className="col s12 l6">
+            <InputFieldContainer>
+              <InputLabel id="account" name="Conta" />
+              <select
+                className="browser-default"
+                name="account"
+                value={account}
+                onChange={onChangeAccount}
+              >
+                <option value="">Selecione uma conta...</option>
+                {contas.map((conta) => (
+                  <option key={conta.id} value={conta.id}>
+                    {conta.nome}
                   </option>
                 ))}
               </select>
