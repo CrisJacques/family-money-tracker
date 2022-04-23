@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_URL_BASE } from '../API_URLs';
+import convertMoneyToNumber from '../helpers/convertMoneyToNumber';
 
 const requestUrl = path => `${API_URL_BASE}${path}`;
 
@@ -16,7 +17,7 @@ export default class ReceitasService {
     return axios.post(
       requestUrl("receitas"),
       {
-        valor: `${value}`,
+        valor: `${convertMoneyToNumber(value)}`,
         descricao: `${description}`,
         data: `${registerDate}`,
         recorrente: false,

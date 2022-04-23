@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
-import InputMask from 'react-input-mask';
+import NumberFormat from 'react-number-format';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -122,6 +122,17 @@ const CreateEditIncome = (props) => {
     window.location.reload();
   };
 
+  function currencyFormatter(value) {
+    if (!Number(value)) return "";
+  
+    const amount = new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL"
+    }).format(value / 100);
+  
+    return `${amount}`;
+  }
+
   return (
     <div>
       <PageTitleContainer>Cadastrar Receita</PageTitleContainer>
@@ -131,13 +142,11 @@ const CreateEditIncome = (props) => {
           <div className="col s12 l6">
             <InputFieldContainer>
               <InputLabel id="value" name="Valor" />
-              <InputMask
-                mask='99.99'
+              <NumberFormat
                 name="value"
                 value={value}
                 onChange={onChangeValue}
-                placeholder="00.00">
-              </InputMask>
+                format={currencyFormatter}/>
             </InputFieldContainer>
           </div>
           <div className="col s12 l6">
