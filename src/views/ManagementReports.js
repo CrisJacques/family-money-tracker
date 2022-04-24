@@ -3,6 +3,7 @@ import PageTitleContainer from "../styles/PageTitleContainer";
 import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 import ListItemContainer from "../styles/ListItemContainer";
 
+/* Tela que irá permitir o acesso aos relatórios gerenciais por parte do administrador do grupo */
 const ManagementReports = () => (
   <div>
     <PageTitleContainer>Relatórios gerenciais</PageTitleContainer>

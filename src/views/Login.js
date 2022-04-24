@@ -1,49 +1,70 @@
 import React, { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 
 import { login } from "../actions/auth";
 
+import LoginPageContainer from "../styles/LoginPageContainer";
+import LoginFormContainer from "../styles/LoginFormContainer";
+import InputFieldContainer from "../styles/InputFieldContainer";
+import PrimaryButtonContainer from "../styles/PrimaryButtonContainer";
+import SecondaryButtonContainer from "../styles/SecondaryButtonContainer";
+
+import LoginHeader from "../components/LoginHeader";
+import RequiredFieldAlert from "../components/RequiredFieldAlert";
+import InputLabel from "../components/InputLabel";
+
+/* Validação que exibe uma mensagem quando o usuário deixa de preencher algum campo e clica em Entrar */
 const required = (value) => {
   if (!value) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        This field is required!
-      </div>
-    );
+    return <RequiredFieldAlert />;
   }
 };
 
+/* Tela de login */
 const Login = (props) => {
+  /* Referência para o formulário de login */
   const form = useRef();
+
+  /* Referência para o checkBtn, que armazena mensagens de erro no preenchimento dos campos de login */
   const checkBtn = useRef();
-  const [username, setUsername] = useState("");
+
+  /* Variáveis de estado para os componentes da tela */
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const { isLoggedIn } = useSelector(state => state.auth);
-  const { message } = useSelector(state => state.message);
+
+  /* Obtendo da store a informação de que se o usuário está logado e armazenando em uma variável */
+  const { isLoggedIn } = useSelector((state) => state.auth);
+
+  /* Obtendo da store a mensagem mais recente e armazenando em uma variável */
+  const { message } = useSelector((state) => state.message);
 
   const dispatch = useDispatch();
 
-  const onChangeUsername = (e) => {
-    const username = e.target.value;
-    setUsername(username);
+  /* ====================== Atualizando o estado dos componentes na tela quando usuário interage com eles ========================================== */
+  /* Campo email */
+  const onChangeEmail = (e) => {
+    const email = e.target.value;
+    setEmail(email);
   };
 
+  /* Campo senha */
   const onChangePassword = (e) => {
     const password = e.target.value;
     setPassword(password);
   };
 
+  /* =============================== Tentando fazer o login quando usuário clica em Entrar ========================================== */
   const handleLogin = (e) => {
     e.preventDefault();
     setLoading(true);
     form.current.validateAll();
     if (checkBtn.current.context._errors.length === 0) {
-      dispatch(login(username, password))
+      dispatch(login(email, password))
         .then(() => {
           props.history.push("/meu_perfil");
           window.location.reload();
@@ -51,54 +72,58 @@ const Login = (props) => {
         .catch(() => {
           setLoading(false);
         });
-    } 
-    else {
+    } else {
       setLoading(false);
     }
   };
 
+  /* ====================== Redirecionando para a página de perfil do usuário se ele estiver logado ========================================== */
   if (isLoggedIn) {
     return <Navigate to="/meu_perfil" />;
   }
 
+  /* ====================== Construção da tela de login ========================================== */
   return (
-    <div className="col-md-12">
-      <div className="card card-container">
-        <img
-          src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-          alt="profile-img"
-          className="profile-img-card"
-        />
+    <LoginPageContainer>
+      <LoginFormContainer>
+        <LoginHeader />
+        <div style={{ "text-align": "center" }}>
+          <PrimaryButtonContainer>Login</PrimaryButtonContainer>
+          <SecondaryButtonContainer>Cadastrar</SecondaryButtonContainer>
+        </div>
         <Form onSubmit={handleLogin} ref={form}>
-          <div className="form-group">
-            <label htmlFor="username">Username</label>
-            <Input
-              type="text"
-              className="form-control"
-              name="username"
-              value={username}
-              onChange={onChangeUsername}
-              validations={[required]}
-            />
+          <div className="row">
+            <div className="col s12">
+              <InputFieldContainer>
+                <InputLabel id="email" name="E-mail" />
+                <Input
+                  type="email"
+                  className="validate"
+                  name="email"
+                  value={email}
+                  onChange={onChangeEmail}
+                  validations={[required]}
+                />
+              </InputFieldContainer>
+            </div>
           </div>
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <Input
-              type="password"
-              className="form-control"
-              name="password"
-              value={password}
-              onChange={onChangePassword}
-              validations={[required]}
-            />
+          <div className="row">
+            <div className="col s12">
+              <InputFieldContainer>
+                <InputLabel id="password" name="Senha" />
+                <Input
+                  type="password"
+                  className="validate"
+                  name="password"
+                  value={password}
+                  onChange={onChangePassword}
+                  validations={[required]}
+                />
+              </InputFieldContainer>
+            </div>
           </div>
-          <div className="form-group">
-            <button className="btn btn-primary btn-block" disabled={loading}>
-              {loading && (
-                <span className="spinner-border spinner-border-sm"></span>
-              )}
-              <span>Login</span>
-            </button>
+          <div style={{ "text-align": "center" }}>
+            <PrimaryButtonContainer>Entrar</PrimaryButtonContainer>
           </div>
           {message && (
             <div className="form-group">
@@ -109,8 +134,8 @@ const Login = (props) => {
           )}
           <CheckButton style={{ display: "none" }} ref={checkBtn} />
         </Form>
-      </div>
-    </div>
+      </LoginFormContainer>
+    </LoginPageContainer>
   );
 };
 

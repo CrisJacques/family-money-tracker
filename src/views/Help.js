@@ -2,6 +2,7 @@ import React from "react";
 import PageTitleContainer from "../styles/PageTitleContainer";
 import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 
+/* Tela que irá permitir o acesso ao tutorial com orientações de como utilizar o sistema */
 const Help = () => (
   <div>
     <PageTitleContainer>Ajuda e feedback</PageTitleContainer>

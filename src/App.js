@@ -1,48 +1,43 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-import Header from './components/Header';
-import MainMenu from './components/MainMenu';
+import Header from "./components/Header";
+import MainMenu from "./components/MainMenu";
 
-import Categories from './views/Categories';
-import Accounts from './views/Accounts';
-import CreditCardPayments from './views/CreditCardPayments';
-import CreditCards from './views/CreditCards';
-import CreateEditExpense from './views/CreateEditExpense';
-import FutureBills from './views/FutureBills';
-import Help from './views/Help';
-import CreateEditIncome from './views/CreateEditIncome';
-import ManagementReports from './views/ManagementReports';
-import MyProfile from './views/MyProfile';
-import RecurringItems from './views/RecurringItems';
-import SummaryReport from './views/SummaryReport';
-import Welcome from './views/Welcome';
-import Login2 from "./views/Login2";
+import Categories from "./views/Categories";
+import Accounts from "./views/Accounts";
+import CreditCardPayments from "./views/CreditCardPayments";
+import CreditCards from "./views/CreditCards";
+import CreateEditExpense from "./views/CreateEditExpense";
+import FutureBills from "./views/FutureBills";
+import Help from "./views/Help";
+import CreateEditIncome from "./views/CreateEditIncome";
+import ManagementReports from "./views/ManagementReports";
+import MyProfile from "./views/MyProfile";
+import RecurringItems from "./views/RecurringItems";
+import SummaryReport from "./views/SummaryReport";
+import Welcome from "./views/Welcome";
+import Login from "./views/Login";
 
 import { logout } from "./actions/auth";
 
 import { history } from "./helpers/history";
 
-import AppContainer from './styles/AppContainer'
-import LogoutButtonContainer from './styles/LogoutButtonContainer'
+import AppContainer from "./styles/AppContainer";
+import LogoutButtonContainer from "./styles/LogoutButtonContainer";
 
-//import "bootstrap/dist/css/bootstrap.min.css";
-import "./App.css";
-
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes
-} from "react-router-dom";
-
-
+/* Aplicação Family Money Tracker */
 function App() {
+  /* Obtendo o usuário a partir da store */
   const { user: currentUser } = useSelector((state) => state.auth);
+
+  /* Variável de estado para armazenar se usuário é admin ou não */
   const [isAdmin, setIsAdmin] = useState(false);
-  console.log(currentUser);
 
   const dispatch = useDispatch();
 
+  /* ======================== Verificando se usuário é admin cada vez que aplicação é carregada e quando a variável currentUser mudar de valor ============================== */
   useEffect(() => {
     if (currentUser) {
       setIsAdmin(currentUser.roles.includes("ADMIN_GRUPO"));
@@ -51,14 +46,17 @@ function App() {
     }
   }, [currentUser]);
 
+  /* ======================== Redirecionando para a tela de login quando usuário não estiver logado ============================== */
   if (!currentUser) {
-    return <Login2 />;
+    return <Login />;
   }
 
+  /* ======================== Fazendo o logout da aplicação quando usuário clicar em Sair ============================== */
   const logOut = () => {
     dispatch(logout());
   };
 
+  /* ======================== Construção da aplicação ============================== */
   return (
     <AppContainer>
       <Header />

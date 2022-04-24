@@ -1,10 +1,12 @@
-import axios from 'axios';
-import { API_URL_BASE } from '../API_URLs';
-import convertMoneyToNumber from '../helpers/convertMoneyToNumber';
+import axios from "axios";
+import { API_URL_BASE } from "../API_URLs";
+import convertMoneyToNumber from "../helpers/convertMoneyToNumber";
 
-const requestUrl = path => `${API_URL_BASE}${path}`;
+const requestUrl = (path) => `${API_URL_BASE}${path}`;
 
+/* Services que tratam das requisições referentes às despesas cuja forma de pagamento é débito ou dinheiro */
 export default class DespesasDebitoDinheiroService {
+  /* Insere uma nova despesa cuja forma de pagamento é débito ou dinheiro */
   static async insertDespesaDebitoDinheiro(
     userToken,
     value,

@@ -1,16 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
-import NumberFormat from 'react-number-format';
-import { ToastContainer, toast } from 'react-toastify';
+import NumberFormat from "react-number-format";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 import PageTitleContainer from "../styles/PageTitleContainer";
 import InputFieldContainer from "../styles/InputFieldContainer";
-import PrimaryButtonContainer from '../styles/PrimaryButtonContainer';
-import SecondaryButtonContainer from '../styles/SecondaryButtonContainer';
+import PrimaryButtonContainer from "../styles/PrimaryButtonContainer";
+import SecondaryButtonContainer from "../styles/SecondaryButtonContainer";
 
 import InputLabel from "../components/InputLabel";
-
-import requiredValidation from "../helpers/requiredValidation";
 
 import CategoriasDespesasService from "../services/CategoriasDespesasService";
 import FormasDePagamentoService from "../services/FormasDePagamentoService";
@@ -21,31 +20,41 @@ import DespesasDebitoDinheiroService from "../services/DespesasDebitoDinheiroSer
 import DespesasCreditoService from "../services/DespesasCreditoService";
 import DespesasFinanciamentoEmprestimoService from "../services/DespesasFinanciamentoEmprestimoService";
 
+/* Tela que permite o cadastro de despesas */
 const CreateEditExpense = (props) => {
+  /*Referência para o formulário de cadastro de despesas */
   const form = useRef();
 
+  /* Variáveis de estado para os componentes da tela */
   const [value, setValue] = useState("");
   const [description, setDescription] = useState("");
   const [registerDate, setRegisterDate] = useState("");
   const [category, setCategory] = useState("");
   const [paymentType, setPaymentType] = useState("");
-  const [categoriasDespesas, setCategoriasDespesas] = useState([]);
-  const [formasDePagamento, setFormasDePagamento] = useState([]);
   const [account, setAccount] = useState("");
-  const [contas, setContas] = useState([]);
-  const [cartoesDeCredito, setCartoesDeCredito] = useState([]);
   const [creditCard, setCreditCard] = useState("");
-  const [bancos, setBancos] = useState([]);
   const [bank, setBank] = useState("");
   const [numberInstallments, setNumberInstallments] = useState("");
+
+  /* Armazenando em variáveis de estado informações vindas do backend para exibir nos comboboxes */
+  const [categoriasDespesas, setCategoriasDespesas] = useState([]);
+  const [formasDePagamento, setFormasDePagamento] = useState([]);
+  const [contas, setContas] = useState([]);
+  const [cartoesDeCredito, setCartoesDeCredito] = useState([]);
+  const [bancos, setBancos] = useState([]);
+
+  /* Criando variáveis de estado para armazenar a decisão de quando exibir ou não determinados campos do formulário, de acordo com a forma de pagamento escolhida */
   const [exibirConta, setExibirConta] = useState(false);
   const [exibirCartaoCredito, setExibirCartaoCredito] = useState(false);
   const [exibirBanco, setExibirBanco] = useState(false);
   const [exibirNumParcelas, setExibirNumParcelas] = useState(false);
 
+  /* Obtendo o usuário da store e armazenando seu token para poder passar no header das requisições que serão feitas ao backend */
   const { user: currentUser } = useSelector((state) => state.auth);
   const userToken = `${currentUser.tokenType} ${currentUser.accessToken}`;
 
+  /* ======================== Carregando informações do banco de dados para popular os comboboxes ===================================== */
+  /* Carrega a lista de contas cadastradas cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor */
   useEffect(() => {
     const fetchAccounts = async () => {
       const resposta = await ContasService.getContas(userToken);
@@ -54,6 +63,7 @@ const CreateEditExpense = (props) => {
     fetchAccounts();
   }, [currentUser, userToken]);
 
+  /* Carrega a lista de cartões de crédito cadastrados cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor */
   useEffect(() => {
     const fetchCreditCards = async () => {
       const resposta = await CartoesDeCreditoService.getCartoesDeCredito(
@@ -64,6 +74,7 @@ const CreateEditExpense = (props) => {
     fetchCreditCards();
   }, [currentUser, userToken]);
 
+  /* Carrega a lista de formas de pagamento cadastradas cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor */
   useEffect(() => {
     const fetchPaymentTypes = async () => {
       const resposta = await FormasDePagamentoService.getFormasDePagamento(
@@ -77,6 +88,7 @@ const CreateEditExpense = (props) => {
     fetchPaymentTypes();
   }, [currentUser, userToken]);
 
+  /* Carrega a lista de bancos cadastrados cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor */
   useEffect(() => {
     const fetchBanks = async () => {
       const resposta = await BancosService.getBancos(userToken);
@@ -88,6 +100,7 @@ const CreateEditExpense = (props) => {
     fetchBanks();
   }, [currentUser, userToken]);
 
+  /* Carrega a lista de categorias de despesas cadastradas cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor */
   useEffect(() => {
     const fetchExpenseCategories = async () => {
       const resposta = await CategoriasDespesasService.getCategoriasDespesas(
@@ -98,42 +111,46 @@ const CreateEditExpense = (props) => {
     fetchExpenseCategories();
   }, [currentUser, userToken]);
 
+  /* ======================== Cadastrando despesas através de requisições à API ===================================== */
+  /* Cadastra uma nova despesa cuja forma de pagamento é financiamento ou empréstimo */
   const insertExpenseFinancingLoan = async () => {
     try {
-      const resultado = await DespesasFinanciamentoEmprestimoService.insertDespesaFinanciamentoEmprestimo(
-        userToken,
-        value,
-        description,
-        bank,
-        numberInstallments,
-        category,
-        registerDate,
-        paymentType,
-        currentUser.id
-      );
+      const resultado =
+        await DespesasFinanciamentoEmprestimoService.insertDespesaFinanciamentoEmprestimo(
+          userToken,
+          value,
+          description,
+          bank,
+          numberInstallments,
+          category,
+          registerDate,
+          paymentType,
+          currentUser.id
+        );
       if (resultado.status === 201) {
         toast.success("Despesa registrada com sucesso.");
 
+        /* Se despesa é registrada com sucesso, limpa todos os campos da tela para facilitar a inserção de novas despesas */
         setValue("");
         setDescription("");
         setPaymentType("");
         setCategory("");
         setBank("");
         setNumberInstallments("");
-        setRegisterDate("");       
-    }else{
-      toast.warning(
-        "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se o registro foi feito com sucesso."
-      );
-    }
-   }
-    catch (error) {
+        setRegisterDate("");
+      } else {
+        toast.warning(
+          "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se o registro foi feito com sucesso."
+        );
+      }
+    } catch (error) {
       toast.error(
         `Houve um problema ao registrar a despesa. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`
       );
     }
   };
 
+  /* Cadastra uma nova despesa cuja forma de pagamento é cartão de crédito */
   const insertExpenseCreditCard = async () => {
     try {
       const resultado = await DespesasCreditoService.insertDespesaCredito(
@@ -150,129 +167,168 @@ const CreateEditExpense = (props) => {
       if (resultado.status === 201) {
         toast.success("Despesa registrada com sucesso.");
 
+        /* Se despesa é registrada com sucesso, limpa todos os campos da tela para facilitar a inserção de novas despesas */
         setValue("");
         setDescription("");
         setPaymentType("");
         setCategory("");
         setCreditCard("");
         setNumberInstallments("");
-        setRegisterDate("");       
-    }else{
-      toast.warning(
-        "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se o registro foi feito com sucesso."
-      );
-    }
-   }
-    catch (error) {
+        setRegisterDate("");
+      } else {
+        toast.warning(
+          "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se o registro foi feito com sucesso."
+        );
+      }
+    } catch (error) {
       toast.error(
         `Houve um problema ao registrar a despesa. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`
       );
     }
   };
 
+  /* Cadastra uma nova despesa cuja forma de pagamento é dinheiro ou débito */
   const insertExpenseDebitCash = async () => {
     try {
-      const resultado = await DespesasDebitoDinheiroService.insertDespesaDebitoDinheiro(
-        userToken,
-        value,
-        description,
-        account,
-        category,
-        registerDate,
-        paymentType,
-        currentUser.id
-      );
+      const resultado =
+        await DespesasDebitoDinheiroService.insertDespesaDebitoDinheiro(
+          userToken,
+          value,
+          description,
+          account,
+          category,
+          registerDate,
+          paymentType,
+          currentUser.id
+        );
       if (resultado.status === 201) {
         toast.success("Despesa registrada com sucesso.");
 
+        /* Se despesa é registrada com sucesso, limpa todos os campos da tela para facilitar a inserção de novas despesas */
         setValue("");
         setDescription("");
         setPaymentType("");
         setCategory("");
         setRegisterDate("");
-        setAccount("");        
-    }else{
-      toast.warning(
-        "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se o registro foi feito com sucesso."
-      );
-    }
-   }
-    catch (error) {
+        setAccount("");
+      } else {
+        toast.warning(
+          "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se o registro foi feito com sucesso."
+        );
+      }
+    } catch (error) {
       toast.error(
         `Houve um problema ao registrar a despesa. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`
       );
     }
   };
 
+  /* ================ Chamando a função de cadastro de despesa de acordo com a forma de pagamento escolhida quando usuário clica em Salvar ========================= */
   const handleSubmit = (e) => {
     e.preventDefault();
     if (paymentType === "") {
       toast.error("Todos os campos são de preenchimento obrigatório");
-    } else{
+    } else {
       const opcaoFormaPagamento = formasDePagamento[paymentType][0].descricao;
-      if(opcaoFormaPagamento === "Dinheiro" || opcaoFormaPagamento === "Débito"){
-        if (value !== "" && description !== "" && paymentType !== "" && category !== "" && registerDate !== "" && account !== "" ){
+      if (
+        opcaoFormaPagamento === "Dinheiro" ||
+        opcaoFormaPagamento === "Débito"
+      ) {
+        if (
+          value !== "" &&
+          description !== "" &&
+          paymentType !== "" &&
+          category !== "" &&
+          registerDate !== "" &&
+          account !== ""
+        ) {
           insertExpenseDebitCash();
-        }else{
+        } else {
           toast.error("Todos os campos são de preenchimento obrigatório");
         }
-      } else if(opcaoFormaPagamento === "Cartão de Crédito"){
-        if (value !== "" && description !== "" && paymentType !== "" && category !== "" && creditCard !== "" && numberInstallments !== "" && registerDate !== "" ){
+      } else if (opcaoFormaPagamento === "Cartão de Crédito") {
+        if (
+          value !== "" &&
+          description !== "" &&
+          paymentType !== "" &&
+          category !== "" &&
+          creditCard !== "" &&
+          numberInstallments !== "" &&
+          registerDate !== ""
+        ) {
           insertExpenseCreditCard();
-        }else{
+        } else {
           toast.error("Todos os campos são de preenchimento obrigatório");
         }
-      } else{
-        if (value !== "" && description !== "" && paymentType !== "" && category !== "" && bank !== "" && numberInstallments !== "" && registerDate !== "" ){
+      } else {
+        if (
+          value !== "" &&
+          description !== "" &&
+          paymentType !== "" &&
+          category !== "" &&
+          bank !== "" &&
+          numberInstallments !== "" &&
+          registerDate !== ""
+        ) {
           insertExpenseFinancingLoan();
-        }else{
+        } else {
           toast.error("Todos os campos são de preenchimento obrigatório");
         }
       }
     }
   };
 
+  /* ====================== Atualizando o estado dos componentes na tela quando usuário interage com eles ========================================== */
+  /* Campo valor */
   const onChangeValue = (e) => {
     const value = e.target.value;
     setValue(value);
   };
 
+  /* Campo descrição */
   const onChangeDescription = (e) => {
     const description = e.target.value;
     setDescription(description);
   };
 
+  /* Campo data */
   const onChangeRegisterDate = (e) => {
     const registerDate = e.target.value;
     setRegisterDate(registerDate);
   };
 
+  /* Campo categoria */
   const onChangeCategory = (e) => {
     const category = e.target.value;
     setCategory(category);
   };
 
+  /* Campo forma de pagamento, que contém lógica para esconder e exibir campos de formulário de acordo com a forma de pagamento selecionada */
   const onChangePaymentType = (e) => {
     const paymentType = e.target.value;
     if (e.target.value !== "") {
-      const opcaoFormaPagamento = formasDePagamento[e.target.value][0].descricao;
-      if(opcaoFormaPagamento === "Dinheiro" || opcaoFormaPagamento === "Débito"){
+      const opcaoFormaPagamento =
+        formasDePagamento[e.target.value][0].descricao;
+      if (
+        opcaoFormaPagamento === "Dinheiro" ||
+        opcaoFormaPagamento === "Débito"
+      ) {
         setExibirConta(true);
         setExibirCartaoCredito(false);
         setExibirBanco(false);
         setExibirNumParcelas(false);
-      } else if(opcaoFormaPagamento === "Cartão de Crédito"){
+      } else if (opcaoFormaPagamento === "Cartão de Crédito") {
         setExibirConta(false);
         setExibirCartaoCredito(true);
         setExibirBanco(false);
         setExibirNumParcelas(true);
-      } else{
+      } else {
         setExibirConta(false);
         setExibirCartaoCredito(false);
         setExibirBanco(true);
         setExibirNumParcelas(true);
       }
-    }else{
+    } else {
       setExibirConta(false);
       setExibirCartaoCredito(false);
       setExibirBanco(false);
@@ -281,31 +337,38 @@ const CreateEditExpense = (props) => {
     setPaymentType(paymentType);
   };
 
+  /* Campo cartão de crédito */
   const onChangeCreditCard = (e) => {
     const creditCard = e.target.value;
     setCreditCard(creditCard);
   };
 
+  /* Campo conta */
   const onChangeAccount = (e) => {
     const account = e.target.value;
     setAccount(account);
   };
 
+  /* Campo banco */
   const onChangeBank = (e) => {
     const bank = e.target.value;
     setBank(bank);
   };
 
+  /* Campo número de parcelas */
   const onChangeNumberInstallments = (e) => {
     const numberInstallments = e.target.value;
     setNumberInstallments(numberInstallments);
   };
 
+  /* ====================== Redirecionando para a tela inicial quando usuário clica em Cancelar ========================================== */
   const onClickCancelButton = () => {
     props.history.push("/");
     window.location.reload();
   };
 
+  /* ====================== Inserindo lógicas de validação e formatação de campos numéricos ========================================== */
+  /* Validações para campo valor, já formatando como um campo monetário, para facilitar o input pelo usuário */
   function currencyFormatter(value) {
     if (!Number(value)) return "";
 
@@ -317,6 +380,7 @@ const CreateEditExpense = (props) => {
     return `${amount}`;
   }
 
+  /* Validação para aceitar apenas números inteiros, no campo número de parcelas */
   function numberFormatter(value) {
     if (!Number(value)) {
       return "";
@@ -325,6 +389,7 @@ const CreateEditExpense = (props) => {
     }
   }
 
+  /* ====================== Construção da tela de cadastro de despesas ========================================== */
   return (
     <div>
       <PageTitleContainer>Cadastrar Despesa</PageTitleContainer>
@@ -386,7 +451,6 @@ const CreateEditExpense = (props) => {
                 name="category"
                 value={category}
                 onChange={onChangeCategory}
-                validations={[requiredValidation]}
               >
                 <option value="">Selecione uma categoria...</option>
                 {categoriasDespesas.map((categoriaDespesa) => (
@@ -398,57 +462,70 @@ const CreateEditExpense = (props) => {
             </InputFieldContainer>
           </div>
         </div>
-        {exibirNumParcelas && <div className="row">
-          {exibirCartaoCredito && <div className="col s12 l6">
-            <InputFieldContainer>
-              <InputLabel id="creditCard" name="Cartão de Crédito" />
-              <select
-                className="browser-default"
-                name="creditCard"
-                value={creditCard}
-                onChange={onChangeCreditCard}
-              >
-                <option value="">Selecione um cartão de crédito...</option>
-                {cartoesDeCredito.map((cartaoDeCredito) => (
-                  <option key={cartaoDeCredito.id} value={cartaoDeCredito.id}>
-                    {cartaoDeCredito.nome}
-                  </option>
-                ))}
-              </select>
-            </InputFieldContainer>
-          </div>}
-          {exibirBanco && <div className="col s12 l6">
-            <InputFieldContainer>
-              <InputLabel id="bank" name="Banco" />
-              <select
-                className="browser-default"
-                name="bank"
-                value={bank}
-                onChange={onChangeBank}
-              >
-                <option value="">Selecione um banco...</option>
-                {bancos.map((banco) => (
-                  <option key={banco[0].cod} value={banco[0].cod}>
-                    {banco[0].descricao}
-                  </option>
-                ))}
-              </select>
-            </InputFieldContainer>
-          </div>}
-          {exibirNumParcelas && 
-          <div className="col s12 l6">
-            <InputFieldContainer>
-              <InputLabel id="numberInstallments" name="Número de parcelas" />
-              <NumberFormat
-                name="numberInstallments"
-                value={numberInstallments}
-                onChange={onChangeNumberInstallments}
-                format={numberFormatter}
-                placeholder="Digite o número de parcelas da despesa"
-              />
-            </InputFieldContainer>
-          </div>}
-        </div>}
+        {exibirNumParcelas && (
+          <div className="row">
+            {exibirCartaoCredito && (
+              <div className="col s12 l6">
+                <InputFieldContainer>
+                  <InputLabel id="creditCard" name="Cartão de Crédito" />
+                  <select
+                    className="browser-default"
+                    name="creditCard"
+                    value={creditCard}
+                    onChange={onChangeCreditCard}
+                  >
+                    <option value="">Selecione um cartão de crédito...</option>
+                    {cartoesDeCredito.map((cartaoDeCredito) => (
+                      <option
+                        key={cartaoDeCredito.id}
+                        value={cartaoDeCredito.id}
+                      >
+                        {cartaoDeCredito.nome}
+                      </option>
+                    ))}
+                  </select>
+                </InputFieldContainer>
+              </div>
+            )}
+            {exibirBanco && (
+              <div className="col s12 l6">
+                <InputFieldContainer>
+                  <InputLabel id="bank" name="Banco" />
+                  <select
+                    className="browser-default"
+                    name="bank"
+                    value={bank}
+                    onChange={onChangeBank}
+                  >
+                    <option value="">Selecione um banco...</option>
+                    {bancos.map((banco) => (
+                      <option key={banco[0].cod} value={banco[0].cod}>
+                        {banco[0].descricao}
+                      </option>
+                    ))}
+                  </select>
+                </InputFieldContainer>
+              </div>
+            )}
+            {exibirNumParcelas && (
+              <div className="col s12 l6">
+                <InputFieldContainer>
+                  <InputLabel
+                    id="numberInstallments"
+                    name="Número de parcelas"
+                  />
+                  <NumberFormat
+                    name="numberInstallments"
+                    value={numberInstallments}
+                    onChange={onChangeNumberInstallments}
+                    format={numberFormatter}
+                    placeholder="Digite o número de parcelas da despesa"
+                  />
+                </InputFieldContainer>
+              </div>
+            )}
+          </div>
+        )}
         <div className="row">
           <div className="col s12 l6">
             <InputFieldContainer>
@@ -461,24 +538,26 @@ const CreateEditExpense = (props) => {
               />
             </InputFieldContainer>
           </div>
-          {exibirConta && <div className="col s12 l6">
-            <InputFieldContainer>
-              <InputLabel id="account" name="Conta" />
-              <select
-                className="browser-default"
-                name="account"
-                value={account}
-                onChange={onChangeAccount}
-              >
-                <option value="">Selecione uma conta...</option>
-                {contas.map((conta) => (
-                  <option key={conta.id} value={conta.id}>
-                    {conta.nome}
-                  </option>
-                ))}
-              </select>
-            </InputFieldContainer>
-          </div>}
+          {exibirConta && (
+            <div className="col s12 l6">
+              <InputFieldContainer>
+                <InputLabel id="account" name="Conta" />
+                <select
+                  className="browser-default"
+                  name="account"
+                  value={account}
+                  onChange={onChangeAccount}
+                >
+                  <option value="">Selecione uma conta...</option>
+                  {contas.map((conta) => (
+                    <option key={conta.id} value={conta.id}>
+                      {conta.nome}
+                    </option>
+                  ))}
+                </select>
+              </InputFieldContainer>
+            </div>
+          )}
         </div>
         <div className="row">
           <div className="col s12" style={{ "text-align": "right" }}>

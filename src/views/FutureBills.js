@@ -2,6 +2,7 @@ import React from "react";
 import PageTitleContainer from "../styles/PageTitleContainer";
 import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 
+/* Tela que irá permitir o cadastro, listagem, edição e exclusão de contas a pagar futuras por parte do administrador do grupo */
 const FutureBills = () => (
   <div>
     <PageTitleContainer>Contas a pagar futuras</PageTitleContainer>

@@ -2,6 +2,7 @@ import React from "react";
 import PageTitleContainer from "../styles/PageTitleContainer";
 import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 
+/* Tela que irá permitir o gerenciamento de contas bancárias por parte do administrador do grupo */
 const Accounts = () => (
   <div>
     <PageTitleContainer>Contas</PageTitleContainer>

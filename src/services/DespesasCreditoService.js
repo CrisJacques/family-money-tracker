@@ -1,10 +1,11 @@
-import axios from 'axios';
-import { API_URL_BASE } from '../API_URLs';
-import convertMoneyToNumber from '../helpers/convertMoneyToNumber';
+import axios from "axios";
+import { API_URL_BASE } from "../API_URLs";
+import convertMoneyToNumber from "../helpers/convertMoneyToNumber";
 
-const requestUrl = path => `${API_URL_BASE}${path}`;
-
+const requestUrl = (path) => `${API_URL_BASE}${path}`;
+/* Services que tratam das requisições referentes às despesas cuja forma de pagamento é cartão de crédito */
 export default class DespesasCreditoService {
+  /* Insere uma nova despesa cuja forma de pagamento é cartão de crédito */
   static async insertDespesaCredito(
     userToken,
     value,
@@ -33,8 +34,8 @@ export default class DespesasCreditoService {
         },
         numeroParcelas: `${numberInstallments}`,
         cartaoDeCredito: {
-            id: `${idCreditCard}`
-        }
+          id: `${idCreditCard}`,
+        },
       },
       {
         headers: {
