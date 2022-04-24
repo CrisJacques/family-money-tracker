@@ -19,6 +19,7 @@ import CartoesDeCreditoService from "../services/CartoesDeCreditoService";
 import BancosService from "../services/BancosService";
 import DespesasDebitoDinheiroService from "../services/DespesasDebitoDinheiroService";
 import DespesasCreditoService from "../services/DespesasCreditoService";
+import DespesasFinanciamentoEmprestimoService from "../services/DespesasFinanciamentoEmprestimoService";
 
 const CreateEditExpense = (props) => {
   const form = useRef();
@@ -97,6 +98,42 @@ const CreateEditExpense = (props) => {
     fetchExpenseCategories();
   }, [currentUser, userToken]);
 
+  const insertExpenseFinancingLoan = async () => {
+    try {
+      const resultado = await DespesasFinanciamentoEmprestimoService.insertDespesaFinanciamentoEmprestimo(
+        userToken,
+        value,
+        description,
+        bank,
+        numberInstallments,
+        category,
+        registerDate,
+        paymentType,
+        currentUser.id
+      );
+      if (resultado.status === 201) {
+        toast.success("Despesa registrada com sucesso.");
+
+        setValue("");
+        setDescription("");
+        setPaymentType("");
+        setCategory("");
+        setBank("");
+        setNumberInstallments("");
+        setRegisterDate("");       
+    }else{
+      toast.warning(
+        "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se o registro foi feito com sucesso."
+      );
+    }
+   }
+    catch (error) {
+      toast.error(
+        `Houve um problema ao registrar a despesa. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`
+      );
+    }
+  };
+
   const insertExpenseCreditCard = async () => {
     try {
       const resultado = await DespesasCreditoService.insertDespesaCredito(
@@ -128,7 +165,7 @@ const CreateEditExpense = (props) => {
    }
     catch (error) {
       toast.error(
-        `Houve um problema ao registrar a receita. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`
+        `Houve um problema ao registrar a despesa. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`
       );
     }
   };
@@ -162,7 +199,7 @@ const CreateEditExpense = (props) => {
    }
     catch (error) {
       toast.error(
-        `Houve um problema ao registrar a receita. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`
+        `Houve um problema ao registrar a despesa. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`
       );
     }
   };
@@ -186,7 +223,11 @@ const CreateEditExpense = (props) => {
           toast.error("Todos os campos são de preenchimento obrigatório");
         }
       } else{
-        alert("selecionou financiamento ou empréstimo");
+        if (value !== "" && description !== "" && paymentType !== "" && category !== "" && bank !== "" && numberInstallments !== "" && registerDate !== "" ){
+          insertExpenseFinancingLoan();
+        }else{
+          toast.error("Todos os campos são de preenchimento obrigatório");
+        }
       }
     }
   };
