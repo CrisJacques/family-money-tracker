@@ -268,7 +268,7 @@ const CreateEditExpense = (props) => {
             </InputFieldContainer>
           </div>
         </div>
-        <div className="row">
+        {exibirNumParcelas && <div className="row">
           {exibirCartaoCredito && <div className="col s12 l6">
             <InputFieldContainer>
               <InputLabel id="creditCard" name="Cartão de Crédito" />
@@ -305,8 +305,7 @@ const CreateEditExpense = (props) => {
               </select>
             </InputFieldContainer>
           </div>}
-        </div>
-        {exibirNumParcelas && <div className="row">
+          {exibirNumParcelas && 
           <div className="col s12 l6">
             <InputFieldContainer>
               <InputLabel id="numberInstallments" name="Número de parcelas" />
@@ -318,7 +317,7 @@ const CreateEditExpense = (props) => {
                 placeholder="Digite o número de parcelas da despesa"
               />
             </InputFieldContainer>
-          </div>
+          </div>}
         </div>}
         <div className="row">
           <div className="col s12 l6">
