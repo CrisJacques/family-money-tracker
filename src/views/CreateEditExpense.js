@@ -17,6 +17,7 @@ import FormasDePagamentoService from "../services/FormasDePagamentoService";
 import ContasService from "../services/ContasService";
 import CartoesDeCreditoService from "../services/CartoesDeCreditoService";
 import BancosService from "../services/BancosService";
+import DespesasDebitoDinheiroService from "../services/DespesasDebitoDinheiroService";
 
 const CreateEditExpense = (props) => {
   const form = useRef();
@@ -95,11 +96,58 @@ const CreateEditExpense = (props) => {
     fetchExpenseCategories();
   }, [currentUser, userToken]);
 
+  const insertExpenseDebitCash = async () => {
+    try {
+      const resultado = await DespesasDebitoDinheiroService.insertDespesaDebitoDinheiro(
+        userToken,
+        value,
+        description,
+        account,
+        category,
+        registerDate,
+        paymentType,
+        currentUser.id
+      );
+      if (resultado.status === 201) {
+        toast.success("Despesa registrada com sucesso.");
+
+        setValue("");
+        setDescription("");
+        setPaymentType("");
+        setCategory("");
+        setRegisterDate("");
+        setAccount("");        
+    }else{
+      toast.warning(
+        "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se o registro foi feito com sucesso."
+      );
+    }
+   }
+    catch (error) {
+      toast.error(
+        `Houve um problema ao registrar a receita. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`
+      );
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    form.current.validateAll();
-    alert(value);
-    alert(description);
+    if (paymentType === "") {
+      toast.error("Todos os campos são de preenchimento obrigatório");
+    } else{
+      const opcaoFormaPagamento = formasDePagamento[paymentType][0].descricao;
+      if(opcaoFormaPagamento === "Dinheiro" || opcaoFormaPagamento === "Débito"){
+        if (value !== "" && description !== "" && paymentType !== "" && category !== "" && registerDate !== "" && account !== "" ){
+          insertExpenseDebitCash();
+        }else{
+          toast.error("Todos os campos são de preenchimento obrigatório");
+        }
+      } else if(opcaoFormaPagamento === "Cartão de Crédito"){
+        alert("selecionou cartão de crédito");
+      } else{
+        alert("selecionou financiamento ou empréstimo");
+      }
+    }
   };
 
   const onChangeValue = (e) => {
