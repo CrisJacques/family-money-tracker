@@ -18,6 +18,7 @@ import ContasService from "../services/ContasService";
 import CartoesDeCreditoService from "../services/CartoesDeCreditoService";
 import BancosService from "../services/BancosService";
 import DespesasDebitoDinheiroService from "../services/DespesasDebitoDinheiroService";
+import DespesasCreditoService from "../services/DespesasCreditoService";
 
 const CreateEditExpense = (props) => {
   const form = useRef();
@@ -96,6 +97,42 @@ const CreateEditExpense = (props) => {
     fetchExpenseCategories();
   }, [currentUser, userToken]);
 
+  const insertExpenseCreditCard = async () => {
+    try {
+      const resultado = await DespesasCreditoService.insertDespesaCredito(
+        userToken,
+        value,
+        description,
+        creditCard,
+        numberInstallments,
+        category,
+        registerDate,
+        paymentType,
+        currentUser.id
+      );
+      if (resultado.status === 201) {
+        toast.success("Despesa registrada com sucesso.");
+
+        setValue("");
+        setDescription("");
+        setPaymentType("");
+        setCategory("");
+        setCreditCard("");
+        setNumberInstallments("");
+        setRegisterDate("");       
+    }else{
+      toast.warning(
+        "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se o registro foi feito com sucesso."
+      );
+    }
+   }
+    catch (error) {
+      toast.error(
+        `Houve um problema ao registrar a receita. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`
+      );
+    }
+  };
+
   const insertExpenseDebitCash = async () => {
     try {
       const resultado = await DespesasDebitoDinheiroService.insertDespesaDebitoDinheiro(
@@ -143,7 +180,11 @@ const CreateEditExpense = (props) => {
           toast.error("Todos os campos são de preenchimento obrigatório");
         }
       } else if(opcaoFormaPagamento === "Cartão de Crédito"){
-        alert("selecionou cartão de crédito");
+        if (value !== "" && description !== "" && paymentType !== "" && category !== "" && creditCard !== "" && numberInstallments !== "" && registerDate !== "" ){
+          insertExpenseCreditCard();
+        }else{
+          toast.error("Todos os campos são de preenchimento obrigatório");
+        }
       } else{
         alert("selecionou financiamento ou empréstimo");
       }
