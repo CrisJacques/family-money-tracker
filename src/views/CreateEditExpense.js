@@ -138,6 +138,10 @@ const CreateEditExpense = (props) => {
         setBank("");
         setNumberInstallments("");
         setRegisterDate("");
+
+        /* Esconde novamente os campos específicos desta forma de pagamento, voltando o formulário ao estado original */
+        setExibirNumParcelas(false);
+        setExibirBanco(false);
       } else {
         toast.warning(
           "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se o registro foi feito com sucesso."
@@ -175,6 +179,10 @@ const CreateEditExpense = (props) => {
         setCreditCard("");
         setNumberInstallments("");
         setRegisterDate("");
+
+        /* Esconde novamente os campos específicos desta forma de pagamento, voltando o formulário ao estado original */
+        setExibirNumParcelas(false);
+        setExibirCartaoCredito(false);
       } else {
         toast.warning(
           "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se o registro foi feito com sucesso."
@@ -211,6 +219,9 @@ const CreateEditExpense = (props) => {
         setCategory("");
         setRegisterDate("");
         setAccount("");
+
+        /* Esconde novamente o campo específico desta forma de pagamento, voltando o formulário ao estado original */
+        setExibirConta(false);
       } else {
         toast.warning(
           "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se o registro foi feito com sucesso."
