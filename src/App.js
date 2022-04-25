@@ -19,6 +19,9 @@ import RecurringItems from "./views/RecurringItems";
 import SummaryReport from "./views/SummaryReport";
 import Welcome from "./views/Welcome";
 import Login from "./views/Login";
+import UserEngagementReport from "./views/UserEngagementReport";
+import UserProfileStatistics from "./views/UserProfileStatistics";
+import Feedbacks from "./views/Feedbacks";
 
 import { logout } from "./actions/auth";
 
@@ -32,17 +35,22 @@ function App() {
   /* Obtendo o usuário a partir da store */
   const { user: currentUser } = useSelector((state) => state.auth);
 
-  /* Variável de estado para armazenar se usuário é admin ou não */
+  /* Variável de estado para armazenar se usuário é admin de grupo ou não */
   const [isAdmin, setIsAdmin] = useState(false);
+
+  /* Variável de estado para armazenar se usuário é admin do sistema ou não */
+  const [isSysAdmin, setIsSysAdmin] = useState(false);
 
   const dispatch = useDispatch();
 
-  /* ======================== Verificando se usuário é admin cada vez que aplicação é carregada e quando a variável currentUser mudar de valor ============================== */
+  /* ================ Verificando se usuário é admin de grupo ou do sistema cada vez que aplicação é carregada e quando a variável currentUser mudar de valor =============== */
   useEffect(() => {
     if (currentUser) {
       setIsAdmin(currentUser.roles.includes("ADMIN_GRUPO"));
+      setIsSysAdmin(currentUser.roles.includes("ADMIN_SISTEMA"));
     } else {
       setIsAdmin(false);
+      setIsSysAdmin(false);
     }
   }, [currentUser]);
 
@@ -63,7 +71,7 @@ function App() {
       <div className="row">
         <Router history={history}>
           <div className="col s3">
-            <MainMenu userIsAdmin={isAdmin} />
+            <MainMenu userIsAdmin={isAdmin} userIsSysAdmin={isSysAdmin} />
             <div
               style={{
                 display: "flex",
@@ -104,6 +112,9 @@ function App() {
               />
               <Route path="/meu_perfil" element={<MyProfile />} />
               <Route path="/ajuda" element={<Help />} />
+              <Route path="/engajamento_usuarios" element={<UserEngagementReport />} />
+              <Route path="/perfis_usuarios" element={<UserProfileStatistics />} />
+              <Route path="/feedbacks" element={<Feedbacks />} />
             </Routes>
           </div>
         </Router>
