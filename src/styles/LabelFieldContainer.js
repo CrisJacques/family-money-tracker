@@ -5,6 +5,5 @@ const LabelFieldContainer = styled.label`
   font-family: "Roboto", sans-serif;
   font-weight: Medium;
   font-color: black;
-  font-size: 3em;
 `;
 export default LabelFieldContainer;
