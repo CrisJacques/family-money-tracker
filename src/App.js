@@ -34,7 +34,6 @@ import LogoutButtonContainer from "./styles/LogoutButtonContainer";
 function App() {
   /* Obtendo o usuário a partir da store */
   const { user: currentUser } = useSelector((state) => state.auth);
-  console.log(currentUser.grupoUsuarios.nome);
 
   /* Variável de estado para armazenar se usuário é admin de grupo ou não */
   const [isAdmin, setIsAdmin] = useState(false);
@@ -88,7 +87,16 @@ function App() {
           </div>
           <div className="col s9">
             <Routes>
-              <Route path="/" element={<Welcome userName={currentUser.username} userProfile={currentUser.roles[0]} groupName={currentUser.grupoUsuarios.nome}/>} />
+              <Route
+                path="/"
+                element={
+                  <Welcome
+                    userName={currentUser.username}
+                    userProfile={currentUser.roles[0]}
+                    groupName={currentUser.grupoUsuarios.nome}
+                  />
+                }
+              />
               <Route
                 path="/despesas"
                 element={<CreateEditExpense history={history} />}
@@ -113,8 +121,14 @@ function App() {
               />
               <Route path="/meu_perfil" element={<MyProfile />} />
               <Route path="/ajuda" element={<Help />} />
-              <Route path="/engajamento_usuarios" element={<UserEngagementReport />} />
-              <Route path="/perfis_usuarios" element={<UserProfileStatistics />} />
+              <Route
+                path="/engajamento_usuarios"
+                element={<UserEngagementReport />}
+              />
+              <Route
+                path="/perfis_usuarios"
+                element={<UserProfileStatistics />}
+              />
               <Route path="/feedbacks" element={<Feedbacks />} />
             </Routes>
           </div>
