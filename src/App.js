@@ -87,7 +87,7 @@ function App() {
           </div>
           <div className="col s9">
             <Routes>
-              <Route path="/" element={<Welcome />} />
+              <Route path="/" element={<Welcome userName={currentUser.username} userProfile={currentUser.roles[0].name} groupName={currentUser.grupoUsuarios}/>} />
               <Route
                 path="/despesas"
                 element={<CreateEditExpense history={history} />}
