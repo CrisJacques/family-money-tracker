@@ -5,12 +5,10 @@ import MenuItem from "./MenuItem";
    Inclui lógicas para mostrar opções de acordo com o perfil de usuário que está logado no sistema */
 const MainMenu = ({ userIsAdmin, userIsSysAdmin }) => (
   <div>
-    {!userIsSysAdmin && (
-      <div className="section">
-        <MenuItem name="Início" addressPage="" iconName="home" />
-      </div>
-    )}
-    {!userIsSysAdmin && <div className="divider"></div>}
+    <div className="section">
+      <MenuItem name="Início" addressPage="" iconName="home" />
+    </div>
+    <div className="divider"></div>
     {!userIsSysAdmin && (
       <div className="section">
         <MenuItem

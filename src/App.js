@@ -94,6 +94,7 @@ function App() {
                     userName={currentUser.username}
                     userProfile={currentUser.roles[0]}
                     groupName={currentUser.grupoUsuarios.nome}
+                    userIsSysAdmin={isSysAdmin}
                   />
                 }
               />

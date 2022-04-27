@@ -8,6 +8,8 @@ const PageContentSectionContainer = styled.div`
   border-radius: 8px;
   padding: 0.7em;
   background: rgba(0, 103, 91, 0.15);
+  margin-top: 0.7em;
+  margin-bottom: 0.7em;
 `;
 
 export default PageContentSectionContainer;
