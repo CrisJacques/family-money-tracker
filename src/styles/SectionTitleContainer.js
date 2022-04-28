@@ -6,6 +6,7 @@ const SectionTitleContainer = styled.h5`
   font-weight: ExtraBold;
   color: black;
   font-size: 1.25em;
+  padding-bottom: 0.2em;
 `;
 
 export default SectionTitleContainer;

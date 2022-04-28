@@ -41,4 +41,12 @@ export default class ReceitasService {
       }
     );
   }
+  /* Lista as receitas recentes */
+  static getReceitasRecentes(userToken) {
+    return axios.get(requestUrl("receitas/recentes"), {
+      headers: {
+        Authorization: `${userToken}`,
+      },
+    });
+  }
 }

@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 import GreetingContainer from "../styles/GreetingContainer";
 import SectionTitleContainer from "../styles/SectionTitleContainer";
 
 import QuickAccessButton from "../components/QuickAccessButton";
+import TransactionItem from "../components/TransactionItem";
+
+import ReceitasService from "../services/ReceitasService";
+import DespesasService from "../services/DespesasService";
 
 let userProfileLabel = "";
 let saudacao = "";
@@ -14,6 +19,34 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
   var today = new Date();
   var time = today.getHours();
 
+  /* Obtendo o usuário da store e armazenando seu token para poder passar no header das requisições que serão feitas ao backend */
+  const { user: currentUser } = useSelector((state) => state.auth);
+  const userToken = `${currentUser.tokenType} ${currentUser.accessToken}`;
+
+  /* Armazenando em variáveis de estado informações vindas do backend para exibir nas seções da tela */
+  const [receitas, setReceitas] = useState([]);
+  const [despesas, setDespesas] = useState([]);
+
+  /* ======================== Carregando informações do banco de dados para popular as seções da tela ===================================== */
+  /* Carrega a lista de receitas recentes cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor */
+  useEffect(() => {
+    const fetchReceitas = async () => {
+      const resposta = await ReceitasService.getReceitasRecentes(userToken);
+      setReceitas(resposta.data);
+    };
+    fetchReceitas();
+  }, [currentUser, userToken]);
+
+   /* Carrega a lista de despesas recentes cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor */
+   useEffect(() => {
+    const fetchDespesas = async () => {
+      const resposta = await DespesasService.getDespesasRecentes(userToken);
+      setDespesas(resposta.data);
+    };
+    fetchDespesas();
+  }, [currentUser, userToken]);
+
+  /* ======================== Lógicas para exibir textos amigáveis para o usuário ===================================== */
   /* Lógica para definir qual saudação exibir ao usuário de acordo com o horário do dia em que ele acessa o sistema */
   if (time < 12) {
     saudacao = "Bom dia";
@@ -32,7 +65,7 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
     userProfileLabel = "Usuário Comum";
   }
 
-  /* Construção da tela de boas vindas */
+  /* ======================== Construção da tela de boas vindas ===================================== */
   return (
     <div>
       <PageContentSectionContainer>
@@ -43,28 +76,58 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
           <b>Perfil:</b> {userProfileLabel} | <b>Nome do grupo:</b> {groupName}
         </p>
       </PageContentSectionContainer>
-      {!userIsSysAdmin &&<div className="row">
+      {!userIsSysAdmin && (
+        <div className="row">
+          <div className="col s12 l6">
+            <PageContentSectionContainer>
+              <SectionTitleContainer>Acesso rápido</SectionTitleContainer>
+              <QuickAccessButton
+                name="Nova Despesa"
+                addressPage="despesas"
+                iconName="trending_down"
+              />
+              <QuickAccessButton
+                name="Nova Receita"
+                addressPage="receitas"
+                iconName="trending_up"
+              />
+              <QuickAccessButton
+                name="Resumo"
+                addressPage="relatorio_resumo"
+                iconName="table_chart"
+              />
+            </PageContentSectionContainer>
+          </div>
+        </div>
+      )}
+      <div className="row">
         <div className="col s12 l6">
           <PageContentSectionContainer>
-            <SectionTitleContainer>Acesso rápido</SectionTitleContainer>
-            <QuickAccessButton
-              name="Nova Despesa"
-              addressPage="despesas"
-              iconName="trending_down"
-            />
-            <QuickAccessButton
-              name="Nova Receita"
-              addressPage="receitas"
-              iconName="trending_up"
-            />
-            <QuickAccessButton
-              name="Resumo"
-              addressPage="relatorio_resumo"
-              iconName="table_chart"
-            />
+            <SectionTitleContainer>Receitas recentes</SectionTitleContainer>
+            {receitas.map((r) => (
+              <TransactionItem
+                description={r.descricao}
+                value={r.valor}
+                category={r.nomeCategoriaReceita}
+                date={r.data}
+              />
+            ))}
           </PageContentSectionContainer>
         </div>
-      </div>}
+        <div className="col s12 l6">
+          <PageContentSectionContainer>
+            <SectionTitleContainer>Despesas recentes</SectionTitleContainer>
+            {despesas.map((d) => (
+              <TransactionItem
+                description={d.descricao}
+                value={d.valor}
+                category={d.nomeCategoriaDespesa}
+                date={d.stringData}
+              />
+            ))}
+          </PageContentSectionContainer>
+        </div>
+      </div>
     </div>
   );
 };
