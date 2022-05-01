@@ -7,6 +7,7 @@ import SectionTitleContainer from "../styles/SectionTitleContainer";
 
 import QuickAccessButton from "../components/QuickAccessButton";
 import TransactionItem from "../components/TransactionItem";
+import CategoryItem from "../components/CategoryItem";
 
 import ReceitasService from "../services/ReceitasService";
 import DespesasService from "../services/DespesasService";
@@ -26,8 +27,19 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
   /* Armazenando em variáveis de estado informações vindas do backend para exibir nas seções da tela */
   const [receitas, setReceitas] = useState([]);
   const [despesas, setDespesas] = useState([]);
+  const [totaisPorCategoriaReceita, setTotaisPorCategoriaReceita] =
+    useState("");
 
   /* ======================== Carregando informações do banco de dados para popular as seções da tela ===================================== */
+  /* Carrega a lista de valores totais de receitas por categoria cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor */
+  useEffect(() => {
+    const fetchTotaisPorCategoriaReceita = async () => {
+      const resposta = await ReceitasService.getTotaisPorCategoria(userToken);
+      setTotaisPorCategoriaReceita(resposta.data);
+    };
+    fetchTotaisPorCategoriaReceita();
+  }, [currentUser, userToken]);
+
   /* Carrega a lista de receitas recentes cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor */
   useEffect(() => {
     const fetchReceitas = async () => {
@@ -37,8 +49,8 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
     fetchReceitas();
   }, [currentUser, userToken]);
 
-   /* Carrega a lista de despesas recentes cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor */
-   useEffect(() => {
+  /* Carrega a lista de despesas recentes cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor */
+  useEffect(() => {
     const fetchDespesas = async () => {
       const resposta = await DespesasService.getDespesasRecentes(userToken);
       setDespesas(resposta.data);
@@ -100,6 +112,18 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
           </div>
         </div>
       )}
+      <div className="row">
+        <div className="col s12 l6">
+          <PageContentSectionContainer>
+            <SectionTitleContainer>
+              Receitas por categoria
+            </SectionTitleContainer>
+            {Object.keys(totaisPorCategoriaReceita).map((key) => (
+              <CategoryItem category={key} value={totaisPorCategoriaReceita[key]} />
+            ))}
+          </PageContentSectionContainer>
+        </div>
+      </div>
       <div className="row">
         <div className="col s12 l6">
           <PageContentSectionContainer>

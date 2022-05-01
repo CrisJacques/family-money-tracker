@@ -69,7 +69,6 @@ const CreateEditIncome = (props) => {
         currentUser.id
       );
       if (resultado.status === 201) {
-        console.log(registerDate);
         toast.success("Receita registrada com sucesso.");
 
         setValue("");

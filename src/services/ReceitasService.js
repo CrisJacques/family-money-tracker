@@ -43,7 +43,15 @@ export default class ReceitasService {
   }
   /* Lista as receitas recentes */
   static getReceitasRecentes(userToken) {
-    return axios.get(requestUrl("receitas/recentes"), {
+    return axios.get(requestUrl("receitas?recentes=true"), {
+      headers: {
+        Authorization: `${userToken}`,
+      },
+    });
+  }
+  /* Lista os valores totais por categoria para o mês atual */
+  static getTotaisPorCategoria(userToken) {
+    return axios.get(requestUrl("receitas/total-por-categoria"), {
       headers: {
         Authorization: `${userToken}`,
       },
