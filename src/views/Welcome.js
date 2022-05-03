@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, PureComponent } from "react";
 import { useSelector } from "react-redux";
+import { PieChart, Pie, Legend, Tooltip, ResponsiveContainer } from "recharts";
 
 import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 import GreetingContainer from "../styles/GreetingContainer";
@@ -8,6 +9,7 @@ import SectionTitleContainer from "../styles/SectionTitleContainer";
 import QuickAccessButton from "../components/QuickAccessButton";
 import TransactionItem from "../components/TransactionItem";
 import CategoryItem from "../components/CategoryItem";
+import Example from "../components/ExamplePieChart";
 
 import ReceitasService from "../services/ReceitasService";
 import DespesasService from "../services/DespesasService";
@@ -77,6 +79,15 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
     userProfileLabel = "Usuário Comum";
   }
 
+  const data02 = [
+    { name: "Group A", value: 2400 },
+    { name: "Group B", value: 4567 },
+    { name: "Group C", value: 1398 },
+    { name: "Group D", value: 9800 },
+    { name: "Group E", value: 3908 },
+    { name: "Group F", value: 4800 },
+  ];
+
   /* ======================== Construção da tela de boas vindas ===================================== */
   return (
     <div>
@@ -118,9 +129,19 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
             <SectionTitleContainer>
               Receitas por categoria
             </SectionTitleContainer>
-            {Object.keys(totaisPorCategoriaReceita).map((key) => (
-              <CategoryItem category={key} value={totaisPorCategoriaReceita[key]} />
-            ))}
+            <div className="row" style={{"position":"relative"}}>
+              <div className="col s5 l5">
+                <Example />
+              </div>
+              <div className="col s7 l7" style={{"position":"absolute", "top":"50%", "left": "40%","-ms-transform": "translateY(-50%)", "transform": "translateY(-50%)"}}>
+                {Object.keys(totaisPorCategoriaReceita).map((key) => (
+                  <CategoryItem
+                    category={key}
+                    value={totaisPorCategoriaReceita[key]}
+                  />
+                ))}
+              </div>
+            </div>
           </PageContentSectionContainer>
         </div>
       </div>
