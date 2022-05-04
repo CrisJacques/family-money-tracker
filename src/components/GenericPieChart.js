@@ -15,7 +15,7 @@ export default class GenericPieChart extends PureComponent {
             data={this.props.dados}
             innerRadius={40}
             outerRadius={80}
-            fill="#82ca9d"
+            fill={`${this.props.cor}`}
           />
           <Tooltip />
         </PieChart>

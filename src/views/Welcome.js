@@ -123,7 +123,7 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
             </SectionTitleContainer>
             <div className="row" style={{"position":"relative"}}>
               <div className="col s5 l5">
-                <GenericPieChart dados={convertDataToPieChart(totaisPorCategoriaReceita)}/>
+                <GenericPieChart dados={convertDataToPieChart(totaisPorCategoriaReceita)} cor="#82ca9d"/>
               </div>
               <div className="col s7 l7" style={{"position":"absolute", "top":"50%", "left": "40%","-ms-transform": "translateY(-50%)", "transform": "translateY(-50%)"}}>
                 {Object.keys(totaisPorCategoriaReceita).map((key) => (
