@@ -8,7 +8,7 @@ export default class GenericPieChart extends PureComponent {
 
   render() {
     return (
-      <ResponsiveContainer aspect={1.2}>
+      <ResponsiveContainer aspect={1.1}>
         <PieChart>
           <Pie
             dataKey="value"

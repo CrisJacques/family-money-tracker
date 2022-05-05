@@ -13,4 +13,12 @@ export default class DespesasService {
       },
     });
   }
+    /* Lista os valores totais por categoria para o mês atual */
+    static getTotaisPorCategoria(userToken) {
+      return axios.get(requestUrl("despesas/total-por-categoria"), {
+        headers: {
+          Authorization: `${userToken}`,
+        },
+      });
+    }
 }
