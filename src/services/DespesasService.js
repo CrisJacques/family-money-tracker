@@ -7,7 +7,7 @@ const requestUrl = (path) => `${API_URL_BASE}${path}`;
 export default class DespesasService {
   /* Lista as despesas recentes */
   static getDespesasRecentes(userToken) {
-    return axios.get(requestUrl("despesas/recentes"), {
+    return axios.get(requestUrl("despesas?recentes=true"), {
       headers: {
         Authorization: `${userToken}`,
       },
