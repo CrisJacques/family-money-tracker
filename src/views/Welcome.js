@@ -1,4 +1,4 @@
-import React, { useState, useEffect, PureComponent } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
 import PageContentSectionContainer from "../styles/PageContentSectionContainer";
@@ -11,6 +11,7 @@ import CategoryItem from "../components/CategoryItem";
 import BoldCategoryItem from "../components/BoldCategoryItem";
 import GenericPieChart from "../components/GenericPieChart";
 import GenericTwoColorsPieChart from "../components/GenericTwoColorsPieChart";
+import SectionTitleInitialScreen from "../components/SectionTitleInitialScreen";
 
 import ReceitasService from "../services/ReceitasService";
 import DespesasService from "../services/DespesasService";
@@ -37,16 +38,16 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
     useState("");
   const [totaisPorCategoriaDespesa, setTotaisPorCategoriaDespesa] =
     useState("");
-  const [totaisGerais, setTotaisGerais] =
-    useState("");
-  const [totaisGeraisComSaldo, setTotaisGeraisComSaldo] =
-    useState("");
+  const [totaisGerais, setTotaisGerais] = useState("");
+  const [totaisGeraisComSaldo, setTotaisGeraisComSaldo] = useState("");
 
   /* ======================== Carregando informações do banco de dados para popular as seções da tela ===================================== */
   /* Carrega os valores totais de despesas e receitas do mês atual e o saldo cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor */
   useEffect(() => {
     const fetchTotaisGeraisMesAtualComSaldo = async () => {
-      const resposta = await TransacoesService.getTotaisMesAtualComSaldo(userToken);
+      const resposta = await TransacoesService.getTotaisMesAtualComSaldo(
+        userToken
+      );
       setTotaisGeraisComSaldo(resposta.data);
     };
     fetchTotaisGeraisMesAtualComSaldo();
@@ -150,42 +151,59 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
             </PageContentSectionContainer>
           </div>
           <div className="col s12 l6">
-          <PageContentSectionContainer>
-            <SectionTitleContainer>
-              Resumo do mês atual
-            </SectionTitleContainer>
-            <div className="row" style={{"position":"relative"}}>
-              <div className="col s5 l5">
-                <GenericTwoColorsPieChart dados={convertDataToPieChart(totaisGerais)} cores={["#2E8B57", "#D2042D"]}/>
-              </div>
-              <div className="col s7 l7" style={{"position":"absolute", "top":"50%", "left": "40%","-ms-transform": "translateY(-50%)", "transform": "translateY(-50%)"}}>
-                {Object.keys(totaisGerais).map((key) => (
-                  <CategoryItem
-                    category={key}
-                    value={totaisGerais[key]}
+            <PageContentSectionContainer>
+              <SectionTitleInitialScreen title="Resumo do mês atual" />
+              <div className="row" style={{ position: "relative" }}>
+                <div className="col s5 l5">
+                  <GenericTwoColorsPieChart
+                    dados={convertDataToPieChart(totaisGerais)}
+                    cores={["#2E8B57", "#D2042D"]}
                   />
-                ))}
-                <BoldCategoryItem
+                </div>
+                <div
+                  className="col s7 l7"
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "40%",
+                    "-ms-transform": "translateY(-50%)",
+                    transform: "translateY(-50%)",
+                  }}
+                >
+                  {Object.keys(totaisGerais).map((key) => (
+                    <CategoryItem category={key} value={totaisGerais[key]} />
+                  ))}
+                  <BoldCategoryItem
                     category="Saldo"
                     value={totaisGeraisComSaldo["Saldo"]}
                   />
+                </div>
               </div>
-            </div>
-          </PageContentSectionContainer>
+            </PageContentSectionContainer>
           </div>
         </div>
       )}
       <div className="row">
         <div className="col s12 l6">
           <PageContentSectionContainer>
-            <SectionTitleContainer>
-              Receitas por categoria
-            </SectionTitleContainer>
-            <div className="row" style={{"position":"relative"}}>
+            <SectionTitleInitialScreen title="Receitas por categoria" />
+            <div className="row" style={{ position: "relative" }}>
               <div className="col s5 l5">
-                <GenericPieChart dados={convertDataToPieChart(totaisPorCategoriaReceita)} cor="#2E8B57"/>
+                <GenericPieChart
+                  dados={convertDataToPieChart(totaisPorCategoriaReceita)}
+                  cor="#2E8B57"
+                />
               </div>
-              <div className="col s7 l7" style={{"position":"absolute", "top":"50%", "left": "40%","-ms-transform": "translateY(-50%)", "transform": "translateY(-50%)"}}>
+              <div
+                className="col s7 l7"
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "40%",
+                  "-ms-transform": "translateY(-50%)",
+                  transform: "translateY(-50%)",
+                }}
+              >
                 {Object.keys(totaisPorCategoriaReceita).map((key) => (
                   <CategoryItem
                     category={key}
@@ -198,14 +216,24 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
         </div>
         <div className="col s12 l6">
           <PageContentSectionContainer>
-            <SectionTitleContainer>
-              Despesas por categoria
-            </SectionTitleContainer>
-            <div className="row" style={{"position":"relative"}}>
+            <SectionTitleInitialScreen title="Despesas por categoria" />
+            <div className="row" style={{ position: "relative" }}>
               <div className="col s5 l5">
-                <GenericPieChart dados={convertDataToPieChart(totaisPorCategoriaDespesa)} cor="#D2042D"/>
+                <GenericPieChart
+                  dados={convertDataToPieChart(totaisPorCategoriaDespesa)}
+                  cor="#D2042D"
+                />
               </div>
-              <div className="col s7 l7" style={{"position":"absolute", "top":"50%", "left": "40%","-ms-transform": "translateY(-50%)", "transform": "translateY(-50%)"}}>
+              <div
+                className="col s7 l7"
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "40%",
+                  "-ms-transform": "translateY(-50%)",
+                  transform: "translateY(-50%)",
+                }}
+              >
                 {Object.keys(totaisPorCategoriaDespesa).map((key) => (
                   <CategoryItem
                     category={key}
@@ -220,7 +248,7 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
       <div className="row">
         <div className="col s12 l6">
           <PageContentSectionContainer>
-            <SectionTitleContainer>Receitas recentes</SectionTitleContainer>
+            <SectionTitleInitialScreen title="Receitas recentes" />
             {receitas.map((r) => (
               <TransactionItem
                 description={r.descricao}
@@ -233,7 +261,7 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
         </div>
         <div className="col s12 l6">
           <PageContentSectionContainer>
-            <SectionTitleContainer>Despesas recentes</SectionTitleContainer>
+            <SectionTitleInitialScreen title="Despesas recentes" />
             {despesas.map((d) => (
               <TransactionItem
                 description={d.descricao}
