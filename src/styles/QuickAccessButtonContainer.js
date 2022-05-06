@@ -6,9 +6,11 @@ const QuickAccessButtonContainer = styled.div`
   color: black;
   border: 1.5px solid #9c9898;
   border-radius: 16px;
-  padding: 0.4em;
+  padding: 0.3em;
   background: white;
-  margin: 0.9em;
+  margin-right: 1.2em;
+  margin-left: 1.2em;
+  margin-bottom: 0.4em;
   width: 25%;
   cursor: pointer;
   text-align: center;

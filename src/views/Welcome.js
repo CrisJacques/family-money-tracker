@@ -120,18 +120,17 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
   /* ======================== Construção da tela de boas vindas ===================================== */
   return (
     <div>
-      <PageContentSectionContainer>
-        <GreetingContainer>
-          {saudacao}, {userName}!
-        </GreetingContainer>
-        <p>
-          <b>Perfil:</b> {userProfileLabel} | <b>Nome do grupo:</b> {groupName}
-        </p>
-      </PageContentSectionContainer>
       {!userIsSysAdmin && (
         <div className="row">
           <div className="col s12 l6">
             <PageContentSectionContainer>
+              <GreetingContainer>
+                {saudacao}, {userName}!
+              </GreetingContainer>
+              <p style={{ "margin-bottom": "1.85em" }}>
+                <b>Perfil:</b> {userProfileLabel} | <b>Nome do grupo:</b>{" "}
+                {groupName}
+              </p>
               <SectionTitleContainer>Acesso rápido</SectionTitleContainer>
               <QuickAccessButton
                 name="Nova Despesa"
