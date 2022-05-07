@@ -69,7 +69,9 @@ const CreateEditIncome = (props) => {
         currentUser.id
       );
       if (resultado.status === 201) {
-        toast.success("Receita registrada com sucesso.");
+        toast.success("Receita registrada com sucesso.", {
+          position: "bottom-center",
+        });
 
         setValue("");
         setDescription("");
@@ -78,12 +80,18 @@ const CreateEditIncome = (props) => {
         setRegisterDate("");
       } else {
         toast.warning(
-          "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se o registro foi feito com sucesso."
+          "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se o registro foi feito com sucesso.",
+          {
+            position: "bottom-center",
+          }
         );
       }
     } catch (error) {
       toast.error(
-        `Houve um problema ao registrar a receita. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`
+        `Houve um problema ao registrar a receita. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`,
+        {
+          position: "bottom-center",
+        }
       );
     }
   };
@@ -100,7 +108,9 @@ const CreateEditIncome = (props) => {
     ) {
       insertIncome();
     } else {
-      toast.error("Todos os campos são de preenchimento obrigatório");
+      toast.error("Todos os campos são de preenchimento obrigatório", {
+        position: "bottom-center",
+      });
     }
   };
 

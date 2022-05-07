@@ -25,7 +25,7 @@ export const login = (email, password) => (dispatch) => {
         type: SET_MESSAGE,
         payload: message,
       });
-      return Promise.reject();
+      return Promise.reject(message);
     }
   );
 };

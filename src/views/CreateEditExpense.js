@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import NumberFormat from "react-number-format";
 import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
 import PageTitleContainer from "../styles/PageTitleContainer";
 import InputFieldContainer from "../styles/InputFieldContainer";
@@ -128,7 +128,9 @@ const CreateEditExpense = (props) => {
           currentUser.id
         );
       if (resultado.status === 201) {
-        toast.success("Despesa registrada com sucesso.");
+        toast.success("Despesa registrada com sucesso.", {
+          position: "bottom-center",
+        });
 
         /* Se despesa é registrada com sucesso, limpa todos os campos da tela para facilitar a inserção de novas despesas */
         setValue("");
@@ -144,12 +146,18 @@ const CreateEditExpense = (props) => {
         setExibirBanco(false);
       } else {
         toast.warning(
-          "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se o registro foi feito com sucesso."
+          "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se o registro foi feito com sucesso.",
+          {
+            position: "bottom-center",
+          }
         );
       }
     } catch (error) {
       toast.error(
-        `Houve um problema ao registrar a despesa. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`
+        `Houve um problema ao registrar a despesa. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`,
+        {
+          position: "bottom-center",
+        }
       );
     }
   };
@@ -169,7 +177,9 @@ const CreateEditExpense = (props) => {
         currentUser.id
       );
       if (resultado.status === 201) {
-        toast.success("Despesa registrada com sucesso.");
+        toast.success("Despesa registrada com sucesso.", {
+          position: "bottom-center",
+        });
 
         /* Se despesa é registrada com sucesso, limpa todos os campos da tela para facilitar a inserção de novas despesas */
         setValue("");
@@ -185,12 +195,18 @@ const CreateEditExpense = (props) => {
         setExibirCartaoCredito(false);
       } else {
         toast.warning(
-          "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se o registro foi feito com sucesso."
+          "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se o registro foi feito com sucesso.",
+          {
+            position: "bottom-center",
+          }
         );
       }
     } catch (error) {
       toast.error(
-        `Houve um problema ao registrar a despesa. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`
+        `Houve um problema ao registrar a despesa. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`,
+        {
+          position: "bottom-center",
+        }
       );
     }
   };
@@ -210,7 +226,9 @@ const CreateEditExpense = (props) => {
           currentUser.id
         );
       if (resultado.status === 201) {
-        toast.success("Despesa registrada com sucesso.");
+        toast.success("Despesa registrada com sucesso.", {
+          position: "bottom-center",
+        });
 
         /* Se despesa é registrada com sucesso, limpa todos os campos da tela para facilitar a inserção de novas despesas */
         setValue("");
@@ -224,12 +242,18 @@ const CreateEditExpense = (props) => {
         setExibirConta(false);
       } else {
         toast.warning(
-          "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se o registro foi feito com sucesso."
+          "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se o registro foi feito com sucesso.",
+          {
+            position: "bottom-center",
+          }
         );
       }
     } catch (error) {
       toast.error(
-        `Houve um problema ao registrar a despesa. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`
+        `Houve um problema ao registrar a despesa. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`,
+        {
+          position: "bottom-center",
+        }
       );
     }
   };
@@ -238,7 +262,9 @@ const CreateEditExpense = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (paymentType === "") {
-      toast.error("Todos os campos são de preenchimento obrigatório");
+      toast.error("Todos os campos são de preenchimento obrigatório", {
+        position: "bottom-center",
+      });
     } else {
       const opcaoFormaPagamento = formasDePagamento[paymentType][0].descricao;
       if (
@@ -255,7 +281,9 @@ const CreateEditExpense = (props) => {
         ) {
           insertExpenseDebitCash();
         } else {
-          toast.error("Todos os campos são de preenchimento obrigatório");
+          toast.error("Todos os campos são de preenchimento obrigatório", {
+            position: "bottom-center",
+          });
         }
       } else if (opcaoFormaPagamento === "Cartão de Crédito") {
         if (
@@ -269,7 +297,9 @@ const CreateEditExpense = (props) => {
         ) {
           insertExpenseCreditCard();
         } else {
-          toast.error("Todos os campos são de preenchimento obrigatório");
+          toast.error("Todos os campos são de preenchimento obrigatório", {
+            position: "bottom-center",
+          });
         }
       } else {
         if (
@@ -283,7 +313,9 @@ const CreateEditExpense = (props) => {
         ) {
           insertExpenseFinancingLoan();
         } else {
-          toast.error("Todos os campos são de preenchimento obrigatório");
+          toast.error("Todos os campos são de preenchimento obrigatório", {
+            position: "bottom-center",
+          });
         }
       }
     }

@@ -4,6 +4,8 @@ import { Navigate } from "react-router-dom";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { login } from "../actions/auth";
 
@@ -11,7 +13,6 @@ import LoginPageContainer from "../styles/LoginPageContainer";
 import LoginFormContainer from "../styles/LoginFormContainer";
 import InputFieldContainer from "../styles/InputFieldContainer";
 import PrimaryButtonContainer from "../styles/PrimaryButtonContainer";
-import SecondaryButtonContainer from "../styles/SecondaryButtonContainer";
 
 import LoginHeader from "../components/LoginHeader";
 import RequiredFieldAlert from "../components/RequiredFieldAlert";
@@ -25,7 +26,7 @@ const required = (value) => {
 };
 
 /* Tela de login */
-const Login = (props) => {
+const Login = () => {
   /* Referência para o formulário de login */
   const form = useRef();
 
@@ -35,13 +36,9 @@ const Login = (props) => {
   /* Variáveis de estado para os componentes da tela */
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
 
   /* Obtendo da store a informação de que se o usuário está logado e armazenando em uma variável */
   const { isLoggedIn } = useSelector((state) => state.auth);
-
-  /* Obtendo da store a mensagem mais recente e armazenando em uma variável */
-  const { message } = useSelector((state) => state.message);
 
   const dispatch = useDispatch();
 
@@ -61,19 +58,39 @@ const Login = (props) => {
   /* =============================== Tentando fazer o login quando usuário clica em Entrar ========================================== */
   const handleLogin = (e) => {
     e.preventDefault();
-    setLoading(true);
     form.current.validateAll();
     if (checkBtn.current.context._errors.length === 0) {
       dispatch(login(email, password))
-        .then(() => {
-          props.history.push("/meu_perfil");
-          window.location.reload();
-        })
-        .catch(() => {
-          setLoading(false);
+        .then(() => {})
+        .catch((message) => {
+          showToastMessage(message);
         });
+    }
+  };
+
+  /* ======================= Traduzindo mensagens de erro no login para textos amigáveis em toasts ============================ */
+  const showToastMessage = (errorMessage) => {
+    if (errorMessage === "Request failed with status code 401") {
+      toast.error(
+        "Usuário e/ou senha incorretos. Por favor, tente novamente.",
+        {
+          position: "bottom-center",
+        }
+      );
+    } else if (errorMessage === "Network Error") {
+      toast.error(
+        "Aplicação está indisponível no momento. Por favor, tente novamente mais tarde.",
+        {
+          position: "bottom-center",
+        }
+      );
     } else {
-      setLoading(false);
+      toast.error(
+        "Erro desconhecido no login. Por favor, verifique usuário e senha inseridos e tente novamente.",
+        {
+          position: "bottom-center",
+        }
+      );
     }
   };
 
@@ -85,6 +102,7 @@ const Login = (props) => {
   /* ====================== Construção da tela de login ========================================== */
   return (
     <LoginPageContainer>
+      <ToastContainer theme="colored" />
       <LoginFormContainer>
         <LoginHeader />
         <Form onSubmit={handleLogin} ref={form}>
@@ -121,13 +139,6 @@ const Login = (props) => {
           <div style={{ "text-align": "center" }}>
             <PrimaryButtonContainer>Entrar</PrimaryButtonContainer>
           </div>
-          {message && (
-            <div className="form-group">
-              <div className="alert alert-danger" role="alert">
-                {message}
-              </div>
-            </div>
-          )}
           <CheckButton style={{ display: "none" }} ref={checkBtn} />
         </Form>
       </LoginFormContainer>
