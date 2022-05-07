@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import NumberFormat from "react-number-format";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -404,12 +405,6 @@ const CreateEditExpense = (props) => {
     setNumberInstallments(numberInstallments);
   };
 
-  /* ====================== Redirecionando para a tela inicial quando usuário clica em Cancelar ========================================== */
-  const onClickCancelButton = () => {
-    props.history.push("/");
-    window.location.reload();
-  };
-
   /* ====================== Inserindo lógicas de validação e formatação de campos numéricos ========================================== */
   /* Validações para campo valor, já formatando como um campo monetário, para facilitar o input pelo usuário */
   function currencyFormatter(value) {
@@ -604,11 +599,10 @@ const CreateEditExpense = (props) => {
         </div>
         <div className="row">
           <div className="col s12" style={{ "text-align": "right" }}>
-            <SecondaryButtonContainer
-              type="button"
-              onClick={onClickCancelButton}
-            >
-              Cancelar
+          <SecondaryButtonContainer>
+              <Link to={"/"} style={{ color: "#00675b" }}>
+                Cancelar
+              </Link>
             </SecondaryButtonContainer>
             <PrimaryButtonContainer type="submit">
               Salvar
