@@ -17,6 +17,7 @@ import PrimaryButtonContainer from "../styles/PrimaryButtonContainer";
 import LoginHeader from "../components/LoginHeader";
 import RequiredFieldAlert from "../components/RequiredFieldAlert";
 import InputLabel from "../components/InputLabel";
+import LoadingMask from "../components/LoadingMask";
 
 /* Validação que exibe uma mensagem quando o usuário deixa de preencher algum campo e clica em Entrar */
 const required = (value) => {
@@ -36,6 +37,9 @@ const Login = () => {
   /* Variáveis de estado para os componentes da tela */
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  /* Variável de estado para controlar a exibição da máscara de carregamento da tela quando usuário solicita o login */
+  const [loading, setLoading] = useState(false);
 
   /* Obtendo da store a informação de que se o usuário está logado e armazenando em uma variável */
   const { isLoggedIn } = useSelector((state) => state.auth);
@@ -60,9 +64,13 @@ const Login = () => {
     e.preventDefault();
     form.current.validateAll();
     if (checkBtn.current.context._errors.length === 0) {
+      setLoading(true);
       dispatch(login(email, password))
-        .then(() => {})
+        .then(() => {
+          setLoading(false);
+        })
         .catch((message) => {
+          setLoading(false);
           showToastMessage(message);
         });
     }
@@ -142,6 +150,7 @@ const Login = () => {
           <CheckButton style={{ display: "none" }} ref={checkBtn} />
         </Form>
       </LoginFormContainer>
+      <div>{loading === true ? <LoadingMask /> : ""}</div>
     </LoginPageContainer>
   );
 };
