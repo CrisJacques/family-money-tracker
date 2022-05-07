@@ -87,10 +87,6 @@ const Login = (props) => {
     <LoginPageContainer>
       <LoginFormContainer>
         <LoginHeader />
-        <div style={{ "text-align": "center" }}>
-          <PrimaryButtonContainer>Login</PrimaryButtonContainer>
-          <SecondaryButtonContainer>Cadastrar</SecondaryButtonContainer>
-        </div>
         <Form onSubmit={handleLogin} ref={form}>
           <div className="row">
             <div className="col s12">
