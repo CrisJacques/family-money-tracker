@@ -639,8 +639,8 @@ const CreateEditExpense = (props) => {
             </div>
           </div>
         </form>
-        <div>{loading === true ? <LoadingMask /> : ""}</div>
       </WholePageContainer>
+      <div>{loading === true ? <LoadingMask /> : ""}</div>
     </div>
   );
 };
