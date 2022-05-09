@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 import GreetingContainer from "../styles/GreetingContainer";
 import SectionTitleContainer from "../styles/SectionTitleContainer";
+import PageTitleContainer from "../styles/PageTitleContainer";
 
 import QuickAccessButton from "../components/QuickAccessButton";
 import TransactionItem from "../components/TransactionItem";
@@ -126,10 +127,22 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
   }
 
   /* ======================== Construção da tela de boas vindas ===================================== */
-  return (
-    <div>
-      <ToastContainer theme="colored" />
-      {!userIsSysAdmin && (
+  if (userIsSysAdmin) {
+    return (
+      <div>
+        <PageTitleContainer>Bem vindo, Admin do Sistema!</PageTitleContainer>
+        <PageContentSectionContainer>
+          <p>
+            Acesse as opções no menu ao lado para visualizar estatísticas sobre o uso do
+            sistema.
+          </p>
+        </PageContentSectionContainer>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <ToastContainer theme="colored" />
         <div className="row">
           <div className="col s12 l6">
             <PageContentSectionContainer>
@@ -190,98 +203,98 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
             </PageContentSectionContainer>
           </div>
         </div>
-      )}
-      <div className="row">
-        <div className="col s12 l6">
-          <PageContentSectionContainer>
-            <SectionTitleInitialScreen title="Receitas por categoria" />
-            <div className="row" style={{ position: "relative" }}>
-              <div className="col s5 l5">
-                <GenericPieChart
-                  dados={convertDataToPieChart(totaisPorCategoriaReceita)}
-                  cor="#2E8B57"
-                />
-              </div>
-              <div
-                className="col s7 l7"
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "40%",
-                  "-ms-transform": "translateY(-50%)",
-                  transform: "translateY(-50%)",
-                }}
-              >
-                {Object.keys(totaisPorCategoriaReceita).map((key) => (
-                  <CategoryItem
-                    category={key}
-                    value={totaisPorCategoriaReceita[key]}
+        <div className="row">
+          <div className="col s12 l6">
+            <PageContentSectionContainer>
+              <SectionTitleInitialScreen title="Receitas por categoria" />
+              <div className="row" style={{ position: "relative" }}>
+                <div className="col s5 l5">
+                  <GenericPieChart
+                    dados={convertDataToPieChart(totaisPorCategoriaReceita)}
+                    cor="#2E8B57"
                   />
-                ))}
+                </div>
+                <div
+                  className="col s7 l7"
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "40%",
+                    "-ms-transform": "translateY(-50%)",
+                    transform: "translateY(-50%)",
+                  }}
+                >
+                  {Object.keys(totaisPorCategoriaReceita).map((key) => (
+                    <CategoryItem
+                      category={key}
+                      value={totaisPorCategoriaReceita[key]}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-          </PageContentSectionContainer>
+            </PageContentSectionContainer>
+          </div>
+          <div className="col s12 l6">
+            <PageContentSectionContainer>
+              <SectionTitleInitialScreen title="Despesas por categoria" />
+              <div className="row" style={{ position: "relative" }}>
+                <div className="col s5 l5">
+                  <GenericPieChart
+                    dados={convertDataToPieChart(totaisPorCategoriaDespesa)}
+                    cor="#D2042D"
+                  />
+                </div>
+                <div
+                  className="col s7 l7"
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "40%",
+                    "-ms-transform": "translateY(-50%)",
+                    transform: "translateY(-50%)",
+                  }}
+                >
+                  {Object.keys(totaisPorCategoriaDespesa).map((key) => (
+                    <CategoryItem
+                      category={key}
+                      value={totaisPorCategoriaDespesa[key]}
+                    />
+                  ))}
+                </div>
+              </div>
+            </PageContentSectionContainer>
+          </div>
         </div>
-        <div className="col s12 l6">
-          <PageContentSectionContainer>
-            <SectionTitleInitialScreen title="Despesas por categoria" />
-            <div className="row" style={{ position: "relative" }}>
-              <div className="col s5 l5">
-                <GenericPieChart
-                  dados={convertDataToPieChart(totaisPorCategoriaDespesa)}
-                  cor="#D2042D"
+        <div className="row">
+          <div className="col s12 l6">
+            <PageContentSectionContainer>
+              <SectionTitleInitialScreen title="Receitas recentes" />
+              {receitas.map((r) => (
+                <TransactionItem
+                  description={r.descricao}
+                  value={r.valor}
+                  category={r.nomeCategoriaReceita}
+                  date={r.data}
                 />
-              </div>
-              <div
-                className="col s7 l7"
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "40%",
-                  "-ms-transform": "translateY(-50%)",
-                  transform: "translateY(-50%)",
-                }}
-              >
-                {Object.keys(totaisPorCategoriaDespesa).map((key) => (
-                  <CategoryItem
-                    category={key}
-                    value={totaisPorCategoriaDespesa[key]}
-                  />
-                ))}
-              </div>
-            </div>
-          </PageContentSectionContainer>
+              ))}
+            </PageContentSectionContainer>
+          </div>
+          <div className="col s12 l6">
+            <PageContentSectionContainer>
+              <SectionTitleInitialScreen title="Despesas recentes" />
+              {despesas.map((d) => (
+                <TransactionItem
+                  description={d.descricao}
+                  value={d.valor}
+                  category={d.nomeCategoriaDespesa}
+                  date={d.stringData}
+                />
+              ))}
+            </PageContentSectionContainer>
+          </div>
         </div>
       </div>
-      <div className="row">
-        <div className="col s12 l6">
-          <PageContentSectionContainer>
-            <SectionTitleInitialScreen title="Receitas recentes" />
-            {receitas.map((r) => (
-              <TransactionItem
-                description={r.descricao}
-                value={r.valor}
-                category={r.nomeCategoriaReceita}
-                date={r.data}
-              />
-            ))}
-          </PageContentSectionContainer>
-        </div>
-        <div className="col s12 l6">
-          <PageContentSectionContainer>
-            <SectionTitleInitialScreen title="Despesas recentes" />
-            {despesas.map((d) => (
-              <TransactionItem
-                description={d.descricao}
-                value={d.valor}
-                category={d.nomeCategoriaDespesa}
-                date={d.stringData}
-              />
-            ))}
-          </PageContentSectionContainer>
-        </div>
-      </div>
-    </div>
-  );
+    );
+  }
 };
 export default Welcome;
