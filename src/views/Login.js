@@ -17,7 +17,7 @@ import PrimaryButtonContainer from "../styles/PrimaryButtonContainer";
 import LoginHeader from "../components/LoginHeader";
 import RequiredFieldAlert from "../components/RequiredFieldAlert";
 import InputLabel from "../components/InputLabel";
-import LoadingMask from "../components/LoadingMask";
+import LoadingLoginMask from "../components/LoadingLoginMask";
 
 /* Validação que exibe uma mensagem quando o usuário deixa de preencher algum campo e clica em Entrar */
 const required = (value) => {
@@ -150,7 +150,7 @@ const Login = () => {
           <CheckButton style={{ display: "none" }} ref={checkBtn} />
         </Form>
       </LoginFormContainer>
-      <div>{loading === true ? <LoadingMask /> : ""}</div>
+      <div>{loading === true ? <LoadingLoginMask height="100vh"/> : ""}</div>
     </LoginPageContainer>
   );
 };

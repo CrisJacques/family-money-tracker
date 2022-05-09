@@ -9,8 +9,10 @@ import PageTitleContainer from "../styles/PageTitleContainer";
 import InputFieldContainer from "../styles/InputFieldContainer";
 import PrimaryButtonContainer from "../styles/PrimaryButtonContainer";
 import SecondaryButtonContainer from "../styles/SecondaryButtonContainer";
+import WholePageContainer from "../styles/WholePageContainer";
 
 import InputLabel from "../components/InputLabel";
+import LoadingMask from "../components/LoadingMask";
 
 import CategoriasDespesasService from "../services/CategoriasDespesasService";
 import FormasDePagamentoService from "../services/FormasDePagamentoService";
@@ -36,6 +38,9 @@ const CreateEditExpense = (props) => {
   const [creditCard, setCreditCard] = useState("");
   const [bank, setBank] = useState("");
   const [numberInstallments, setNumberInstallments] = useState("");
+
+  /* Variável de estado para controlar a exibição da máscara de carregamento da tela quando usuário salva um novo registro */
+  const [loading, setLoading] = useState(false);
 
   /* Armazenando em variáveis de estado informações vindas do backend para exibir nos comboboxes */
   const [categoriasDespesas, setCategoriasDespesas] = useState([]);
@@ -78,13 +83,19 @@ const CreateEditExpense = (props) => {
   /* Carrega a lista de formas de pagamento cadastradas cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor */
   useEffect(() => {
     const fetchPaymentTypes = async () => {
-      const resposta = await FormasDePagamentoService.getFormasDePagamento(
-        userToken
-      );
-      const result = Object.keys(resposta.data).map((key) => [
-        resposta.data[key],
-      ]);
-      setFormasDePagamento(result);
+      try {
+        const resposta = await FormasDePagamentoService.getFormasDePagamento(
+          userToken
+        );
+        const result = Object.keys(resposta.data).map((key) => [
+          resposta.data[key],
+        ]);
+        setFormasDePagamento(result);
+      } catch (error) { // Só é preciso fazer a verificação de sessão expirada no carregamento de um dos comboboxes, pois se der erro em um, dará em todos. Assim, é evitada a exibição de vários toasts com o mesmo erro para o usuário. Foi escolhido o combobox de forma de pagamento pois ele sempre está presente logo que a tela é carregada, independentemente da forma de pagamento escolhida.
+        toast.error("Sessão expirada. Por favor, faça login novamente.", {
+          position: "bottom-center",
+        });
+      }
     };
     fetchPaymentTypes();
   }, [currentUser, userToken]);
@@ -116,6 +127,7 @@ const CreateEditExpense = (props) => {
   /* Cadastra uma nova despesa cuja forma de pagamento é financiamento ou empréstimo */
   const insertExpenseFinancingLoan = async () => {
     try {
+      setLoading(true);
       const resultado =
         await DespesasFinanciamentoEmprestimoService.insertDespesaFinanciamentoEmprestimo(
           userToken,
@@ -129,6 +141,7 @@ const CreateEditExpense = (props) => {
           currentUser.id
         );
       if (resultado.status === 201) {
+        setLoading(false);
         toast.success("Despesa registrada com sucesso.", {
           position: "bottom-center",
         });
@@ -146,6 +159,7 @@ const CreateEditExpense = (props) => {
         setExibirNumParcelas(false);
         setExibirBanco(false);
       } else {
+        setLoading(false);
         toast.warning(
           "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se o registro foi feito com sucesso.",
           {
@@ -154,6 +168,7 @@ const CreateEditExpense = (props) => {
         );
       }
     } catch (error) {
+      setLoading(false);
       toast.error(
         `Houve um problema ao registrar a despesa. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`,
         {
@@ -166,6 +181,7 @@ const CreateEditExpense = (props) => {
   /* Cadastra uma nova despesa cuja forma de pagamento é cartão de crédito */
   const insertExpenseCreditCard = async () => {
     try {
+      setLoading(true);
       const resultado = await DespesasCreditoService.insertDespesaCredito(
         userToken,
         value,
@@ -178,6 +194,7 @@ const CreateEditExpense = (props) => {
         currentUser.id
       );
       if (resultado.status === 201) {
+        setLoading(false);
         toast.success("Despesa registrada com sucesso.", {
           position: "bottom-center",
         });
@@ -195,6 +212,7 @@ const CreateEditExpense = (props) => {
         setExibirNumParcelas(false);
         setExibirCartaoCredito(false);
       } else {
+        setLoading(false);
         toast.warning(
           "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se o registro foi feito com sucesso.",
           {
@@ -203,6 +221,7 @@ const CreateEditExpense = (props) => {
         );
       }
     } catch (error) {
+      setLoading(false);
       toast.error(
         `Houve um problema ao registrar a despesa. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`,
         {
@@ -215,6 +234,7 @@ const CreateEditExpense = (props) => {
   /* Cadastra uma nova despesa cuja forma de pagamento é dinheiro ou débito */
   const insertExpenseDebitCash = async () => {
     try {
+      setLoading(true);
       const resultado =
         await DespesasDebitoDinheiroService.insertDespesaDebitoDinheiro(
           userToken,
@@ -227,6 +247,7 @@ const CreateEditExpense = (props) => {
           currentUser.id
         );
       if (resultado.status === 201) {
+        setLoading(false);
         toast.success("Despesa registrada com sucesso.", {
           position: "bottom-center",
         });
@@ -242,6 +263,7 @@ const CreateEditExpense = (props) => {
         /* Esconde novamente o campo específico desta forma de pagamento, voltando o formulário ao estado original */
         setExibirConta(false);
       } else {
+        setLoading(false);
         toast.warning(
           "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se o registro foi feito com sucesso.",
           {
@@ -250,6 +272,7 @@ const CreateEditExpense = (props) => {
         );
       }
     } catch (error) {
+      setLoading(false);
       toast.error(
         `Houve um problema ao registrar a despesa. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`,
         {
@@ -430,186 +453,194 @@ const CreateEditExpense = (props) => {
   /* ====================== Construção da tela de cadastro de despesas ========================================== */
   return (
     <div>
-      <PageTitleContainer>Cadastrar Despesa</PageTitleContainer>
-      <ToastContainer theme="colored" />
-      <form onSubmit={handleSubmit} ref={form}>
-        <div className="row">
-          <div className="col s12 l6">
-            <InputFieldContainer>
-              <InputLabel id="value" name="Valor" />
-              <NumberFormat
-                name="value"
-                value={value}
-                onChange={onChangeValue}
-                format={currencyFormatter}
-                placeholder="Valor da despesa"
-              />
-            </InputFieldContainer>
-          </div>
-          <div className="col s12 l6">
-            <InputFieldContainer>
-              <InputLabel id="description" name="Descrição" />
-              <input
-                type="text"
-                name="description"
-                value={description}
-                onChange={onChangeDescription}
-                placeholder="Descrição da despesa"
-              />
-            </InputFieldContainer>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col s12 l6">
-            <InputFieldContainer>
-              <InputLabel id="paymentType" name="Forma de pagamento" />
-              <select
-                className="browser-default"
-                name="paymentType"
-                value={paymentType}
-                onChange={onChangePaymentType}
-              >
-                <option value="">Selecione uma forma de pagamento...</option>
-                {formasDePagamento.map((formaDePagamento) => (
-                  <option
-                    key={formaDePagamento[0].cod}
-                    value={formaDePagamento[0].cod}
-                  >
-                    {formaDePagamento[0].descricao}
-                  </option>
-                ))}
-              </select>
-            </InputFieldContainer>
-          </div>
-          <div className="col s12 l6">
-            <InputFieldContainer>
-              <InputLabel id="category" name="Categoria" />
-              <select
-                className="browser-default"
-                name="category"
-                value={category}
-                onChange={onChangeCategory}
-              >
-                <option value="">Selecione uma categoria...</option>
-                {categoriasDespesas.map((categoriaDespesa) => (
-                  <option key={categoriaDespesa.id} value={categoriaDespesa.id}>
-                    {categoriaDespesa.nome}
-                  </option>
-                ))}
-              </select>
-            </InputFieldContainer>
-          </div>
-        </div>
-        {exibirNumParcelas && (
+      <WholePageContainer>
+        <PageTitleContainer>Cadastrar Despesa</PageTitleContainer>
+        <ToastContainer theme="colored" />
+        <form onSubmit={handleSubmit} ref={form}>
           <div className="row">
-            {exibirCartaoCredito && (
-              <div className="col s12 l6">
-                <InputFieldContainer>
-                  <InputLabel id="creditCard" name="Cartão de Crédito" />
-                  <select
-                    className="browser-default"
-                    name="creditCard"
-                    value={creditCard}
-                    onChange={onChangeCreditCard}
-                  >
-                    <option value="">Selecione um cartão de crédito...</option>
-                    {cartoesDeCredito.map((cartaoDeCredito) => (
-                      <option
-                        key={cartaoDeCredito.id}
-                        value={cartaoDeCredito.id}
-                      >
-                        {cartaoDeCredito.nome}
-                      </option>
-                    ))}
-                  </select>
-                </InputFieldContainer>
-              </div>
-            )}
-            {exibirBanco && (
-              <div className="col s12 l6">
-                <InputFieldContainer>
-                  <InputLabel id="bank" name="Banco" />
-                  <select
-                    className="browser-default"
-                    name="bank"
-                    value={bank}
-                    onChange={onChangeBank}
-                  >
-                    <option value="">Selecione um banco...</option>
-                    {bancos.map((banco) => (
-                      <option key={banco[0].cod} value={banco[0].cod}>
-                        {banco[0].descricao}
-                      </option>
-                    ))}
-                  </select>
-                </InputFieldContainer>
-              </div>
-            )}
-            {exibirNumParcelas && (
-              <div className="col s12 l6">
-                <InputFieldContainer>
-                  <InputLabel
-                    id="numberInstallments"
-                    name="Número de parcelas"
-                  />
-                  <NumberFormat
-                    name="numberInstallments"
-                    value={numberInstallments}
-                    onChange={onChangeNumberInstallments}
-                    format={numberFormatter}
-                    placeholder="Digite o número de parcelas da despesa"
-                  />
-                </InputFieldContainer>
-              </div>
-            )}
-          </div>
-        )}
-        <div className="row">
-          <div className="col s12 l6">
-            <InputFieldContainer>
-              <InputLabel id="registerDate" name="Data" />
-              <input
-                type="date"
-                name="registerDate"
-                value={registerDate}
-                onChange={onChangeRegisterDate}
-              />
-            </InputFieldContainer>
-          </div>
-          {exibirConta && (
             <div className="col s12 l6">
               <InputFieldContainer>
-                <InputLabel id="account" name="Conta" />
+                <InputLabel id="value" name="Valor" />
+                <NumberFormat
+                  name="value"
+                  value={value}
+                  onChange={onChangeValue}
+                  format={currencyFormatter}
+                  placeholder="Valor da despesa"
+                />
+              </InputFieldContainer>
+            </div>
+            <div className="col s12 l6">
+              <InputFieldContainer>
+                <InputLabel id="description" name="Descrição" />
+                <input
+                  type="text"
+                  name="description"
+                  value={description}
+                  onChange={onChangeDescription}
+                  placeholder="Descrição da despesa"
+                />
+              </InputFieldContainer>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col s12 l6">
+              <InputFieldContainer>
+                <InputLabel id="paymentType" name="Forma de pagamento" />
                 <select
                   className="browser-default"
-                  name="account"
-                  value={account}
-                  onChange={onChangeAccount}
+                  name="paymentType"
+                  value={paymentType}
+                  onChange={onChangePaymentType}
                 >
-                  <option value="">Selecione uma conta...</option>
-                  {contas.map((conta) => (
-                    <option key={conta.id} value={conta.id}>
-                      {conta.nome}
+                  <option value="">Selecione uma forma de pagamento...</option>
+                  {formasDePagamento.map((formaDePagamento) => (
+                    <option
+                      key={formaDePagamento[0].cod}
+                      value={formaDePagamento[0].cod}
+                    >
+                      {formaDePagamento[0].descricao}
                     </option>
                   ))}
                 </select>
               </InputFieldContainer>
             </div>
-          )}
-        </div>
-        <div className="row">
-          <div className="col s12" style={{ "text-align": "right" }}>
-          <SecondaryButtonContainer>
-              <Link to={"/"} style={{ color: "#00675b" }}>
-                Cancelar
-              </Link>
-            </SecondaryButtonContainer>
-            <PrimaryButtonContainer type="submit">
-              Salvar
-            </PrimaryButtonContainer>
+            <div className="col s12 l6">
+              <InputFieldContainer>
+                <InputLabel id="category" name="Categoria" />
+                <select
+                  className="browser-default"
+                  name="category"
+                  value={category}
+                  onChange={onChangeCategory}
+                >
+                  <option value="">Selecione uma categoria...</option>
+                  {categoriasDespesas.map((categoriaDespesa) => (
+                    <option
+                      key={categoriaDespesa.id}
+                      value={categoriaDespesa.id}
+                    >
+                      {categoriaDespesa.nome}
+                    </option>
+                  ))}
+                </select>
+              </InputFieldContainer>
+            </div>
           </div>
-        </div>
-      </form>
+          {exibirNumParcelas && (
+            <div className="row">
+              {exibirCartaoCredito && (
+                <div className="col s12 l6">
+                  <InputFieldContainer>
+                    <InputLabel id="creditCard" name="Cartão de Crédito" />
+                    <select
+                      className="browser-default"
+                      name="creditCard"
+                      value={creditCard}
+                      onChange={onChangeCreditCard}
+                    >
+                      <option value="">
+                        Selecione um cartão de crédito...
+                      </option>
+                      {cartoesDeCredito.map((cartaoDeCredito) => (
+                        <option
+                          key={cartaoDeCredito.id}
+                          value={cartaoDeCredito.id}
+                        >
+                          {cartaoDeCredito.nome}
+                        </option>
+                      ))}
+                    </select>
+                  </InputFieldContainer>
+                </div>
+              )}
+              {exibirBanco && (
+                <div className="col s12 l6">
+                  <InputFieldContainer>
+                    <InputLabel id="bank" name="Banco" />
+                    <select
+                      className="browser-default"
+                      name="bank"
+                      value={bank}
+                      onChange={onChangeBank}
+                    >
+                      <option value="">Selecione um banco...</option>
+                      {bancos.map((banco) => (
+                        <option key={banco[0].cod} value={banco[0].cod}>
+                          {banco[0].descricao}
+                        </option>
+                      ))}
+                    </select>
+                  </InputFieldContainer>
+                </div>
+              )}
+              {exibirNumParcelas && (
+                <div className="col s12 l6">
+                  <InputFieldContainer>
+                    <InputLabel
+                      id="numberInstallments"
+                      name="Número de parcelas"
+                    />
+                    <NumberFormat
+                      name="numberInstallments"
+                      value={numberInstallments}
+                      onChange={onChangeNumberInstallments}
+                      format={numberFormatter}
+                      placeholder="Digite o número de parcelas da despesa"
+                    />
+                  </InputFieldContainer>
+                </div>
+              )}
+            </div>
+          )}
+          <div className="row">
+            <div className="col s12 l6">
+              <InputFieldContainer>
+                <InputLabel id="registerDate" name="Data" />
+                <input
+                  type="date"
+                  name="registerDate"
+                  value={registerDate}
+                  onChange={onChangeRegisterDate}
+                />
+              </InputFieldContainer>
+            </div>
+            {exibirConta && (
+              <div className="col s12 l6">
+                <InputFieldContainer>
+                  <InputLabel id="account" name="Conta" />
+                  <select
+                    className="browser-default"
+                    name="account"
+                    value={account}
+                    onChange={onChangeAccount}
+                  >
+                    <option value="">Selecione uma conta...</option>
+                    {contas.map((conta) => (
+                      <option key={conta.id} value={conta.id}>
+                        {conta.nome}
+                      </option>
+                    ))}
+                  </select>
+                </InputFieldContainer>
+              </div>
+            )}
+          </div>
+          <div className="row">
+            <div className="col s12" style={{ "text-align": "right" }}>
+              <SecondaryButtonContainer>
+                <Link to={"/"} style={{ color: "#00675b" }}>
+                  Cancelar
+                </Link>
+              </SecondaryButtonContainer>
+              <PrimaryButtonContainer type="submit">
+                Salvar
+              </PrimaryButtonContainer>
+            </div>
+          </div>
+        </form>
+        <div>{loading === true ? <LoadingMask /> : ""}</div>
+      </WholePageContainer>
     </div>
   );
 };

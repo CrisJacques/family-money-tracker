@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 import GreetingContainer from "../styles/GreetingContainer";
@@ -45,10 +47,16 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
   /* Carrega os valores totais de despesas e receitas do mês atual e o saldo cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor */
   useEffect(() => {
     const fetchTotaisGeraisMesAtualComSaldo = async () => {
-      const resposta = await TransacoesService.getTotaisMesAtualComSaldo(
-        userToken
-      );
-      setTotaisGeraisComSaldo(resposta.data);
+      try {
+        const resposta = await TransacoesService.getTotaisMesAtualComSaldo(
+          userToken
+        );
+        setTotaisGeraisComSaldo(resposta.data);
+      } catch (error) {
+        toast.error("Sessão expirada. Por favor, faça login novamente.", {
+          position: "bottom-center",
+        });
+      }
     };
     fetchTotaisGeraisMesAtualComSaldo();
   }, [currentUser, userToken]);
@@ -120,6 +128,7 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
   /* ======================== Construção da tela de boas vindas ===================================== */
   return (
     <div>
+      <ToastContainer theme="colored" />
       {!userIsSysAdmin && (
         <div className="row">
           <div className="col s12 l6">

@@ -9,8 +9,10 @@ import PageTitleContainer from "../styles/PageTitleContainer";
 import InputFieldContainer from "../styles/InputFieldContainer";
 import PrimaryButtonContainer from "../styles/PrimaryButtonContainer";
 import SecondaryButtonContainer from "../styles/SecondaryButtonContainer";
+import WholePageContainer from "../styles/WholePageContainer";
 
 import InputLabel from "../components/InputLabel";
+import LoadingMask from "../components/LoadingMask";
 
 import ContasService from "../services/ContasService";
 import CategoriasReceitasService from "../services/CategoriasReceitasService";
@@ -28,6 +30,9 @@ const CreateEditIncome = (props) => {
   const [category, setCategory] = useState("");
   const [account, setAccount] = useState("");
 
+  /* Variável de estado para controlar a exibição da máscara de carregamento da tela quando usuário salva um novo registro */
+  const [loading, setLoading] = useState(false);
+
   /* Armazenando em variáveis de estado informações vindas do backend para exibir nos comboboxes */
   const [categoriasReceitas, setCategoriasReceitas] = useState([]);
   const [contas, setContas] = useState([]);
@@ -40,8 +45,14 @@ const CreateEditIncome = (props) => {
   /* Carrega a lista de contas cadastradas cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor */
   useEffect(() => {
     const fetchAccounts = async () => {
-      const resposta = await ContasService.getContas(userToken);
-      setContas(resposta.data);
+      try {
+        const resposta = await ContasService.getContas(userToken);
+        setContas(resposta.data);
+      } catch (error) {// Só é preciso fazer a verificação de sessão expirada no carregamento de um dos comboboxes, pois se der erro em um, dará em todos. Assim, é evitada a exibição de vários toasts com o mesmo erro para o usuário.
+        toast.error("Sessão expirada. Por favor, faça login novamente.", {
+          position: "bottom-center",
+        });
+      }
     };
     fetchAccounts();
   }, [currentUser, userToken]);
@@ -60,6 +71,7 @@ const CreateEditIncome = (props) => {
   /* ======================== Cadastrando receitas através de requisições à API ===================================== */
   const insertIncome = async () => {
     try {
+      setLoading(true);
       const resultado = await ReceitasService.insertReceita(
         userToken,
         value,
@@ -70,6 +82,7 @@ const CreateEditIncome = (props) => {
         currentUser.id
       );
       if (resultado.status === 201) {
+        setLoading(false);
         toast.success("Receita registrada com sucesso.", {
           position: "bottom-center",
         });
@@ -80,6 +93,7 @@ const CreateEditIncome = (props) => {
         setCategory("");
         setRegisterDate("");
       } else {
+        setLoading(false);
         toast.warning(
           "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se o registro foi feito com sucesso.",
           {
@@ -88,6 +102,7 @@ const CreateEditIncome = (props) => {
         );
       }
     } catch (error) {
+      setLoading(false);
       toast.error(
         `Houve um problema ao registrar a receita. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`,
         {
@@ -162,97 +177,103 @@ const CreateEditIncome = (props) => {
   /* ====================== Construção da tela de cadastro de receitas ========================================== */
   return (
     <div>
-      <PageTitleContainer>Cadastrar Receita</PageTitleContainer>
-      <ToastContainer theme="colored" />
-      <form onSubmit={handleSubmit} ref={form}>
-        <div className="row">
-          <div className="col s12 l6">
-            <InputFieldContainer>
-              <InputLabel id="value" name="Valor" />
-              <NumberFormat
-                name="value"
-                value={value}
-                onChange={onChangeValue}
-                format={currencyFormatter}
-                placeholder="Valor da receita"
-              />
-            </InputFieldContainer>
+      <WholePageContainer>
+        <PageTitleContainer>Cadastrar Receita</PageTitleContainer>
+        <ToastContainer theme="colored" />
+        <form onSubmit={handleSubmit} ref={form}>
+          <div className="row">
+            <div className="col s12 l6">
+              <InputFieldContainer>
+                <InputLabel id="value" name="Valor" />
+                <NumberFormat
+                  name="value"
+                  value={value}
+                  onChange={onChangeValue}
+                  format={currencyFormatter}
+                  placeholder="Valor da receita"
+                />
+              </InputFieldContainer>
+            </div>
+            <div className="col s12 l6">
+              <InputFieldContainer>
+                <InputLabel id="description" name="Descrição" />
+                <input
+                  type="text"
+                  name="description"
+                  value={description}
+                  onChange={onChangeDescription}
+                  placeholder="Descrição da receita"
+                />
+              </InputFieldContainer>
+            </div>
           </div>
-          <div className="col s12 l6">
-            <InputFieldContainer>
-              <InputLabel id="description" name="Descrição" />
-              <input
-                type="text"
-                name="description"
-                value={description}
-                onChange={onChangeDescription}
-                placeholder="Descrição da receita"
-              />
-            </InputFieldContainer>
+          <div className="row">
+            <div className="col s12 l6">
+              <InputFieldContainer>
+                <InputLabel id="account" name="Conta" />
+                <select
+                  className="browser-default"
+                  name="account"
+                  value={account}
+                  onChange={onChangeAccount}
+                >
+                  <option value="">Selecione uma conta...</option>
+                  {contas.map((conta) => (
+                    <option key={conta.id} value={conta.id}>
+                      {conta.nome}
+                    </option>
+                  ))}
+                </select>
+              </InputFieldContainer>
+            </div>
+            <div className="col s12 l6">
+              <InputFieldContainer>
+                <InputLabel id="category" name="Categoria" />
+                <select
+                  className="browser-default"
+                  name="category"
+                  value={category}
+                  onChange={onChangeCategory}
+                >
+                  <option value="">Selecione uma categoria...</option>
+                  {categoriasReceitas.map((categoriaReceita) => (
+                    <option
+                      key={categoriaReceita.id}
+                      value={categoriaReceita.id}
+                    >
+                      {categoriaReceita.nome}
+                    </option>
+                  ))}
+                </select>
+              </InputFieldContainer>
+            </div>
           </div>
-        </div>
-        <div className="row">
-          <div className="col s12 l6">
-            <InputFieldContainer>
-              <InputLabel id="account" name="Conta" />
-              <select
-                className="browser-default"
-                name="account"
-                value={account}
-                onChange={onChangeAccount}
-              >
-                <option value="">Selecione uma conta...</option>
-                {contas.map((conta) => (
-                  <option key={conta.id} value={conta.id}>
-                    {conta.nome}
-                  </option>
-                ))}
-              </select>
-            </InputFieldContainer>
+          <div className="row">
+            <div className="col s12 l6">
+              <InputFieldContainer>
+                <InputLabel id="registerDate" name="Data" />
+                <input
+                  type="date"
+                  name="registerDate"
+                  value={registerDate}
+                  onChange={onChangeRegisterDate}
+                />
+              </InputFieldContainer>
+            </div>
+            <div className="col s12" style={{ "text-align": "right" }}>
+              <SecondaryButtonContainer>
+                <Link to={"/"} style={{ color: "#00675b" }}>
+                  Cancelar
+                </Link>
+              </SecondaryButtonContainer>
+              <PrimaryButtonContainer type="submit">
+                Salvar
+              </PrimaryButtonContainer>
+            </div>
           </div>
-          <div className="col s12 l6">
-            <InputFieldContainer>
-              <InputLabel id="category" name="Categoria" />
-              <select
-                className="browser-default"
-                name="category"
-                value={category}
-                onChange={onChangeCategory}
-              >
-                <option value="">Selecione uma categoria...</option>
-                {categoriasReceitas.map((categoriaReceita) => (
-                  <option key={categoriaReceita.id} value={categoriaReceita.id}>
-                    {categoriaReceita.nome}
-                  </option>
-                ))}
-              </select>
-            </InputFieldContainer>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col s12 l6">
-            <InputFieldContainer>
-              <InputLabel id="registerDate" name="Data" />
-              <input
-                type="date"
-                name="registerDate"
-                value={registerDate}
-                onChange={onChangeRegisterDate}
-              />
-            </InputFieldContainer>
-          </div>
-          <div className="col s12" style={{ "text-align": "right" }}>
-            <SecondaryButtonContainer>
-              <Link to={"/"} style={{ color: "#00675b" }}>
-                Cancelar
-              </Link>
-            </SecondaryButtonContainer>
-            <PrimaryButtonContainer type="submit">
-              Salvar
-            </PrimaryButtonContainer>
-          </div>
-        </div>
-      </form>
+        </form>
+      </WholePageContainer>
+      <div>{loading === true ? <LoadingMask /> : ""}</div>
     </div>
   );
 };
