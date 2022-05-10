@@ -9,10 +9,9 @@ const RecurringItems = () => (
     <PageContentSectionContainer>
       <p>
         Esta página irá permitir o cadastro, listagem, edição e exclusão de
-        itens recorrentes (despesas e receitas que se repetem todo mês). O
-        cadastro e listagem destes itens será permitido a todos os perfis de
-        usuário, mas edição e exclusão só será permitida ao administrador do
-        grupo.
+        itens recorrentes (despesas e receitas que se repetem todo mês). A
+        edição e exclusão de tais cadastros só será permitida ao administrador
+        do grupo, não sendo permitida a usuários comuns.
       </p>
     </PageContentSectionContainer>
   </div>

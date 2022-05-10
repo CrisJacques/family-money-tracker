@@ -9,9 +9,8 @@ const Help = () => (
     <PageContentSectionContainer>
       <p>
         Esta página irá permitir o acesso ao tutorial com orientações de como
-        utilizar o sistema. Todos os perfis de usuário poderão acessar esta
-        página. O administrador do grupo também poderá enviar feedbacks ao
-        desenvolvedor da ferramenta através desta página.
+        utilizar o sistema. O administrador do grupo também poderá enviar
+        feedbacks ao desenvolvedor da ferramenta através desta página.
       </p>
     </PageContentSectionContainer>
   </div>

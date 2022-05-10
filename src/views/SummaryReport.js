@@ -10,7 +10,7 @@ const SummaryReport = () => (
       <p>
         Esta página irá exibir o relatório de resumo de despesas e receitas para
         um período selecionado pelo usuário. Esta página estará disponível para
-        todos os perfis de usuário do sistema.
+        usuários comuns e administradores de grupo.
       </p>
     </PageContentSectionContainer>
   </div>
