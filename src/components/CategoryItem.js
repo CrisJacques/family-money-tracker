@@ -5,7 +5,7 @@ const CategoryItem = ({category, value}) => (
   <div>
     <div style={{ "display": "flex",  "justify-content": "space-between", "font-size": "1.05em", "padding-bottom": "0.4em"}}>
       <span>{category}</span>
-      <span>R$ {value}</span>
+      <span>R$ {value.toFixed(2)}</span>
     </div>
   </div>
 );

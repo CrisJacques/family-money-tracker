@@ -5,7 +5,7 @@ const TransactionItem = ({description, value, category, date}) => (
   <div>
     <div style={{ "display": "flex",  "justify-content": "space-between", "font-size": "1.05em"}}>
       <span>{description}</span>
-      <span>R$ {value}</span>
+      <span>R$ {value.toFixed(2)}</span>
     </div>
     <div style={{ "display": "flex",  "justify-content": "space-between", "font-size": "0.85em", "font-style": "italic", "padding-bottom": "0.4em"}}>
       <span>{category}</span>
