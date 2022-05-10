@@ -23,6 +23,8 @@ import DespesasDebitoDinheiroService from "../services/DespesasDebitoDinheiroSer
 import DespesasCreditoService from "../services/DespesasCreditoService";
 import DespesasFinanciamentoEmprestimoService from "../services/DespesasFinanciamentoEmprestimoService";
 
+import { MAX_DESCRIPTION_LENGTH } from "../helpers/generalRules";
+
 /* Tela que permite o cadastro de despesas */
 const CreateEditExpense = (props) => {
   /*Referência para o formulário de cadastro de despesas */
@@ -91,7 +93,8 @@ const CreateEditExpense = (props) => {
           resposta.data[key],
         ]);
         setFormasDePagamento(result);
-      } catch (error) { // Só é preciso fazer a verificação de sessão expirada no carregamento de um dos comboboxes, pois se der erro em um, dará em todos. Assim, é evitada a exibição de vários toasts com o mesmo erro para o usuário. Foi escolhido o combobox de forma de pagamento pois ele sempre está presente logo que a tela é carregada, independentemente da forma de pagamento escolhida.
+      } catch (error) {
+        // Só é preciso fazer a verificação de sessão expirada no carregamento de um dos comboboxes, pois se der erro em um, dará em todos. Assim, é evitada a exibição de vários toasts com o mesmo erro para o usuário. Foi escolhido o combobox de forma de pagamento pois ele sempre está presente logo que a tela é carregada, independentemente da forma de pagamento escolhida.
         toast.error("Sessão expirada. Por favor, faça login novamente.", {
           position: "bottom-center",
         });
@@ -285,61 +288,70 @@ const CreateEditExpense = (props) => {
   /* ================ Chamando a função de cadastro de despesa de acordo com a forma de pagamento escolhida quando usuário clica em Salvar ========================= */
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (paymentType === "") {
-      toast.error("Todos os campos são de preenchimento obrigatório", {
-        position: "bottom-center",
-      });
+    if (description.length > MAX_DESCRIPTION_LENGTH) {
+      toast.error(
+        `Campo descrição não pode conter mais do que ${MAX_DESCRIPTION_LENGTH} caracteres`,
+        {
+          position: "bottom-center",
+        }
+      );
     } else {
-      const opcaoFormaPagamento = formasDePagamento[paymentType][0].descricao;
-      if (
-        opcaoFormaPagamento === "Dinheiro" ||
-        opcaoFormaPagamento === "Débito"
-      ) {
-        if (
-          value !== "" &&
-          description !== "" &&
-          paymentType !== "" &&
-          category !== "" &&
-          registerDate !== "" &&
-          account !== ""
-        ) {
-          insertExpenseDebitCash();
-        } else {
-          toast.error("Todos os campos são de preenchimento obrigatório", {
-            position: "bottom-center",
-          });
-        }
-      } else if (opcaoFormaPagamento === "Cartão de Crédito") {
-        if (
-          value !== "" &&
-          description !== "" &&
-          paymentType !== "" &&
-          category !== "" &&
-          creditCard !== "" &&
-          numberInstallments !== "" &&
-          registerDate !== ""
-        ) {
-          insertExpenseCreditCard();
-        } else {
-          toast.error("Todos os campos são de preenchimento obrigatório", {
-            position: "bottom-center",
-          });
-        }
+      if (paymentType === "") {
+        toast.error("Todos os campos são de preenchimento obrigatório", {
+          position: "bottom-center",
+        });
       } else {
+        const opcaoFormaPagamento = formasDePagamento[paymentType][0].descricao;
         if (
-          value !== "" &&
-          description !== "" &&
-          paymentType !== "" &&
-          category !== "" &&
-          bank !== "" &&
-          numberInstallments !== "" &&
-          registerDate !== ""
+          opcaoFormaPagamento === "Dinheiro" ||
+          opcaoFormaPagamento === "Débito"
         ) {
-          insertExpenseFinancingLoan();
+          if (
+            value !== "" &&
+            description !== "" &&
+            paymentType !== "" &&
+            category !== "" &&
+            registerDate !== "" &&
+            account !== ""
+          ) {
+            insertExpenseDebitCash();
+          } else {
+            toast.error("Todos os campos são de preenchimento obrigatório", {
+              position: "bottom-center",
+            });
+          }
+        } else if (opcaoFormaPagamento === "Cartão de Crédito") {
+          if (
+            value !== "" &&
+            description !== "" &&
+            paymentType !== "" &&
+            category !== "" &&
+            creditCard !== "" &&
+            numberInstallments !== "" &&
+            registerDate !== ""
+          ) {
+            insertExpenseCreditCard();
+          } else {
+            toast.error("Todos os campos são de preenchimento obrigatório", {
+              position: "bottom-center",
+            });
+          }
         } else {
-          toast.error("Todos os campos são de preenchimento obrigatório", {
-            position: "bottom-center",
-          });
+          if (
+            value !== "" &&
+            description !== "" &&
+            paymentType !== "" &&
+            category !== "" &&
+            bank !== "" &&
+            numberInstallments !== "" &&
+            registerDate !== ""
+          ) {
+            insertExpenseFinancingLoan();
+          } else {
+            toast.error("Todos os campos são de preenchimento obrigatório", {
+              position: "bottom-center",
+            });
+          }
         }
       }
     }

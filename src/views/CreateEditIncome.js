@@ -18,6 +18,8 @@ import ContasService from "../services/ContasService";
 import CategoriasReceitasService from "../services/CategoriasReceitasService";
 import ReceitasService from "../services/ReceitasService";
 
+import { MAX_DESCRIPTION_LENGTH } from "../helpers/generalRules";
+
 /* Tela que permite o cadastro de receitas */
 const CreateEditIncome = (props) => {
   /*Referência para o formulário de cadastro de receitas */
@@ -115,7 +117,12 @@ const CreateEditIncome = (props) => {
   /* ======================== Chamando a função de cadastro de receita quando usuário clica em Salvar ===================================== */
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (
+    if (description.length > MAX_DESCRIPTION_LENGTH) {
+      toast.error(`Campo descrição não pode conter mais do que ${MAX_DESCRIPTION_LENGTH} caracteres`, {
+        position: "bottom-center",
+      });
+    }
+    else if (
       value !== "" &&
       description !== "" &&
       registerDate !== "" &&
