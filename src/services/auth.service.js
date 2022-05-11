@@ -1,7 +1,12 @@
 import axios from "axios";
 import { API_URL_AUTH } from "../API_URLs";
 
-/* Service que cuida do login */
+/**
+ * Envia a requisição de login e retorna o resultado
+ * @param {String} email - Email do usuário
+ * @param {String} password - Senha do usuário
+ * @returns {Object} JSON com os dados do usuário logado
+ */
 const login = (email, password) => {
   return axios
     .post(API_URL_AUTH + "signin", {
@@ -16,11 +21,16 @@ const login = (email, password) => {
     });
 };
 
-/* Service que cuida do logout */
+/**
+ * Executa o logout, removendo o usuário da localStorage
+ */
 const logout = () => {
   localStorage.removeItem("user");
 };
 
+/**
+ * Exporta os services de login e logout
+ */
 const auth_services = {
   login,
   logout,

@@ -2,11 +2,28 @@ import axios from "axios";
 import { API_URL_BASE } from "../API_URLs";
 import convertMoneyToNumber from "../helpers/convertMoneyToNumber";
 
+/**
+ * Faz a união da URL base da API com o caminho passado por parâmetro
+ * @param {String} path - Caminho do endpoint
+ * @returns {String} Caminho completo da requisição
+ */
 const requestUrl = (path) => `${API_URL_BASE}${path}`;
 
-/* Services que tratam das requisições referentes às receitas */
+/**
+ * Classe que executa ações relacionadas a receitas através do envio de requisições à API
+ */
 export default class ReceitasService {
-  /* Insere uma nova receita */
+  /**
+   * Insere uma receita
+   * @param {String} userToken - Token do usuário logado
+   * @param {number} value - Valor da receita
+   * @param {String} description - Descrição da receita
+   * @param {number} idAccount - Id da conta selecionada
+   * @param {number} idCategory - Id da categoria de receita selecionada
+   * @param {String} registerDate - Data da receita
+   * @param {number} idCurrentUser - Id do usuário logado
+   * @returns {Object} JSON com informações sobre resultado da requisição, incluindo o status code
+   */
   static async insertReceita(
     userToken,
     value,
@@ -41,7 +58,11 @@ export default class ReceitasService {
       }
     );
   }
-  /* Lista as receitas recentes */
+  /**
+   * Lista as receitas recentes
+   * @param {String} userToken - Token do usuário logado
+   * @returns {Object} JSON com lista das receitas recentes, contendo apenas as informações essenciais de cada uma delas (DTOs)
+   */
   static getReceitasRecentes(userToken) {
     return axios.get(requestUrl("receitas?recentes=true"), {
       headers: {
@@ -49,7 +70,11 @@ export default class ReceitasService {
       },
     });
   }
-  /* Lista os valores totais por categoria para o mês atual */
+  /**
+   * Lista os valores totais de receitas por categoria para o mês atual
+   * @param {String} userToken - Token do usuário logado
+   * @returns {Object} JSON com as categorias de receitas e os valores totais por categoria
+   */
   static getTotaisPorCategoria(userToken) {
     return axios.get(requestUrl("receitas/total-por-categoria"), {
       headers: {

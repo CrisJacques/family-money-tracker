@@ -2,10 +2,30 @@ import axios from "axios";
 import { API_URL_BASE } from "../API_URLs";
 import convertMoneyToNumber from "../helpers/convertMoneyToNumber";
 
+/**
+ * Faz a união da URL base da API com o caminho passado por parâmetro
+ * @param {String} path - Caminho do endpoint
+ * @returns {String} Caminho completo da requisição
+ */
 const requestUrl = (path) => `${API_URL_BASE}${path}`;
-/* Services que tratam das requisições referentes às despesas cuja forma de pagamento é cartão de crédito */
+
+/**
+ * Classe que executa ações relacionadas a despesas cuja forma de pagamento é cartão de crédito através do envio de requisições à API
+ */
 export default class DespesasCreditoService {
-  /* Insere uma nova despesa cuja forma de pagamento é cartão de crédito */
+  /**
+   * Insere uma despesa cuja forma de pagamento é cartão de crédito
+   * @param {String} userToken - Token do usuário logado
+   * @param {number} value - Valor da despesa
+   * @param {String} description - Descrição da despesa
+   * @param {number} idCreditCard - Id do cartão de crédito selecionado
+   * @param {number} numberInstallments - Número de parcelas
+   * @param {number} idCategory - Id da categoria de despesa selecionada
+   * @param {String} registerDate - Data da despesa
+   * @param {number} paymentType - Id da forma de pagamento selecionada
+   * @param {number} idCurrentUser - Id do usuário logado
+   * @returns {Object} JSON com informações sobre resultado da requisição, incluindo o status code
+   */
   static async insertDespesaCredito(
     userToken,
     value,
