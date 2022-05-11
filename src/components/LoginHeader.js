@@ -2,7 +2,10 @@ import React from "react";
 import LoginHeaderContainer from "../styles/LoginHeaderContainer";
 import AppTitleContainer from "../styles/AppTitleContainer";
 
-/* Componente que tem a responsabilidade de ser o header da tela de login da aplicação */
+/**
+ * Constrói o cabeçalho da tela de login da aplicação
+ * @returns Componente que exibe o ícone da aplicação e o título estilizado
+ */
 const LoginHeader = () => (
   <LoginHeaderContainer>
     <img

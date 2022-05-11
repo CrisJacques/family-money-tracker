@@ -1,7 +1,9 @@
 import React, { PureComponent } from "react";
 import { PieChart, Pie, Tooltip, ResponsiveContainer } from "recharts";
 
-/* Componente que tem a responsabilidade de construir um gráfico de rosca monocromático, cuja cor é passada por parâmetro */
+/**
+ * Componente que tem a responsabilidade de construir um gráfico de rosca monocromático, cuja cor é passada por props
+ */
 export default class GenericPieChart extends PureComponent {
   constructor(props) {
     super(props);

@@ -1,7 +1,9 @@
 import React, { PureComponent } from "react";
 import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer } from "recharts";
 
-/* Componente que tem a responsabilidade de construir um gráfico de rosca com duas cores, passadas por parâmetro */
+/**
+ * Componente que tem a responsabilidade de construir um gráfico de rosca com duas cores, passadas por props
+ */
 export default class GenericTwoColorsPieChart extends PureComponent {
   constructor(props) {
     super(props);

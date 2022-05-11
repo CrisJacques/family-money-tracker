@@ -2,7 +2,12 @@ import React from "react";
 
 import LabelFieldContainer from "../styles/LabelFieldContainer";
 
-/* Componente que tem a responsabilidade de ser o label de todos os campos de formulário da aplicação */
+/**
+ * Constrói o label de todos os campos de formulário da aplicação
+ * @param {String} id - Id do campo de formulário ao qual o label deve se referir
+ * @param {String} name - Texto que deve ser exibido no label
+ * @returns Componente de label de campo de formulário
+ */
 const InputLabel = ({ id, name }) => (
   <LabelFieldContainer>
     <label htmlFor={`${id}`}>{name}</label>

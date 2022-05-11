@@ -3,7 +3,13 @@ import { Link } from "react-router-dom";
 
 import QuickAccessButtonContainer from "../styles/QuickAccessButtonContainer";
 
-/* Componente que tem a responsabilidade de construir botões de acesso rápido, que contém ícones grandes e ficam na tela inicial da aplicação */
+/**
+ * Constrói os botões de acesso rápido da tela inicial
+ * @param {String} name - Texto do botão
+ * @param {String} addressPage - Endereço para o qual o usuário deve ser redirecionado quando clicar no botão
+ * @param {String} iconName - Nome do ícone do Materialize CSS que ilustra o botão
+ * @returns Componente que é um botão com ícone grande apontando para alguma página específica da aplicação
+ */
 const QuickAccessButton = ({ name, addressPage, iconName }) => (
   <QuickAccessButtonContainer>
     <Link to={`${addressPage}`} style={{ color: "black" }}>

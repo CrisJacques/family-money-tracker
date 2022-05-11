@@ -1,7 +1,9 @@
 import React from "react";
 
-/* Componente que tem a responsabilidade de exibir uma mensagem de campo obrigatório quando o usuário
-deixa de preencher algum campo na tela de login */
+/**
+ * Constrói uma mensagem de campo obrigatório na tela de login
+ * @returns Componente que avisa ao usuário que algum campo obrigatório deixou de ser preenchido na tela de login, exibido logo abaixo do campo vazio
+ */
 const RequiredFieldAlert = () => (
   <div style={{ color: "red" }} role="alert">
     Este campo é obrigatório

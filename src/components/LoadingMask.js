@@ -1,8 +1,11 @@
 import React from "react";
 
-import "../styles/spinner.css"; 
+import "../styles/spinner.css";
 
-/* Componente que tem a responsabilidade de ser a máscara de carregamento para informar ao usuário que algum processamento está em andamento */
+/**
+ * Constrói uma máscara de carregamento para informar ao usuário que algum processamento está em andamento
+ * @returns Máscara de carregamento com um spinner animado que fica por cima de formulários enquanto algum processamento estiver em andamento no backend
+ */
 const LoadingMask = () => (
   <div className="spinner-container">
     <div className="loading-spinner"></div>

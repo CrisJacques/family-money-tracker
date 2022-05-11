@@ -1,8 +1,12 @@
 import React from "react";
 import MenuItem from "./MenuItem";
 
-/* Componente que tem a responsabilidade de ser o menu lateral, que aparece à esquerda de todas as páginas da aplicação. 
-   Inclui lógicas para mostrar opções de acordo com o perfil de usuário que está logado no sistema */
+/**
+ * Constrói o menu lateral, que está sempre visível em todas as páginas do sistema, exceto na tela de login
+ * @param {boolean} userIsAdmin - Indica se usuário logado é admininstrador de grupo
+ * @param {boolean} userIsSysAdmin - Indica se usuário logado é admininstrador do sistema
+ * @returns Menu lateral da aplicação com opções habilitadas de acordo com o perfil do usuário logado
+ */
 const MainMenu = ({ userIsAdmin, userIsSysAdmin }) => (
   <div>
     <div className="section">

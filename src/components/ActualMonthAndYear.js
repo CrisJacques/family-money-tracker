@@ -2,7 +2,10 @@ import React from "react";
 
 import actualMonth from "../helpers/actualMonth";
 
-/* Componente que tem a responsabilidade de informar o mês e ano atual na tela inicial */
+/**
+ * Informa o mês e ano atual na tela inicial
+ * @returns Componente com o mês e ano atual
+ */
 const ActualMonthAndYear = () => {
   const actualMonthAndYear = actualMonth();
 

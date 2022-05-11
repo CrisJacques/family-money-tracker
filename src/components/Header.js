@@ -1,6 +1,9 @@
 import React from "react";
 
-/* Componente que tem a responsabilidade de ser o header de todas as páginas da aplicação, exceto a de login */
+/**
+ * Constrói o cabeçalho de todas as páginas da aplicação, exceto a de login
+ * @returns Componente com a imagem de uma família contando dinheiro
+ */
 const Header = () => (
   <header>
     <div>
