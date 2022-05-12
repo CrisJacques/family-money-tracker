@@ -25,44 +25,139 @@ import DespesasFinanciamentoEmprestimoService from "../services/DespesasFinancia
 
 import { MAX_DESCRIPTION_LENGTH } from "../helpers/generalRules";
 
-/* Tela que permite o cadastro de despesas */
-const CreateEditExpense = (props) => {
-  /*Referência para o formulário de cadastro de despesas */
+/**
+ * Tela de cadastro de despesas
+ * @returns Formulário de cadastro de despesas, com os botões Salvar e Cancelar
+ */
+const CreateEditExpense = () => {
+  /**
+   * Referência para o formulário de cadastro de despesas
+   */
   const form = useRef();
+  
 
-  /* Variáveis de estado para os componentes da tela */
+  /* ======================== Variáveis de estado para os componentes da tela ===================================== */
+
+  /**
+   * Campo "Valor"
+   */
   const [value, setValue] = useState("");
+
+  /**
+   * Campo "Descrição"
+   */
   const [description, setDescription] = useState("");
+
+  /**
+   * Campo "Data"
+   */
   const [registerDate, setRegisterDate] = useState("");
+
+  /**
+   * Combobox "Categoria"
+   */
   const [category, setCategory] = useState("");
+
+  /**
+   * Combobox "Forma de Pagamento"
+   */
   const [paymentType, setPaymentType] = useState("");
+
+  /**
+   * Combobox "Conta"
+   */
   const [account, setAccount] = useState("");
+
+  /**
+   * Combobox "Cartão de crédito"
+   */
   const [creditCard, setCreditCard] = useState("");
+
+  /**
+   * Combobox "Banco"
+   */
   const [bank, setBank] = useState("");
+
+  /**
+   * Campo "Número de parcelas"
+   */
   const [numberInstallments, setNumberInstallments] = useState("");
 
-  /* Variável de estado para controlar a exibição da máscara de carregamento da tela quando usuário salva um novo registro */
+  /**
+   * Variável de estado para controlar a exibição da máscara de carregamento da tela quando usuário salva um novo registro
+   */
   const [loading, setLoading] = useState(false);
 
-  /* Armazenando em variáveis de estado informações vindas do backend para exibir nos comboboxes */
+
+  /* ======================== Armazenando em variáveis de estado informações vindas do backend para exibir nos comboboxes ===================================== */
+
+  /**
+   * Lista de categorias de despesas
+   */
   const [categoriasDespesas, setCategoriasDespesas] = useState([]);
+
+  /**
+   * Lista de formas de pagamento
+   */
   const [formasDePagamento, setFormasDePagamento] = useState([]);
+
+  /**
+   * Lista de contas
+   */
   const [contas, setContas] = useState([]);
+
+  /**
+   * Lista de cartões de crédito
+   */
   const [cartoesDeCredito, setCartoesDeCredito] = useState([]);
+
+  /**
+   * Lista de bancos
+   */
   const [bancos, setBancos] = useState([]);
 
-  /* Criando variáveis de estado para armazenar a decisão de quando exibir ou não determinados campos do formulário, de acordo com a forma de pagamento escolhida */
+
+  /* ==== Criando variáveis de estado para armazenar a decisão de quando exibir ou não determinados campos do formulário, de acordo com a forma de pagamento escolhida ===== */
+
+  /**
+   * Exibir ou não o campo "Conta"
+   */
   const [exibirConta, setExibirConta] = useState(false);
+
+  /**
+   * Exibir ou não o campo "Cartão de crédito"
+   */
   const [exibirCartaoCredito, setExibirCartaoCredito] = useState(false);
+
+  /**
+   * Exibir ou não o campo "Banco"
+   */
   const [exibirBanco, setExibirBanco] = useState(false);
+
+  /**
+   * Exibir ou não o campo "Número de parcelas"
+   */
   const [exibirNumParcelas, setExibirNumParcelas] = useState(false);
 
-  /* Obtendo o usuário da store e armazenando seu token para poder passar no header das requisições que serão feitas ao backend */
+
+  /* =========== Obtendo o usuário da store e armazenando seu token para poder passar no header das requisições que serão feitas ao backend =============== */
+
+  /**
+   * Armazenando as informações do usuário logado em uma variável
+   */
   const { user: currentUser } = useSelector((state) => state.auth);
+
+  /**
+   * Unindo o tipo do token com o seu valor para ser utilizado no header das requisições
+   */
   const userToken = `${currentUser.tokenType} ${currentUser.accessToken}`;
 
+
   /* ======================== Carregando informações do banco de dados para popular os comboboxes ===================================== */
-  /* Carrega a lista de contas cadastradas cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor */
+
+  /**
+   * Carrega a lista de contas cadastradas cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor
+   */
   useEffect(() => {
     const fetchAccounts = async () => {
       const resposta = await ContasService.getContas(userToken);
@@ -71,7 +166,9 @@ const CreateEditExpense = (props) => {
     fetchAccounts();
   }, [currentUser, userToken]);
 
-  /* Carrega a lista de cartões de crédito cadastrados cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor */
+  /**
+   * Carrega a lista de cartões de crédito cadastrados cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor
+   */
   useEffect(() => {
     const fetchCreditCards = async () => {
       const resposta = await CartoesDeCreditoService.getCartoesDeCredito(
@@ -82,7 +179,9 @@ const CreateEditExpense = (props) => {
     fetchCreditCards();
   }, [currentUser, userToken]);
 
-  /* Carrega a lista de formas de pagamento cadastradas cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor */
+  /**
+   * Carrega a lista de formas de pagamento cadastradas cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor
+   */
   useEffect(() => {
     const fetchPaymentTypes = async () => {
       try {
@@ -103,7 +202,9 @@ const CreateEditExpense = (props) => {
     fetchPaymentTypes();
   }, [currentUser, userToken]);
 
-  /* Carrega a lista de bancos cadastrados cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor */
+  /**
+   * Carrega a lista de bancos cadastrados cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor
+   */
   useEffect(() => {
     const fetchBanks = async () => {
       const resposta = await BancosService.getBancos(userToken);
@@ -115,7 +216,9 @@ const CreateEditExpense = (props) => {
     fetchBanks();
   }, [currentUser, userToken]);
 
-  /* Carrega a lista de categorias de despesas cadastradas cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor */
+  /**
+   * Carrega a lista de categorias de despesas cadastradas cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor
+   */
   useEffect(() => {
     const fetchExpenseCategories = async () => {
       const resposta = await CategoriasDespesasService.getCategoriasDespesas(
@@ -126,8 +229,12 @@ const CreateEditExpense = (props) => {
     fetchExpenseCategories();
   }, [currentUser, userToken]);
 
+
   /* ======================== Cadastrando despesas através de requisições à API ===================================== */
-  /* Cadastra uma nova despesa cuja forma de pagamento é financiamento ou empréstimo */
+
+  /**
+   * Cadastra uma despesa cuja forma de pagamento é financiamento ou empréstimo
+   */
   const insertExpenseFinancingLoan = async () => {
     try {
       setLoading(true);
@@ -181,7 +288,9 @@ const CreateEditExpense = (props) => {
     }
   };
 
-  /* Cadastra uma nova despesa cuja forma de pagamento é cartão de crédito */
+  /**
+   * Cadastra uma despesa cuja forma de pagamento é cartão de crédito
+   */
   const insertExpenseCreditCard = async () => {
     try {
       setLoading(true);
@@ -234,7 +343,9 @@ const CreateEditExpense = (props) => {
     }
   };
 
-  /* Cadastra uma nova despesa cuja forma de pagamento é dinheiro ou débito */
+  /**
+   * Cadastra uma despesa cuja forma de pagamento é dinheiro ou débito
+   */
   const insertExpenseDebitCash = async () => {
     try {
       setLoading(true);
@@ -285,7 +396,13 @@ const CreateEditExpense = (props) => {
     }
   };
 
+
   /* ================ Chamando a função de cadastro de despesa de acordo com a forma de pagamento escolhida quando usuário clica em Salvar ========================= */
+
+  /**
+   * Solicita o cadastro da despesa de acordo com a forma de pagamento escolhida, caso não haja problemas no preenchimento do formulário. Se algum campo estiver com problemas no preenchimento, será exibido um toast alertando o usuário
+   * @param {Event} e - Evento de clique do usuário
+   */
   const handleSubmit = (e) => {
     e.preventDefault();
     if (description.length > MAX_DESCRIPTION_LENGTH) {
@@ -357,32 +474,49 @@ const CreateEditExpense = (props) => {
     }
   };
 
+
   /* ====================== Atualizando o estado dos componentes na tela quando usuário interage com eles ========================================== */
-  /* Campo valor */
+
+  /**
+   * Atualiza a variável de estado do campo "Valor" com a nova entrada do usuário
+   * @param {Event} e - Evento de interação do usuário com o campo
+   */
   const onChangeValue = (e) => {
     const value = e.target.value;
     setValue(value);
   };
 
-  /* Campo descrição */
+  /**
+   * Atualiza a variável de estado do campo "Descrição" com a nova entrada do usuário
+   * @param {Event} e - Evento de interação do usuário com o campo
+   */
   const onChangeDescription = (e) => {
     const description = e.target.value;
     setDescription(description);
   };
 
-  /* Campo data */
+  /**
+   * Atualiza a variável de estado do campo "Data" com a nova entrada do usuário
+   * @param {Event} e - Evento de interação do usuário com o campo
+   */
   const onChangeRegisterDate = (e) => {
     const registerDate = e.target.value;
     setRegisterDate(registerDate);
   };
 
-  /* Campo categoria */
+  /**
+   * Atualiza a variável de estado do combobox "Categoria" com a nova entrada do usuário
+   * @param {Event} e - Evento de interação do usuário com o combobox
+   */
   const onChangeCategory = (e) => {
     const category = e.target.value;
     setCategory(category);
   };
 
-  /* Campo forma de pagamento, que contém lógica para esconder e exibir campos de formulário de acordo com a forma de pagamento selecionada */
+  /**
+   * Atualiza a variável de estado do combobox "Forma de pagamento" e implementa lógica para esconder e exibir campos de formulário de acordo com a forma de pagamento selecionada
+   * @param {Event} e - Evento de interação do usuário com o combobox
+   */
   const onChangePaymentType = (e) => {
     const paymentType = e.target.value;
     if (e.target.value !== "") {
@@ -416,32 +550,50 @@ const CreateEditExpense = (props) => {
     setPaymentType(paymentType);
   };
 
-  /* Campo cartão de crédito */
+  /**
+   * Atualiza a variável de estado do combobox "Cartão de crédito" com a nova entrada do usuário
+   * @param {Event} e - Evento de interação do usuário com o combobox
+   */
   const onChangeCreditCard = (e) => {
     const creditCard = e.target.value;
     setCreditCard(creditCard);
   };
 
-  /* Campo conta */
+  /**
+   * Atualiza a variável de estado do combobox "Conta" com a nova entrada do usuário
+   * @param {Event} e - Evento de interação do usuário com o combobox
+   */
   const onChangeAccount = (e) => {
     const account = e.target.value;
     setAccount(account);
   };
 
-  /* Campo banco */
+  /**
+   * Atualiza a variável de estado do combobox "Banco" com a nova entrada do usuário
+   * @param {Event} e - Evento de interação do usuário com o combobox
+   */
   const onChangeBank = (e) => {
     const bank = e.target.value;
     setBank(bank);
   };
 
-  /* Campo número de parcelas */
+  /**
+   * Atualiza a variável de estado do campo "Número de parcelas" com a nova entrada do usuário
+   * @param {Event} e - Evento de interação do usuário com o campo
+   */
   const onChangeNumberInstallments = (e) => {
     const numberInstallments = e.target.value;
     setNumberInstallments(numberInstallments);
   };
 
+
   /* ====================== Inserindo lógicas de validação e formatação de campos numéricos ========================================== */
-  /* Validações para campo valor, já formatando como um campo monetário, para facilitar o input pelo usuário */
+
+  /**
+   * Formata o campo "Valor" como monetário, para facilitar o input pelo usuário
+   * @param {String} value - Valor inserido pelo usuário no campo "Valor"
+   * @returns {String} Valor formatado como monetário, com moeda do Brasil
+   */
   function currencyFormatter(value) {
     if (!Number(value)) return "";
 
@@ -453,7 +605,11 @@ const CreateEditExpense = (props) => {
     return `${amount}`;
   }
 
-  /* Validação para aceitar apenas números inteiros, no campo número de parcelas */
+  /**
+   * Validação para aceitar apenas números inteiros
+   * @param {*} value - Valor inserido pelo usuário no campo
+   * @returns {String} Retorna uma string vazia se a entrada não for numérica; retorna a própria entrada caso ela seja numérica
+   */
   function numberFormatter(value) {
     if (!Number(value)) {
       return "";
@@ -462,7 +618,12 @@ const CreateEditExpense = (props) => {
     }
   }
 
+
   /* ====================== Construção da tela de cadastro de despesas ========================================== */
+
+  /**
+   * Formulário de cadastro de despesas com os botões Salvar e Cancelar
+   */
   return (
     <div>
       <WholePageContainer>

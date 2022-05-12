@@ -100,7 +100,7 @@ function App() {
               />
               <Route
                 path="/despesas"
-                element={<CreateEditExpense history={history} />}
+                element={<CreateEditExpense />}
               />
               <Route
                 path="/receitas"
