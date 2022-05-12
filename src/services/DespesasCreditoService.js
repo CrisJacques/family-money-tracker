@@ -1,13 +1,6 @@
 import axios from "axios";
-import { API_URL_BASE } from "../API_URLs";
+import requestUrl from "../helpers/requestURL";
 import convertMoneyToNumber from "../helpers/convertMoneyToNumber";
-
-/**
- * Faz a união da URL base da API com o caminho passado por parâmetro
- * @param {String} path - Caminho do endpoint
- * @returns {String} Caminho completo da requisição
- */
-const requestUrl = (path) => `${API_URL_BASE}${path}`;
 
 /**
  * Classe que executa ações relacionadas a despesas cuja forma de pagamento é cartão de crédito através do envio de requisições à API

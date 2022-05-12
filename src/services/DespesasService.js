@@ -1,12 +1,5 @@
 import axios from "axios";
-import { API_URL_BASE } from "../API_URLs";
-
-/**
- * Faz a união da URL base da API com o caminho passado por parâmetro
- * @param {String} path - Caminho do endpoint
- * @returns {String} Caminho completo da requisição
- */
-const requestUrl = (path) => `${API_URL_BASE}${path}`;
+import requestUrl from "../helpers/requestURL";
 
 /**
  * Classe que executa consultas gerais relacionadas a despesas através do envio de requisições à API
