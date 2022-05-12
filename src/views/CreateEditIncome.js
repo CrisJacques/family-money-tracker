@@ -20,37 +20,82 @@ import ReceitasService from "../services/ReceitasService";
 
 import { MAX_DESCRIPTION_LENGTH } from "../helpers/generalRules";
 
-/* Tela que permite o cadastro de receitas */
-const CreateEditIncome = (props) => {
-  /*Referência para o formulário de cadastro de receitas */
+/**
+ * Tela que permite o cadastro de receitas
+ * @returns Formulário de cadastro de receitas, com os botões "Salvar" e "Cancelar"
+ */
+const CreateEditIncome = () => {
+  /**
+   * Referência para o formulário de cadastro de receitas
+   */
   const form = useRef();
 
-  /* Variáveis de estado para os componentes da tela */
+  /* ======================== Variáveis de estado para os componentes da tela ===================================== */
+  /**
+   * Campo "Valor"
+   */
   const [value, setValue] = useState("");
+
+  /**
+   * Campo "Descrição"
+   */
   const [description, setDescription] = useState("");
+
+  /**
+   * Campo "Data"
+   */
   const [registerDate, setRegisterDate] = useState("");
+
+  /**
+   * Combobox "Categoria"
+   */
   const [category, setCategory] = useState("");
+
+  /**
+   * Combobox "Conta"
+   */
   const [account, setAccount] = useState("");
 
-  /* Variável de estado para controlar a exibição da máscara de carregamento da tela quando usuário salva um novo registro */
+  /**
+   * Variável de estado para controlar a exibição da máscara de carregamento da tela quando usuário salva um novo registro
+   */
   const [loading, setLoading] = useState(false);
 
-  /* Armazenando em variáveis de estado informações vindas do backend para exibir nos comboboxes */
+  /* ============= Armazenando em variáveis de estado informações vindas do backend para exibir nos comboboxes ========================== */
+  /**
+   * Lista de categorias de receitas
+   */
   const [categoriasReceitas, setCategoriasReceitas] = useState([]);
+
+  /**
+   * Lista de contas
+   */
   const [contas, setContas] = useState([]);
 
-  /* Obtendo o usuário da store e armazenando seu token para poder passar no header das requisições que serão feitas ao backend */
+  /* ==== Obtendo o usuário da store e armazenando seu token para poder passar no header das requisições que serão feitas ao backend ===== */
+
+  /**
+   * Armazenando as informações do usuário logado em uma variável
+   */
   const { user: currentUser } = useSelector((state) => state.auth);
+
+  /**
+   * Unindo o tipo do token com o seu valor para ser utilizado no header das requisições
+   */
   const userToken = `${currentUser.tokenType} ${currentUser.accessToken}`;
 
   /* ======================== Carregando informações do banco de dados para popular os comboboxes ===================================== */
-  /* Carrega a lista de contas cadastradas cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor */
+
+  /**
+   * Carrega a lista de contas cadastradas cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor
+   */
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
         const resposta = await ContasService.getContas(userToken);
         setContas(resposta.data);
-      } catch (error) {// Só é preciso fazer a verificação de sessão expirada no carregamento de um dos comboboxes, pois se der erro em um, dará em todos. Assim, é evitada a exibição de vários toasts com o mesmo erro para o usuário.
+      } catch (error) {
+        // Só é preciso fazer a verificação de sessão expirada no carregamento de um dos comboboxes, pois se der erro em um, dará em todos. Assim, é evitada a exibição de vários toasts com o mesmo erro para o usuário.
         toast.error("Sessão expirada. Por favor, faça login novamente.", {
           position: "bottom-center",
         });
@@ -59,7 +104,9 @@ const CreateEditIncome = (props) => {
     fetchAccounts();
   }, [currentUser, userToken]);
 
-  /* Carrega a lista de categorias de receitas cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor */
+  /**
+   * Carrega a lista de categorias de receitas cada vez que a tela é renderizada e quando as variáveis currentUser e userToken mudarem de valor
+   */
   useEffect(() => {
     const fetchIncomeCategories = async () => {
       const resposta = await CategoriasReceitasService.getCategoriasReceitas(
@@ -71,6 +118,10 @@ const CreateEditIncome = (props) => {
   }, [currentUser, userToken]);
 
   /* ======================== Cadastrando receitas através de requisições à API ===================================== */
+
+  /**
+   * Cadastra uma receita
+   */
   const insertIncome = async () => {
     try {
       setLoading(true);
@@ -115,14 +166,21 @@ const CreateEditIncome = (props) => {
   };
 
   /* ======================== Chamando a função de cadastro de receita quando usuário clica em Salvar ===================================== */
+
+  /**
+   * Solicita o cadastro da receita, caso não haja problemas no preenchimento do formulário. Se algum campo estiver com problemas no preenchimento, será exibido um toast alertando o usuário
+   * @param {Event} e - Evento de clique do usuário
+   */
   const handleSubmit = (e) => {
     e.preventDefault();
     if (description.length > MAX_DESCRIPTION_LENGTH) {
-      toast.error(`Campo descrição não pode conter mais do que ${MAX_DESCRIPTION_LENGTH} caracteres`, {
-        position: "bottom-center",
-      });
-    }
-    else if (
+      toast.error(
+        `Campo descrição não pode conter mais do que ${MAX_DESCRIPTION_LENGTH} caracteres`,
+        {
+          position: "bottom-center",
+        }
+      );
+    } else if (
       value !== "" &&
       description !== "" &&
       registerDate !== "" &&
@@ -138,38 +196,59 @@ const CreateEditIncome = (props) => {
   };
 
   /* ====================== Atualizando o estado dos componentes na tela quando usuário interage com eles ========================================== */
-  /* Campo valor */
+
+  /**
+   * Atualiza a variável de estado do campo "Valor" com a nova entrada do usuário
+   * @param {Event} e - Evento de interação do usuário com o campo
+   */
   const onChangeValue = (e) => {
     const value = e.target.value;
     setValue(value);
   };
 
-  /* Campo descrição */
+  /**
+   * Atualiza a variável de estado do campo "Descrição" com a nova entrada do usuário
+   * @param {Event} e - Evento de interação do usuário com o campo
+   */
   const onChangeDescription = (e) => {
     const description = e.target.value;
     setDescription(description);
   };
 
-  /* Campo data */
+  /**
+   * Atualiza a variável de estado do campo "Data" com a nova entrada do usuário
+   * @param {Event} e - Evento de interação do usuário com o campo
+   */
   const onChangeRegisterDate = (e) => {
     const registerDate = e.target.value;
     setRegisterDate(registerDate);
   };
 
-  /* Campo categoria */
+  /**
+   * Atualiza a variável de estado do combobox "Categoria" com a nova entrada do usuário
+   * @param {Event} e - Evento de interação do usuário com o combobox
+   */
   const onChangeCategory = (e) => {
     const category = e.target.value;
     setCategory(category);
   };
 
-  /* Campo conta */
+  /**
+   * Atualiza a variável de estado do combobox "Conta" com a nova entrada do usuário
+   * @param {Event} e - Evento de interação do usuário com o combobox
+   */
   const onChangeAccount = (e) => {
     const account = e.target.value;
     setAccount(account);
   };
 
   /* ====================== Inserindo lógicas de validação e formatação de campos numéricos ========================================== */
-  /* Validações para campo valor, já formatando como um campo monetário, para facilitar o input pelo usuário */
+
+  /**
+   * Formata o campo "Valor" como monetário, para facilitar o input pelo usuário
+   * @param {String} value - Valor inserido pelo usuário no campo "Valor"
+   * @returns {String} Valor formatado como monetário, com moeda do Brasil
+   */
   function currencyFormatter(value) {
     if (!Number(value)) return "";
 
@@ -182,6 +261,10 @@ const CreateEditIncome = (props) => {
   }
 
   /* ====================== Construção da tela de cadastro de receitas ========================================== */
+
+  /**
+   * Formulário de cadastro de receitas com os botões Salvar e Cancelar
+   */
   return (
     <div>
       <WholePageContainer>

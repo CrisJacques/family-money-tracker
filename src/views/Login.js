@@ -1,6 +1,5 @@
 import React, { useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
@@ -19,47 +18,81 @@ import RequiredFieldAlert from "../components/RequiredFieldAlert";
 import InputLabel from "../components/InputLabel";
 import LoadingLoginMask from "../components/LoadingLoginMask";
 
-/* Validação que exibe uma mensagem quando o usuário deixa de preencher algum campo e clica em Entrar */
+/**
+ * Validação que exibe uma mensagem quando o usuário deixa de preencher algum campo e clica em Entrar
+ * @param {String} value - Valor preenchido no campo
+ * @returns Componente com uma mensagem alertando que o campo é obrigatório (caso ele esteja vazio)
+ */
 const required = (value) => {
   if (!value) {
     return <RequiredFieldAlert />;
   }
 };
 
-/* Tela de login */
+/**
+ * Tela de login
+ * @returns Formulário com campos para inserir o usuário e a senha e o botão "Entrar"
+ */
 const Login = () => {
-  /* Referência para o formulário de login */
+  /**
+   * Referência para o formulário de login
+   */
   const form = useRef();
 
-  /* Referência para o checkBtn, que armazena mensagens de erro no preenchimento dos campos de login */
+  /**
+   * Referência para o checkBtn, que armazena mensagens de erro no preenchimento dos campos de login
+   */
   const checkBtn = useRef();
 
-  /* Variáveis de estado para os componentes da tela */
+  /* ====================== Variáveis de estado para os componentes da tela ========================================== */
+  /**
+   * Campo "E-mail"
+   */
   const [email, setEmail] = useState("");
+
+  /**
+   * Campo "Senha"
+   */
   const [password, setPassword] = useState("");
 
-  /* Variável de estado para controlar a exibição da máscara de carregamento da tela quando usuário solicita o login */
+  /**
+   * Variável de estado para controlar a exibição da máscara de carregamento da tela quando usuário solicita o login
+   */
   const [loading, setLoading] = useState(false);
 
-  /* Obtendo da store a informação de que se o usuário está logado e armazenando em uma variável */
-  const { isLoggedIn } = useSelector((state) => state.auth);
+  /* ====================== Dispatch das actions necessárias ========================================== */
 
+  /**
+   * Responsável por fazer o dispatch das actions relacionadas ao login
+   */
   const dispatch = useDispatch();
 
   /* ====================== Atualizando o estado dos componentes na tela quando usuário interage com eles ========================================== */
-  /* Campo email */
+
+  /**
+   * Atualiza a variável de estado do campo "E-mail" com a nova entrada do usuário
+   * @param {Event} e - Evento de interação do usuário com o campo
+   */
   const onChangeEmail = (e) => {
     const email = e.target.value;
     setEmail(email);
   };
 
-  /* Campo senha */
+  /**
+   * Atualiza a variável de estado do campo "Senha" com a nova entrada do usuário
+   * @param {Event} e - Evento de interação do usuário com o campo
+   */
   const onChangePassword = (e) => {
     const password = e.target.value;
     setPassword(password);
   };
 
   /* =============================== Tentando fazer o login quando usuário clica em Entrar ========================================== */
+
+  /**
+   * Tenta fazer o login, caso não haja problemas no preenchimento do formulário. Se algum campo estiver com problemas no preenchimento, usuário será alertado. Se login não for bem sucedido, usuário também será alertado.
+   * @param {Event} e - Evento de clique do usuário
+   */
   const handleLogin = (e) => {
     e.preventDefault();
     form.current.validateAll();
@@ -77,6 +110,11 @@ const Login = () => {
   };
 
   /* ======================= Traduzindo mensagens de erro no login para textos amigáveis em toasts ============================ */
+
+  /**
+   * Gera toasts com mensagens mais amigáveis em caso de falha no login
+   * @param {String} errorMessage - Mensagem de erro resultante da requisição de login
+   */
   const showToastMessage = (errorMessage) => {
     if (errorMessage === "Request failed with status code 401") {
       toast.error(
@@ -102,12 +140,11 @@ const Login = () => {
     }
   };
 
-  /* ====================== Redirecionando para a página de perfil do usuário se ele estiver logado ========================================== */
-  if (isLoggedIn) {
-    return <Navigate to="/meu_perfil" />;
-  }
-
   /* ====================== Construção da tela de login ========================================== */
+
+  /**
+   * Formulário de login com o botão "Entrar"
+   */
   return (
     <LoginPageContainer>
       <ToastContainer theme="colored" />
@@ -150,7 +187,7 @@ const Login = () => {
           <CheckButton style={{ display: "none" }} ref={checkBtn} />
         </Form>
       </LoginFormContainer>
-      <div>{loading === true ? <LoadingLoginMask height="100vh"/> : ""}</div>
+      <div>{loading === true ? <LoadingLoginMask height="100vh" /> : ""}</div>
     </LoginPageContainer>
   );
 };

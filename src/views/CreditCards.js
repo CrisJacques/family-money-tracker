@@ -2,7 +2,10 @@ import React from "react";
 import PageTitleContainer from "../styles/PageTitleContainer";
 import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 
-/* Tela que irá permitir o cadastro, listagem, edição e exclusão de cartões de crédito por parte do administrador do grupo */
+/**
+ * Tela que irá permitir o cadastro, listagem, edição e exclusão de cartões de crédito por parte do administrador do grupo
+ * @returns Componente contendo uma explicação de qual será o escopo desta página
+ */
 const CreditCards = () => (
   <div>
     <PageTitleContainer>Cartões de Crédito</PageTitleContainer>

@@ -3,7 +3,10 @@ import React from "react";
 import PageTitleContainer from "../styles/PageTitleContainer";
 import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 
-/* Tela que irá permitir o cadastro, listagem, edição e exclusão de pagamentos de faturas de cartão de crédito, financiamentos e empréstimos */
+/**
+ * Tela que irá permitir o cadastro, listagem, edição e exclusão de pagamentos de faturas de cartão de crédito, financiamentos e empréstimos
+ * @returns Componente contendo uma explicação de qual será o escopo desta página
+ */
 const CreditCardPayments = () => (
   <div>
     <PageTitleContainer>Pagamento de parcelas / faturas</PageTitleContainer>

@@ -5,7 +5,9 @@ import { Provider } from "react-redux";
 import store from "./store";
 import App from "./App";
 
-/* Conectando a store do Redux à aplicação e renderizando */
+/**
+ * Conectando a store do Redux à aplicação e renderizando
+ */
 ReactDOM.render(
   <Provider store={store}>
     <App />

@@ -2,7 +2,10 @@ import React from "react";
 import PageTitleContainer from "../styles/PageTitleContainer";
 import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 
-/* Tela que irá permitir o cadastro, listagem, edição e exclusão de itens recorrentes (despesas e receitas que se repetem todo mês) */
+/**
+ * Tela que irá permitir o cadastro, listagem, edição e exclusão de itens recorrentes (despesas e receitas que se repetem todo mês)
+ * @returns Componente contendo uma explicação de qual será o escopo desta página
+ */
 const RecurringItems = () => (
   <div>
     <PageTitleContainer>Itens recorrentes</PageTitleContainer>

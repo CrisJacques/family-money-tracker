@@ -6,7 +6,9 @@ import rootReducer from "./reducers";
 
 const middleware = [thunk];
 
-/* Criando a store do Redux, passando todos os reducers criados */
+/**
+ * Criando a store do Redux, passando todos os reducers criados
+ */
 const store = createStore(
   rootReducer,
   composeWithDevTools(applyMiddleware(...middleware))

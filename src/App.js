@@ -30,20 +30,33 @@ import { history } from "./helpers/history";
 import AppContainer from "./styles/AppContainer";
 import LogoutButtonContainer from "./styles/LogoutButtonContainer";
 
-/* Aplicação Family Money Tracker */
+/**
+ * Aplicação Family Money Tracker
+ * @returns Estrutura da aplicação, com menu lateral direcionando a todas as páginas do sistema. As opções do menu variam de acordo com o perfil do usuário logado. Caso usuário não esteja logado, o mesmo é redirecionado a tela de Login.
+ */
 function App() {
-  /* Obtendo o usuário a partir da store */
+  /**
+   * Obtendo o usuário a partir da store
+   */
   const { user: currentUser } = useSelector((state) => state.auth);
 
-  /* Variável de estado para armazenar se usuário é admin de grupo ou não */
+  /**
+   * Variável de estado para armazenar se usuário é admin de grupo ou não
+   */
   const [isAdmin, setIsAdmin] = useState(false);
 
-  /* Variável de estado para armazenar se usuário é admin do sistema ou não */
+  /**
+   * Variável de estado para armazenar se usuário é admin do sistema ou não
+   */
   const [isSysAdmin, setIsSysAdmin] = useState(false);
 
+  /**
+   * Responsável pelo dispatch das actions relacionadas a login e logout
+   */
   const dispatch = useDispatch();
 
   /* ================ Verificando se usuário é admin de grupo ou do sistema cada vez que aplicação é carregada e quando a variável currentUser mudar de valor =============== */
+
   useEffect(() => {
     if (currentUser) {
       setIsAdmin(currentUser.roles.includes("ADMIN_GRUPO"));
@@ -55,16 +68,22 @@ function App() {
   }, [currentUser]);
 
   /* ======================== Redirecionando para a tela de login quando usuário não estiver logado ============================== */
+
   if (!currentUser) {
     return <Login />;
   }
 
   /* ======================== Fazendo o logout da aplicação quando usuário clicar em Sair ============================== */
+
   const logOut = () => {
     dispatch(logout());
   };
 
   /* ======================== Construção da aplicação ============================== */
+
+  /**
+   * Estrutura da aplicação, com menu lateral direcionando a todas as páginas do sistema
+   */
   return (
     <AppContainer>
       <Header />
@@ -98,14 +117,8 @@ function App() {
                   />
                 }
               />
-              <Route
-                path="/despesas"
-                element={<CreateEditExpense />}
-              />
-              <Route
-                path="/receitas"
-                element={<CreateEditIncome history={history} />}
-              />
+              <Route path="/despesas" element={<CreateEditExpense />} />
+              <Route path="/receitas" element={<CreateEditIncome />} />
               <Route
                 path="/pagamento_parcelas"
                 element={<CreditCardPayments />}
