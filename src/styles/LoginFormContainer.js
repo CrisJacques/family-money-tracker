@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
-/* O objetivo deste syled component é centralizar o formulário de login na tela, tanto horizontalmente quanto verticalmente */
+/**
+ * O objetivo deste styled component é centralizar o formulário de login na tela, tanto horizontalmente quanto verticalmente
+ */
 const LoginFormContainer = styled.div`
   margin: 0;
   position: absolute;

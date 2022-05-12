@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
-/* O objetivo deste styled component é estilizar cada botão de acesso rápido da tela inicial da aplicação */
+/**
+ * O objetivo deste styled component é estilizar cada botão de acesso rápido da tela inicial da aplicação
+ */
 const QuickAccessButtonContainer = styled.div`
   font-family: "Roboto", sans-serif;
   color: black;

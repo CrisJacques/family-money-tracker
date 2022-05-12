@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
-/* O objetivo deste syled component é estilizar todos os campos de formulário da aplicação */
+/**
+ * O objetivo deste styled component é estilizar todos os campos de formulário da aplicação
+ */
 const InputFieldContainer = styled.div`
   background: white;
   padding: 0.1em;

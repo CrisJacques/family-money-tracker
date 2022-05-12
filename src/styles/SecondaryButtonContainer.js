@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
-/* O objetivo deste styled component é padronizar o aspecto visual de todos os botões secundários da aplicação */
+/**
+ * O objetivo deste styled component é padronizar o aspecto visual de todos os botões secundários da aplicação
+ */
 const SecondaryButtonContainer = styled.button`
   background: white;
   color: #00675b;

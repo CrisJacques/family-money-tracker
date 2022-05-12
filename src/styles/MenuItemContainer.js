@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
-/* O objetivo deste styled component é estilizar cada item do menu lateral, a fim de manter consistência visual */
+/**
+ * O objetivo deste styled component é estilizar cada item do menu lateral, a fim de manter consistência visual
+ */
 const MenuItemContainer = styled.div`
   font-family: "Roboto", sans-serif;
   color: black;

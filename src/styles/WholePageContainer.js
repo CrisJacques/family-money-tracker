@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
-/* O objetivo deste syled component é padronizar a estilização de cada uma das páginas como um todo, a fim de permitir que elas possam receber facilmente uma máscara de carregamento sobre elas quando for necessário (componente LoadingMask) */
+/**
+ * O objetivo deste syled component é padronizar a estilização de cada uma das páginas como um todo, a fim de permitir que elas possam receber facilmente uma máscara de carregamento sobre elas quando for necessário (componente LoadingMask)
+ */
 const WholePageContainer = styled.div`
   position: absolute;
 

@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
-/* O objetivo deste styled component é padronizar a apresentação visual de todas as seções de conteúdo das páginas */
+/**
+ * O objetivo deste styled component é padronizar a apresentação visual de todas as seções de conteúdo das páginas
+ */
 const PageContentSectionContainer = styled.div`
   font-family: "Roboto", sans-serif;
   color: black;
