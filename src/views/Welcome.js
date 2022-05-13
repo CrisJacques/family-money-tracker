@@ -242,7 +242,7 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
                 <div className="col s5 l5">
                   <GenericTwoColorsPieChart
                     dados={convertDataToPieChart(totaisGerais)}
-                    cores={["#2E8B57", "#D2042D"]}
+                    cores={["#D2042D", "#2E8B57"]}
                   />
                 </div>
                 <div
