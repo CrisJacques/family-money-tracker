@@ -256,7 +256,11 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
                   }}
                 >
                   {Object.keys(totaisGerais).map((key) => (
-                    <CategoryItem category={key} value={totaisGerais[key]} />
+                    <CategoryItem
+                      key={key}
+                      category={key}
+                      value={totaisGerais[key]}
+                    />
                   ))}
                   <BoldCategoryItem
                     category="Saldo"
@@ -290,6 +294,7 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
                 >
                   {Object.keys(totaisPorCategoriaReceita).map((key) => (
                     <CategoryItem
+                      key={key}
                       category={key}
                       value={totaisPorCategoriaReceita[key]}
                     />
@@ -320,6 +325,7 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
                 >
                   {Object.keys(totaisPorCategoriaDespesa).map((key) => (
                     <CategoryItem
+                      key={key}
                       category={key}
                       value={totaisPorCategoriaDespesa[key]}
                     />
@@ -335,6 +341,7 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
               <SectionTitleInitialScreen title="Receitas recentes" />
               {receitas.map((r) => (
                 <TransactionItem
+                  key={r.descricao}
                   description={r.descricao}
                   value={r.valor}
                   category={r.nomeCategoriaReceita}
@@ -348,6 +355,7 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
               <SectionTitleInitialScreen title="Despesas recentes" />
               {despesas.map((d) => (
                 <TransactionItem
+                  key={d.descricao}
                   description={d.descricao}
                   value={d.valor}
                   category={d.nomeCategoriaDespesa}
