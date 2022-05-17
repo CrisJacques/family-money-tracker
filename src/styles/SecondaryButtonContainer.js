@@ -3,7 +3,7 @@ import styled from "styled-components";
 /**
  * O objetivo deste styled component é padronizar o aspecto visual de todos os botões secundários da aplicação
  */
-const SecondaryButtonContainer = styled.button`
+const SecondaryButtonContainer = styled.div`
   background: white;
   color: #00675b;
   font-size: 1.2em;
@@ -12,6 +12,7 @@ const SecondaryButtonContainer = styled.button`
   border: 1.5px solid black;
   border-radius: 15px;
   cursor: pointer;
+  display: inline;
 `;
 
 export default SecondaryButtonContainer;
