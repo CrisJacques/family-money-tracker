@@ -7,9 +7,9 @@ const express = require("express");
 const app = express();
 
 /**
- * Este servidor está entregando arquivos da pasta dist, que é a pasta onde fica o build da aplicação depois de compilada
+ * Este servidor está entregando arquivos da pasta build, que é a pasta onde fica o build da aplicação depois de compilada
  */
-app.use(express.static(path.join(__dirname, "dist")));
+app.use(express.static(path.join(__dirname, "build")));
 
 /**
  * Uso de uma variável de ambiente para a porta, esta é uma exigência da Heroku, pois lá as portas são dinâmicas
