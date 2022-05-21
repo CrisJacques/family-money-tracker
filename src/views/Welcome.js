@@ -15,6 +15,7 @@ import BoldCategoryItem from "../components/BoldCategoryItem";
 import GenericPieChart from "../components/GenericPieChart";
 import GenericTwoColorsPieChart from "../components/GenericTwoColorsPieChart";
 import SectionTitleInitialScreen from "../components/SectionTitleInitialScreen";
+import LoadingSectionMask from "../components/LoadingSectionMask";
 
 import ReceitasService from "../services/ReceitasService";
 import DespesasService from "../services/DespesasService";
@@ -86,6 +87,13 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
    */
   const [totaisGeraisComSaldo, setTotaisGeraisComSaldo] = useState("");
 
+  /* ============= Variáveis de estado para controlar a exibição de máscaras de carregamento da tela =============== */
+
+  /**
+   * Carregamento da seção Resumo do mês atual (é utuilizada para carregar a mask de toda a tela: se terminou o carregamento das informações desta seção, provavelmente terminou também o das demais, nesse momento a máscara deixa de ser exibida)
+   */
+  const [loadingResumoMesAtual, setLoadingResumoMesAtual] = useState(false);
+
   /* ======================== Carregando informações do banco de dados para popular as seções da tela ===================================== */
 
   /**
@@ -93,15 +101,18 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
    */
   useEffect(() => {
     const fetchTotaisGeraisMesAtualComSaldo = async () => {
+      setLoadingResumoMesAtual(true);
       try {
         const resposta = await TransacoesService.getTotaisMesAtualComSaldo(
           userToken
         );
         setTotaisGeraisComSaldo(resposta.data);
+        setLoadingResumoMesAtual(false);
       } catch (error) {
         toast.error("Sessão expirada. Por favor, faça login novamente.", {
           position: "bottom-center",
         });
+        setLoadingResumoMesAtual(false);
       }
     };
     fetchTotaisGeraisMesAtualComSaldo();
@@ -206,165 +217,175 @@ const Welcome = ({ userName, userProfile, groupName, userIsSysAdmin }) => {
   } else {
     return (
       <div>
-        <ToastContainer theme="colored" />
-        <div className="row">
-          <div className="col s12 l6">
-            <PageContentSectionContainer>
-              <GreetingContainer>
-                {saudacao}, {userName}!
-              </GreetingContainer>
-              <p style={{ "margin-bottom": "1.85em" }}>
-                <b>Perfil:</b> {userProfileLabel} | <b>Nome do grupo:</b>{" "}
-                {groupName}
-              </p>
-              <SectionTitleContainer>Acesso rápido</SectionTitleContainer>
-              <QuickAccessButton
-                name="Nova Despesa"
-                addressPage="despesas"
-                iconName="trending_down"
-              />
-              <QuickAccessButton
-                name="Nova Receita"
-                addressPage="receitas"
-                iconName="trending_up"
-              />
-              <QuickAccessButton
-                name="Resumo"
-                addressPage="relatorio_resumo"
-                iconName="table_chart"
-              />
-            </PageContentSectionContainer>
+        {loadingResumoMesAtual && (
+          <div>
+            <LoadingSectionMask />{" "}
+            {/*Mostra uma máscara de carregamento sobre toda a tela inicial enquanto não terminar de carregar as informações da seção Resumo do mês atual. Se terminou o carregamento desta seção, provavelmente já terminou também o das demais, e a máscara deixa de ser exibida. Foi inserida esta máscara para contemplar o caso em que a API demorar mais do que o normal para responder, garantindo uma experiência melhor ao usuário.*/}
           </div>
-          <div className="col s12 l6">
-            <PageContentSectionContainer>
-              <SectionTitleInitialScreen title="Resumo do mês atual" />
-              <div className="row" style={{ position: "relative" }}>
-                <div className="col s5 l5">
-                  <GenericTwoColorsPieChart
-                    dados={convertDataToPieChart(totaisGerais)}
-                    cores={["#D2042D", "#2E8B57"]}
+        )}
+        {!loadingResumoMesAtual && (
+          <div>
+            <ToastContainer theme="colored" />
+            <div className="row">
+              <div className="col s12 l6">
+                <PageContentSectionContainer>
+                  <GreetingContainer>
+                    {saudacao}, {userName}!
+                  </GreetingContainer>
+                  <p style={{ "margin-bottom": "1.85em" }}>
+                    <b>Perfil:</b> {userProfileLabel} | <b>Nome do grupo:</b>{" "}
+                    {groupName}
+                  </p>
+                  <SectionTitleContainer>Acesso rápido</SectionTitleContainer>
+                  <QuickAccessButton
+                    name="Nova Despesa"
+                    addressPage="despesas"
+                    iconName="trending_down"
                   />
-                </div>
-                <div
-                  className="col s7 l7"
-                  style={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "40%",
-                    "-ms-transform": "translateY(-50%)",
-                    transform: "translateY(-50%)",
-                  }}
-                >
-                  {Object.keys(totaisGerais).map((key) => (
-                    <CategoryItem
-                      key={key}
-                      category={key}
-                      value={totaisGerais[key]}
+                  <QuickAccessButton
+                    name="Nova Receita"
+                    addressPage="receitas"
+                    iconName="trending_up"
+                  />
+                  <QuickAccessButton
+                    name="Resumo"
+                    addressPage="relatorio_resumo"
+                    iconName="table_chart"
+                  />
+                </PageContentSectionContainer>
+              </div>
+              <div className="col s12 l6">
+                <PageContentSectionContainer>
+                  <SectionTitleInitialScreen title="Resumo do mês atual" />
+                  <div className="row" style={{ position: "relative" }}>
+                    <div className="col s5 l5">
+                      <GenericTwoColorsPieChart
+                        dados={convertDataToPieChart(totaisGerais)}
+                        cores={["#D2042D", "#2E8B57"]}
+                      />
+                    </div>
+                    <div
+                      className="col s7 l7"
+                      style={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "40%",
+                        "-ms-transform": "translateY(-50%)",
+                        transform: "translateY(-50%)",
+                      }}
+                    >
+                      {Object.keys(totaisGerais).map((key) => (
+                        <CategoryItem
+                          key={key}
+                          category={key}
+                          value={totaisGerais[key]}
+                        />
+                      ))}
+                      <BoldCategoryItem
+                        category="Saldo"
+                        value={totaisGeraisComSaldo["Saldo"]}
+                      />
+                    </div>
+                  </div>
+                </PageContentSectionContainer>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col s12 l6">
+                <PageContentSectionContainer>
+                  <SectionTitleInitialScreen title="Receitas por categoria" />
+                  <div className="row" style={{ position: "relative" }}>
+                    <div className="col s5 l5">
+                      <GenericPieChart
+                        dados={convertDataToPieChart(totaisPorCategoriaReceita)}
+                        cor="#2E8B57"
+                      />
+                    </div>
+                    <div
+                      className="col s7 l7"
+                      style={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "40%",
+                        "-ms-transform": "translateY(-50%)",
+                        transform: "translateY(-50%)",
+                      }}
+                    >
+                      {Object.keys(totaisPorCategoriaReceita).map((key) => (
+                        <CategoryItem
+                          key={key}
+                          category={key}
+                          value={totaisPorCategoriaReceita[key]}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </PageContentSectionContainer>
+              </div>
+              <div className="col s12 l6">
+                <PageContentSectionContainer>
+                  <SectionTitleInitialScreen title="Despesas por categoria" />
+                  <div className="row" style={{ position: "relative" }}>
+                    <div className="col s5 l5">
+                      <GenericPieChart
+                        dados={convertDataToPieChart(totaisPorCategoriaDespesa)}
+                        cor="#D2042D"
+                      />
+                    </div>
+                    <div
+                      className="col s7 l7"
+                      style={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "40%",
+                        "-ms-transform": "translateY(-50%)",
+                        transform: "translateY(-50%)",
+                      }}
+                    >
+                      {Object.keys(totaisPorCategoriaDespesa).map((key) => (
+                        <CategoryItem
+                          key={key}
+                          category={key}
+                          value={totaisPorCategoriaDespesa[key]}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </PageContentSectionContainer>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col s12 l6">
+                <PageContentSectionContainer>
+                  <SectionTitleInitialScreen title="Receitas recentes" />
+                  {receitas.map((r) => (
+                    <TransactionItem
+                      key={r.descricao}
+                      description={r.descricao}
+                      value={r.valor}
+                      category={r.nomeCategoriaReceita}
+                      date={r.data}
                     />
                   ))}
-                  <BoldCategoryItem
-                    category="Saldo"
-                    value={totaisGeraisComSaldo["Saldo"]}
-                  />
-                </div>
+                </PageContentSectionContainer>
               </div>
-            </PageContentSectionContainer>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col s12 l6">
-            <PageContentSectionContainer>
-              <SectionTitleInitialScreen title="Receitas por categoria" />
-              <div className="row" style={{ position: "relative" }}>
-                <div className="col s5 l5">
-                  <GenericPieChart
-                    dados={convertDataToPieChart(totaisPorCategoriaReceita)}
-                    cor="#2E8B57"
-                  />
-                </div>
-                <div
-                  className="col s7 l7"
-                  style={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "40%",
-                    "-ms-transform": "translateY(-50%)",
-                    transform: "translateY(-50%)",
-                  }}
-                >
-                  {Object.keys(totaisPorCategoriaReceita).map((key) => (
-                    <CategoryItem
-                      key={key}
-                      category={key}
-                      value={totaisPorCategoriaReceita[key]}
+              <div className="col s12 l6">
+                <PageContentSectionContainer>
+                  <SectionTitleInitialScreen title="Despesas recentes" />
+                  {despesas.map((d) => (
+                    <TransactionItem
+                      key={d.descricao}
+                      description={d.descricao}
+                      value={d.valor}
+                      category={d.nomeCategoriaDespesa}
+                      date={d.stringData}
                     />
                   ))}
-                </div>
+                </PageContentSectionContainer>
               </div>
-            </PageContentSectionContainer>
+            </div>
           </div>
-          <div className="col s12 l6">
-            <PageContentSectionContainer>
-              <SectionTitleInitialScreen title="Despesas por categoria" />
-              <div className="row" style={{ position: "relative" }}>
-                <div className="col s5 l5">
-                  <GenericPieChart
-                    dados={convertDataToPieChart(totaisPorCategoriaDespesa)}
-                    cor="#D2042D"
-                  />
-                </div>
-                <div
-                  className="col s7 l7"
-                  style={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "40%",
-                    "-ms-transform": "translateY(-50%)",
-                    transform: "translateY(-50%)",
-                  }}
-                >
-                  {Object.keys(totaisPorCategoriaDespesa).map((key) => (
-                    <CategoryItem
-                      key={key}
-                      category={key}
-                      value={totaisPorCategoriaDespesa[key]}
-                    />
-                  ))}
-                </div>
-              </div>
-            </PageContentSectionContainer>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col s12 l6">
-            <PageContentSectionContainer>
-              <SectionTitleInitialScreen title="Receitas recentes" />
-              {receitas.map((r) => (
-                <TransactionItem
-                  key={r.descricao}
-                  description={r.descricao}
-                  value={r.valor}
-                  category={r.nomeCategoriaReceita}
-                  date={r.data}
-                />
-              ))}
-            </PageContentSectionContainer>
-          </div>
-          <div className="col s12 l6">
-            <PageContentSectionContainer>
-              <SectionTitleInitialScreen title="Despesas recentes" />
-              {despesas.map((d) => (
-                <TransactionItem
-                  key={d.descricao}
-                  description={d.descricao}
-                  value={d.valor}
-                  category={d.nomeCategoriaDespesa}
-                  date={d.stringData}
-                />
-              ))}
-            </PageContentSectionContainer>
-          </div>
-        </div>
+        )}
       </div>
     );
   }
