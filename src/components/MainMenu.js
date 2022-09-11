@@ -17,7 +17,7 @@ const MainMenu = ({ userIsAdmin, userIsSysAdmin }) => (
       <div className="section">
         <MenuItem
           name="Despesas"
-          addressPage="despesas"
+          addressPage="lista_despesas"
           iconName="trending_down"
         />
         <MenuItem
