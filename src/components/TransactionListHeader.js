@@ -11,7 +11,7 @@ const TransactionListHeader = () => (
         <th>Descrição</th>
         <th>Categoria</th>
         <th>Valor</th>
-        <th></th>
+        <th>Ações</th>
     </tr>
   </thead>
 );

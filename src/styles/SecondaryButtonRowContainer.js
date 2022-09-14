@@ -8,7 +8,7 @@ const SecondaryButtonRowContainer = styled.div`
   color: #00675b;
   font-size: 1em;
   margin: 0.2em;
-  padding: 0.3em 1.2em;
+  padding: 0.2em 1.1em;
   border: 1.5px solid black;
   border-radius: 15px;
   cursor: pointer;

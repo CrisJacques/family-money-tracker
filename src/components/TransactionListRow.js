@@ -18,7 +18,8 @@ const TransactionListRow = ({ date, description, category, value }) => (
     <td>{category}</td>
     <td>R$ {value.toFixed(2)}</td>
     <td>
-      <PrimaryButtonRowContainer>Editar</PrimaryButtonRowContainer>
+      <PrimaryButtonRowContainer>Ver</PrimaryButtonRowContainer>
+      <SecondaryButtonRowContainer>Editar</SecondaryButtonRowContainer>
       <SecondaryButtonRowContainer>Remover</SecondaryButtonRowContainer>
     </td>
   </tr>

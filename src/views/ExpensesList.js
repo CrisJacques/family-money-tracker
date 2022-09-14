@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import PageTitleContainer from "../styles/PageTitleContainer";
+
 import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 
 import TransactionListHeader from "../components/TransactionListHeader";
 import TransactionListRow from "../components/TransactionListRow";
+import PageTitleWithButton from "../components/PageTitleWithButton";
+import DateFilterSelector from "../components/DateFilterSelector";
 
 import DespesasService from "../services/DespesasService";
 
@@ -41,7 +43,11 @@ const ExpensesList = () => {
 
   return (
     <div>
-      <PageTitleContainer>Lista de Despesas</PageTitleContainer>
+      <PageTitleWithButton
+      title="Lista de Despesas"
+      buttonName="Nova Despesa"
+      />
+      <DateFilterSelector />
       <PageContentSectionContainer>
         <table className="responsive-table">
           <TransactionListHeader />
