@@ -29,4 +29,23 @@ export default class DespesasService {
       },
     });
   }
+  /**
+   * Lista as despesas pertencentes ao período informado por parâmetro
+   * @param {String} userToken - Token do usuário logado
+   * @param {String} startDate - Data inicial do período a ser buscado (formato dd/mm/aaaa)
+   * @param {String} endDate - Data final do período a ser buscado (formato dd/mm/aaaa)
+   * @returns {Object} JSON com lista das despesas do período, contendo apenas as informações essenciais de cada uma delas (DTOs)
+   */
+  static getDespesasPorPeriodo(userToken, startDate, endDate) {
+    return axios.get(
+      requestUrl(
+        `despesas?start=${startDate}&end=${endDate}&por_periodo=true`
+      ),
+      {
+        headers: {
+          Authorization: `${userToken}`,
+        },
+      }
+    );
+  }
 }

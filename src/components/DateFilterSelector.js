@@ -4,14 +4,20 @@ import PrimaryButtonRowContainer from "../styles/PrimaryButtonRowContainer";
 
 /**
  * Constrói um seletor de data com data inicial e final já configuradas no momento da abertura da tela
- * @param {String} initialDate - Data inicial padrão quando a tela é aberta
- * @param {String} finalDate - Data final padrão quando a tela é aberta
+ * @param {String} startValue - Nome da variável de estado que armazena a nova data de início selecionada pelo usuário
+ * @param {String} startOnChange - Nome do método que deve ser chamado para atualizar o estado do campo de data de início do período selecionado pelo usuário
+ * @param {String} endValue - Nome da variável de estado que armazena a nova data final selecionada pelo usuário
+ * @param {String} endOnChange - Nome do método que deve ser chamado para atualizar o estado do campo de data final do período selecionado pelo usuário
+ * @param {String} onClickOk - Nome da função que deve ser chamada ao clicar no OK
  * @returns Componente que exibe 2 campos para seleção de data com uma frase que os conecta
  */
-const DateFilterSelector = () => {
-  var today = new Date().toISOString().substring(0,10); // dia atual, formatado para ser usado no input de data logo abaixo (formato aaaa-mm-dd)
-  var lastWeek = new Date(new Date().setDate(new Date().getDate() - 5)).toISOString().substring(0,10); // 5 dias atrás, formatado para ser usado no input de data logo abaixo (formato aaaa-mm-dd)
-
+const DateFilterSelector = ({
+  startValue,
+  startOnChange,
+  endValue,
+  endOnChange,
+  onClickOk,
+}) => {
   return (
     <div
       style={{
@@ -32,7 +38,8 @@ const DateFilterSelector = () => {
       <input
         type="date"
         name="initialDate"
-        defaultValue={`${lastWeek}`}
+        value={startValue}
+        onChange={startOnChange}
         style={{
           width: "12%",
         }}
@@ -51,15 +58,27 @@ const DateFilterSelector = () => {
       <input
         type="date"
         name="initialDate"
-        defaultValue={`${today}`}
+        value={endValue}
+        onChange={endOnChange}
         style={{
           width: "12%",
           "margin-right": "1em",
         }}
       />
-      <PrimaryButtonRowContainer>OK</PrimaryButtonRowContainer>
+      <div
+        style={{
+          "margin-right": "1em",
+          "margin-left": "1em",
+          "margin-bottom": "auto",
+          "margin-top": "auto",
+          "font-size": "1.1em",
+        }}
+        onClick={onClickOk}
+      >
+        <PrimaryButtonRowContainer>OK</PrimaryButtonRowContainer>
+      </div>
     </div>
   );
-}
+};
 
 export default DateFilterSelector;
