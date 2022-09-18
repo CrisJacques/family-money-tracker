@@ -105,6 +105,7 @@ const ExpensesList = () => {
       <PageTitleWithButton
         title="Lista de Despesas"
         buttonName="Nova Despesa"
+        addressPage="despesas"
       />
       <DateFilterSelector
         startValue={startDatePeriod}
