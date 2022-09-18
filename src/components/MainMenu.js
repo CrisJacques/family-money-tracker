@@ -22,7 +22,7 @@ const MainMenu = ({ userIsAdmin, userIsSysAdmin }) => (
         />
         <MenuItem
           name="Receitas"
-          addressPage="receitas"
+          addressPage="lista_receitas"
           iconName="trending_up"
         />
         <MenuItem

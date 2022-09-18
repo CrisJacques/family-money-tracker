@@ -10,6 +10,7 @@ import Accounts from "./views/Accounts";
 import CreditCardPayments from "./views/CreditCardPayments";
 import CreditCards from "./views/CreditCards";
 import ExpensesList from "./views/ExpensesList";
+import IncomesList from "./views/IncomesList";
 import CreateEditExpense from "./views/CreateEditExpense";
 import FutureBills from "./views/FutureBills";
 import Help from "./views/Help";
@@ -119,6 +120,7 @@ function App() {
                 }
               />
               <Route path="/lista_despesas" element={<ExpensesList />} />
+              <Route path="/lista_receitas" element={<IncomesList />} />
               <Route path="/despesas" element={<CreateEditExpense />} />
               <Route path="/receitas" element={<CreateEditIncome />} />
               <Route

@@ -8,15 +8,15 @@ import TransactionListRow from "../components/TransactionListRow";
 import PageTitleWithButton from "../components/PageTitleWithButton";
 import DateFilterSelector from "../components/DateFilterSelector";
 
-import DespesasService from "../services/DespesasService";
+import ReceitasService from "../services/ReceitasService";
 
 import convertDateFormat from "../helpers/convertDateFormat";
 
 /**
- * Tela que irá permitir a listagem, edição e remoção de despesas
- * @returns Tela que lista as despesas de um período selecionado, além de permitir a alteração do período a ser buscado
+ * Tela que irá permitir a listagem, edição e remoção de receitas
+ * @returns Tela que lista as receitas de um período selecionado, além de permitir a alteração do período a ser buscado
  */
-const ExpensesList = () => {
+const IncomesList = () => {
   /**
    * Definindo o período padrão que será buscado ao abrir a tela (data atual - 5 dias)
    */
@@ -49,9 +49,9 @@ const ExpensesList = () => {
 
   /* ======================== Armazenando em variáveis de estado informações vindas do backend para exibir na tela ===================================== */
   /**
-   * Lista de despesas
+   * Lista de receitas
    */
-  const [despesas, setDespesas] = useState([]);
+  const [receitas, setReceitas] = useState([]);
 
   /* ====================== Atualizando o estado dos componentes na tela quando usuário interage com eles ========================================== */
 
@@ -74,55 +74,55 @@ const ExpensesList = () => {
   };
 
   /**
-   * Carrega a lista de despesas do período padrão cada vez que a tela é renderizada e quando as variáveis currentUser, userToken, lastFiveDays e today mudarem de valor
+   * Carrega a lista de receitas do período padrão cada vez que a tela é renderizada e quando as variáveis currentUser, userToken, lastFiveDays e today mudarem de valor
    */
   useEffect(() => {
-    const fetchDespesas = async () => {
-      const resposta = await DespesasService.getDespesasPorPeriodo(
+    const fetchReceitas = async () => {
+      const resposta = await ReceitasService.getReceitasPorPeriodo(
         userToken,
         convertDateFormat(lastFiveDays),
         convertDateFormat(today)
       );
-      setDespesas(resposta.data);
+      setReceitas(resposta.data);
     };
-    fetchDespesas();
+    fetchReceitas();
   }, [currentUser, userToken, lastFiveDays, today]);
 
   /**
-   * Carrega a lista de despesas do período selecionado pelo usuário
+   * Carrega a lista de receitas do período selecionado pelo usuário
    */
-  const fetchDespesasDoPeriodo = async () => {
-    const resposta = await DespesasService.getDespesasPorPeriodo(
+  const fetchReceitasDoPeriodo = async () => {
+    const resposta = await ReceitasService.getReceitasPorPeriodo(
       userToken,
       convertDateFormat(startDatePeriod),
       convertDateFormat(endDatePeriod)
     );
-    setDespesas(resposta.data);
+    setReceitas(resposta.data);
   };
 
   return (
     <div>
       <PageTitleWithButton
-        title="Lista de Despesas"
-        buttonName="Nova Despesa"
-        addressPage="despesas"
+        title="Lista de Receitas"
+        buttonName="Nova Receita"
+        addressPage="receitas"
       />
       <DateFilterSelector
         startValue={startDatePeriod}
         startOnChange={onChangeStartDatePeriod}
         endValue={endDatePeriod}
         endOnChange={onChangeEndDatePeriod}
-        onClickOk={fetchDespesasDoPeriodo}
+        onClickOk={fetchReceitasDoPeriodo}
       />
       <PageContentSectionContainer>
         <table className="responsive-table">
           <TransactionListHeader />
-          {despesas.map((d) => (
+          {receitas.map((r) => (
             <TransactionListRow
-              date={d.stringData}
-              description={d.descricao}
-              category={d.nomeCategoriaDespesa}
-              value={d.valor}
+              date={r.data}
+              description={r.descricao}
+              category={r.nomeCategoriaReceita}
+              value={r.valor}
             />
           ))}
           <tbody></tbody>
@@ -132,4 +132,4 @@ const ExpensesList = () => {
   );
 };
 
-export default ExpensesList;
+export default IncomesList;
