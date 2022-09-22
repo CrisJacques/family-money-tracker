@@ -123,6 +123,7 @@ const IncomesList = () => {
               description={r.descricao}
               category={r.nomeCategoriaReceita}
               value={r.valor}
+              transactionType="receita"
             />
           ))}
           <tbody></tbody>

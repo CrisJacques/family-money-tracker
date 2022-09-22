@@ -9,7 +9,6 @@ const TransactionListHeader = () => (
     <tr>
         <th>Data</th>
         <th>Descrição</th>
-        <th>Categoria</th>
         <th>Valor</th>
         <th>Ações</th>
     </tr>

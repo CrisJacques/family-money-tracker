@@ -123,6 +123,7 @@ const ExpensesList = () => {
               description={d.descricao}
               category={d.nomeCategoriaDespesa}
               value={d.valor}
+              transactionType="despesa"
             />
           ))}
           <tbody></tbody>
