@@ -11,15 +11,24 @@ import SecondaryButtonRowContainer from "../styles/SecondaryButtonRowContainer";
 
 /**
  * Constrói uma linha da lista de transações (despesas ou receitas)
+ * @param {String} id - Identificador numérico da transação oriundo do backend
  * @param {String} date - Data da transação
  * @param {String} description - Descrição da transação
  * @param {String} category - Nome da categoria da transação
  * @param {String} value - Valor da transação
- * @param {String} transactionType - Tipo da transação ("despesa" ou "receita") 
+ * @param {String} transactionType - Tipo da transação ("despesa" ou "receita")
  * @returns Componente que exibe os valores das colunas da lista de despesas e receitas
  */
-const TransactionListRow = ({ date, description, category, value, transactionType}) => {
+const TransactionListRow = ({
+  id,
+  date,
+  description,
+  category,
+  value,
+  transactionType,
+}) => {
   const [open, setOpen] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
 
   const handleClickToOpenDialog = () => {
     setOpen(true);
@@ -28,6 +37,26 @@ const TransactionListRow = ({ date, description, category, value, transactionTyp
   const handleToCloseDialog = () => {
     setOpen(false);
   };
+
+  const handleClickToOpenDialogDelete = () => {
+    setOpenDelete(true);
+  };
+
+  const handleToCloseDialogDelete = () => {
+    setOpenDelete(false);
+  };
+
+  const handleDelete = () => {
+    setOpenDelete(false);
+    if (transactionType === "despesa") {
+      console.log("DELETOU DESPESA");
+    } else if (transactionType === "receita") {
+      console.log("DELETOU RECEITA");
+    }
+    else {
+      console.log("Opção de tipo de transação só pode ser despesa ou receita");
+    }
+  }
 
   return (
     <tr>
@@ -39,18 +68,38 @@ const TransactionListRow = ({ date, description, category, value, transactionTyp
           Ver
         </PrimaryButtonRowContainer>
         <SecondaryButtonRowContainer>Editar</SecondaryButtonRowContainer>
-        <SecondaryButtonRowContainer>Remover</SecondaryButtonRowContainer>
+        <SecondaryButtonRowContainer onClick={handleClickToOpenDialogDelete}>
+          Remover
+        </SecondaryButtonRowContainer>
         <Dialog open={open} onClose={handleToCloseDialog}>
           <DialogTitle>{`Detalhes da ${transactionType}`}</DialogTitle>
           <DialogContent>
             <DialogContentText>{`Data: ${date}`}</DialogContentText>
             <DialogContentText>{`Descrição: ${description}`}</DialogContentText>
             <DialogContentText>{`Categoria: ${category}`}</DialogContentText>
-            <DialogContentText>{`Valor: R$ ${value.toFixed(2)}`}</DialogContentText>
+            <DialogContentText>{`Valor: R$ ${value.toFixed(
+              2
+            )}`}</DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleToCloseDialog} color="primary" autoFocus>
               Fechar
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog open={openDelete} onClose={handleToCloseDialogDelete}>
+          <DialogTitle>{"Confirmação"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>{`Deseja realmente remover a ${transactionType}: ${description}?`}</DialogContentText>
+          </DialogContent>
+          <DialogActions>
+          <Button onClick={handleToCloseDialogDelete}>Não</Button>
+            <Button
+              onClick={handleDelete}
+              color="primary"
+              autoFocus
+            >
+              Sim
             </Button>
           </DialogActions>
         </Dialog>

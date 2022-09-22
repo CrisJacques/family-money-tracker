@@ -119,6 +119,8 @@ const IncomesList = () => {
           <TransactionListHeader />
           {receitas.map((r) => (
             <TransactionListRow
+              key={r.descricao}
+              id={r.id}
               date={r.data}
               description={r.descricao}
               category={r.nomeCategoriaReceita}

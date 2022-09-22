@@ -119,6 +119,8 @@ const ExpensesList = () => {
           <TransactionListHeader />
           {despesas.map((d) => (
             <TransactionListRow
+              key={d.descricao}
+              id={d.id}
               date={d.stringData}
               description={d.descricao}
               category={d.nomeCategoriaDespesa}
