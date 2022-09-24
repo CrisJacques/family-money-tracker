@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-
-import PageContentSectionContainer from "../styles/PageContentSectionContainer";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import Button from "@material-ui/core/Button";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import TransactionListHeader from "../components/TransactionListHeader";
-import TransactionListRow from "../components/TransactionListRow";
 import PageTitleWithButton from "../components/PageTitleWithButton";
 import DateFilterSelector from "../components/DateFilterSelector";
 
+import convertDateFormat from "../helpers/convertDateFormat";
+
 import ReceitasService from "../services/ReceitasService";
 
-import convertDateFormat from "../helpers/convertDateFormat";
+import PrimaryButtonRowContainer from "../styles/PrimaryButtonRowContainer";
+import SecondaryButtonRowContainer from "../styles/SecondaryButtonRowContainer";
+import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 
 /**
  * Tela que irá permitir a listagem, edição e remoção de receitas
@@ -47,6 +56,11 @@ const IncomesList = () => {
    */
   const [endDatePeriod, setEndDatePeriod] = useState(today);
 
+  /**
+   * Diálogo de detalhes da transação
+   */
+  const [open, setOpen] = useState(false);
+
   /* ======================== Armazenando em variáveis de estado informações vindas do backend para exibir na tela ===================================== */
   /**
    * Lista de receitas
@@ -72,6 +86,22 @@ const IncomesList = () => {
     const endDatePeriod = e.target.value;
     setEndDatePeriod(endDatePeriod);
   };
+
+  /**
+   * Atualiza a variável de estado do diálogo de detalhes da transação quando usuário clica em "Ver" na linha de uma transação na tabela
+   */
+  const handleClickToOpenDialog = () => {
+    setOpen(true);
+  };
+
+  /**
+   * Atualiza a variável de estado do diálogo de detalhes da transação quando usuário clica em "Fechar" no diálogo de detalhes da transação
+   */
+  const handleToCloseDialog = () => {
+    setOpen(false);
+  };
+
+  /* ====================== Funções que populam a tabela de transações e que executam as ações dos botões de cada transação ========================================== */
 
   /**
    * Carrega a lista de receitas do período padrão cada vez que a tela é renderizada e quando as variáveis currentUser, userToken, lastFiveDays e today mudarem de valor
@@ -100,6 +130,28 @@ const IncomesList = () => {
     setReceitas(resposta.data);
   };
 
+  /**
+   * Remove a transação solicitada pelo usuário e atualiza a lista de transações
+   * @param {Event} e - Evento de clique no botão
+   */
+  const deleteIncomes = async (e) => {
+    const resultado = await ReceitasService.removeReceita(
+      userToken,
+      e.target.id
+    );
+    if (resultado.status === 204) {
+      toast.success("Receita removida com sucesso.", {
+        position: "bottom-center",
+      });
+      fetchReceitasDoPeriodo();
+    } else {
+      toast.error("Houve um problema ao remover a receita.", {
+        position: "bottom-center",
+      });
+    }
+  };
+
+  /* ====================== Construção da tela de lista de receitas ========================================== */
   return (
     <div>
       <PageTitleWithButton
@@ -115,18 +167,47 @@ const IncomesList = () => {
         onClickOk={fetchReceitasDoPeriodo}
       />
       <PageContentSectionContainer>
+        <ToastContainer theme="colored" />
         <table className="responsive-table">
           <TransactionListHeader />
           {receitas.map((r) => (
-            <TransactionListRow
-              key={r.descricao}
-              id={r.id}
-              date={r.data}
-              description={r.descricao}
-              category={r.nomeCategoriaReceita}
-              value={r.valor}
-              transactionType="receita"
-            />
+            <tr>
+              <td>{r.data}</td>
+              <td>{r.descricao}</td>
+              <td>R$ {r.valor.toFixed(2)}</td>
+              <td>
+                <PrimaryButtonRowContainer onClick={handleClickToOpenDialog}>
+                  Ver
+                </PrimaryButtonRowContainer>
+                <SecondaryButtonRowContainer>
+                  Editar
+                </SecondaryButtonRowContainer>
+                <SecondaryButtonRowContainer id={r.id} onClick={deleteIncomes}>
+                  Remover
+                </SecondaryButtonRowContainer>
+                <Dialog open={open} onClose={handleToCloseDialog}>
+                  <DialogTitle>{"Detalhes da receita"}</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText>{`Data: ${r.data}`}</DialogContentText>
+                    <DialogContentText>{`Descrição: ${r.descricao}`}</DialogContentText>
+                    <DialogContentText>{`Categoria: ${r.nomeCategoriaReceita}`}</DialogContentText>
+                    <DialogContentText>{`Valor: R$ ${r.valor.toFixed(
+                      2
+                    )}`}</DialogContentText>
+                    <DialogContentText>{`Conta: ${r.conta.nome}`}</DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button
+                      onClick={handleToCloseDialog}
+                      color="primary"
+                      autoFocus
+                    >
+                      Fechar
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </td>
+            </tr>
           ))}
           <tbody></tbody>
         </table>

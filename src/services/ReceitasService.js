@@ -75,23 +75,33 @@ export default class ReceitasService {
       },
     });
   }
-   /**
+  /**
    * Lista as receitas pertencentes ao período informado por parâmetro
    * @param {String} userToken - Token do usuário logado
    * @param {String} startDate - Data inicial do período a ser buscado (formato dd/mm/aaaa)
    * @param {String} endDate - Data final do período a ser buscado (formato dd/mm/aaaa)
    * @returns {Object} JSON com lista das receitas do período, contendo apenas as informações essenciais de cada uma delas (DTOs)
    */
-    static getReceitasPorPeriodo(userToken, startDate, endDate) {
-      return axios.get(
-        requestUrl(
-          `receitas?start=${startDate}&end=${endDate}&por_periodo=true`
-        ),
-        {
-          headers: {
-            Authorization: `${userToken}`,
-          },
-        }
-      );
-    }
+  static getReceitasPorPeriodo(userToken, startDate, endDate) {
+    return axios.get(
+      requestUrl(`receitas?start=${startDate}&end=${endDate}&por_periodo=true`),
+      {
+        headers: {
+          Authorization: `${userToken}`,
+        },
+      }
+    );
+  }
+  /**
+   * Remove uma receita cujo id é passado por parâmetro
+   * @param {String} userToken - Token do usuário logado
+   * @param {String} id - Identificador da receita
+   */
+  static removeReceita(userToken, id) {
+    return axios.delete(requestUrl(`receitas/${id}`), {
+      headers: {
+        Authorization: `${userToken}`,
+      },
+    });
+  }
 }

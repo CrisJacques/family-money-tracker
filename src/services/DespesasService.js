@@ -48,4 +48,17 @@ export default class DespesasService {
       }
     );
   }
+  /**
+   * Remove uma despesa cujo id e forma de pagamento é passada por parâmetro
+   * @param {String} userToken - Token do usuário logado
+   * @param {String} id - Identificador da despesa
+   * @param {String} formaDePagamento - Nome da forma de pagamento da despesa
+   */
+     static removeDespesa(userToken, id, formaDePagamento) {
+      return axios.delete(requestUrl(`despesas/${id}?forma_pagamento=${formaDePagamento}`), {
+        headers: {
+          Authorization: `${userToken}`,
+        },
+      });
+    }
 }
