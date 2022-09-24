@@ -1,24 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import Button from "@material-ui/core/Button";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import TransactionListHeader from "../components/TransactionListHeader";
 import PageTitleWithButton from "../components/PageTitleWithButton";
 import DateFilterSelector from "../components/DateFilterSelector";
+import ExpensesListRow from "../components/ExpensesListRow";
 
 import convertDateFormat from "../helpers/convertDateFormat";
 
 import DespesasService from "../services/DespesasService";
 
-import PrimaryButtonRowContainer from "../styles/PrimaryButtonRowContainer";
-import SecondaryButtonRowContainer from "../styles/SecondaryButtonRowContainer";
 import PageContentSectionContainer from "../styles/PageContentSectionContainer";
 
 /**
@@ -56,11 +49,6 @@ const ExpensesList = () => {
    */
   const [endDatePeriod, setEndDatePeriod] = useState(today);
 
-  /**
-   * Diálogo de detalhes da transação
-   */
-  const [open, setOpen] = useState(false);
-
   /* ======================== Armazenando em variáveis de estado informações vindas do backend para exibir na tela ===================================== */
   /**
    * Lista de despesas
@@ -85,20 +73,6 @@ const ExpensesList = () => {
   const onChangeEndDatePeriod = (e) => {
     const endDatePeriod = e.target.value;
     setEndDatePeriod(endDatePeriod);
-  };
-
-  /**
-   * Atualiza a variável de estado do diálogo de detalhes da transação quando usuário clica em "Ver" na linha de uma transação na tabela
-   */
-  const handleClickToOpenDialog = () => {
-    setOpen(true);
-  };
-
-  /**
-   * Atualiza a variável de estado do diálogo de detalhes da transação quando usuário clica em "Fechar" no diálogo de detalhes da transação
-   */
-  const handleToCloseDialog = () => {
-    setOpen(false);
   };
 
   /* ====================== Funções que populam a tabela de transações e que executam as ações dos botões de cada transação ========================================== */
@@ -171,46 +145,20 @@ const ExpensesList = () => {
         <ToastContainer theme="colored" />
         <table className="responsive-table">
           <TransactionListHeader />
-          {despesas.map((d) => (
-            <tr>
-              <td>{d.data}</td>
-              <td>{d.descricao}</td>
-              <td>R$ {d.valor.toFixed(2)}</td>
-              <td>
-                <PrimaryButtonRowContainer onClick={handleClickToOpenDialog}>
-                  Ver
-                </PrimaryButtonRowContainer>
-                <SecondaryButtonRowContainer>
-                  Editar
-                </SecondaryButtonRowContainer>
-                <SecondaryButtonRowContainer id={`${d.id}-${d.formaDePagamentoName}`} onClick={deleteExpenses}>
-                  Remover
-                </SecondaryButtonRowContainer>
-                <Dialog open={open} onClose={handleToCloseDialog}>
-                  <DialogTitle>{"Detalhes da despesa"}</DialogTitle>
-                  <DialogContent>
-                    <DialogContentText>{`Data: ${d.data}`}</DialogContentText>
-                    <DialogContentText>{`Descrição: ${d.descricao}`}</DialogContentText>
-                    <DialogContentText>{`Categoria: ${d.nomeCategoriaDespesa}`}</DialogContentText>
-                    <DialogContentText>{`Valor: R$ ${d.valor.toFixed(
-                      2
-                    )}`}</DialogContentText>
-                    <DialogContentText>{`Forma de pagamento: ${d.formaDePagamentoDesc}`}</DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button
-                      onClick={handleToCloseDialog}
-                      color="primary"
-                      autoFocus
-                    >
-                      Fechar
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-              </td>
-            </tr>
-          ))}
-          <tbody></tbody>
+          <tbody>
+            {despesas.map((d) => (
+              <ExpensesListRow
+                id={d.id}
+                data={d.data}
+                descricao={d.descricao}
+                valor={d.valor}
+                nomeCategoriaDespesa={d.nomeCategoriaDespesa}
+                formaDePagamentoName={d.formaDePagamentoName}
+                formaDePagamentoDesc={d.formaDePagamentoDesc}
+                deleteExpenses={deleteExpenses}
+              />
+            ))}
+          </tbody>
         </table>
       </PageContentSectionContainer>
     </div>
