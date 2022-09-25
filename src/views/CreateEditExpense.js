@@ -545,6 +545,63 @@ const CreateEditExpense = () => {
     }
   };
 
+  /**
+   * Edita uma despesa cuja forma de pagamento é dinheiro ou débito
+   */
+  const editExpenseDebitCash = async () => {
+    console.log("EDITANDO DESPESA DÉBITO OU DINHEIRO");
+    try {
+      setLoading(true);
+      const resultado =
+        await DespesasDebitoDinheiroService.updateDespesaDebitoDinheiro(
+          id,
+          userToken,
+          value,
+          description,
+          account,
+          category,
+          registerDate,
+          paymentType,
+          location.state.nomeFormaDePagamentoTela,
+          currentUser.id
+        );
+      if (resultado.status === 204 || resultado.status === 201) {
+        setLoading(false);
+        toast.success("Despesa alterada com sucesso.", {
+          position: "bottom-center",
+        });
+
+        /* Se despesa é alterada com sucesso, limpa todos os campos da tela para facilitar a inserção de novas despesas */
+        setValue("");
+        setDescription("");
+        setPaymentType("");
+        setCategory("");
+        setRegisterDate("");
+        setAccount("");
+
+        /* Esconde novamente o campo específico desta forma de pagamento, voltando o formulário ao estado original */
+        setExibirConta(false);
+        location.state = null; //esvaziando o location.state para que a tela entre no modo de cadastro de nova receita
+      } else {
+        setLoading(false);
+        toast.warning(
+          "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se a alteração foi feita com sucesso.",
+          {
+            position: "bottom-center",
+          }
+        );
+      }
+    } catch (error) {
+      setLoading(false);
+      toast.error(
+        `Houve um problema ao alterar a despesa. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`,
+        {
+          position: "bottom-center",
+        }
+      );
+    }
+  };
+
   /* ================ Chamando a função de cadastro de despesa de acordo com a forma de pagamento escolhida quando usuário clica em Salvar ========================= */
 
   /**
@@ -579,7 +636,12 @@ const CreateEditExpense = () => {
             registerDate !== "" &&
             account !== ""
           ) {
-            insertExpenseDebitCash();
+            if (location.state != null) {
+              // se location.state for diferentre de null, significa que a tela está sendo aberta no modo edição de despesa
+              editExpenseDebitCash();
+            } else {
+              insertExpenseDebitCash();
+            }
           } else {
             toast.error("Todos os campos são de preenchimento obrigatório", {
               position: "bottom-center",
