@@ -52,6 +52,53 @@ export default class ReceitasService {
     );
   }
   /**
+   * Edita uma receita
+   * @param {String} userToken - Token do usuário logado
+   * @param {number} id - Id numérico da receita
+   * @param {number} value - Valor da receita
+   * @param {String} description - Descrição da receita
+   * @param {number} idAccount - Id da conta selecionada
+   * @param {number} idCategory - Id da categoria de receita selecionada
+   * @param {String} registerDate - Data da receita
+   * @param {number} idCurrentUser - Id do usuário logado
+   * @returns {Object} JSON com informações sobre resultado da requisição, incluindo o status code
+   */
+   static async editReceita(
+    userToken,
+    id,
+    value,
+    description,
+    idAccount,
+    idCategory,
+    registerDate,
+    idCurrentUser
+  ) {
+    return axios.put(
+      requestUrl(`receitas/${id}`),
+      {
+        valor: `${convertMoneyToNumber(value)}`,
+        descricao: `${description}`,
+        data: `${registerDate}`,
+        recorrente: false,
+        diaLancamentoRecorrente: null,
+        categoriaReceita: {
+          id: `${idCategory}`,
+        },
+        conta: {
+          id: `${idAccount}`,
+        },
+        user: {
+          id: `${idCurrentUser}`,
+        },
+      },
+      {
+        headers: {
+          Authorization: `${userToken}`,
+        },
+      }
+    );
+  }
+  /**
    * Lista as receitas recentes
    * @param {String} userToken - Token do usuário logado
    * @returns {Object} JSON com lista das receitas recentes, contendo apenas as informações essenciais de cada uma delas (DTOs)

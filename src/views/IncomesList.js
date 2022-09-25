@@ -105,7 +105,7 @@ const IncomesList = () => {
   };
 
   /**
-   * Remove a transação solicitada pelo usuário e atualiza a lista de transações
+   * Remove a receita solicitada pelo usuário e atualiza a lista de receitas
    * @param {Event} e - Evento de clique no botão
    */
   const deleteIncomes = async (e) => {
@@ -148,11 +148,14 @@ const IncomesList = () => {
             {receitas.map((r) => (
               <IncomesListRow
                 id={r.id}
+                key={r.id}
                 data={r.data}
                 descricao={r.descricao}
                 valor={r.valor}
                 nomeCategoriaReceita={r.nomeCategoriaReceita}
-                conta={r.conta.nome}
+                idCategoria={r.idCategoriaReceita}
+                nomeConta={r.conta.nome}
+                idConta={r.conta.id}
                 deleteIncomes={deleteIncomes}
               />
             ))}

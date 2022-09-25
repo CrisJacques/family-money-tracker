@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import NumberFormat from "react-number-format";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -21,40 +21,68 @@ import ReceitasService from "../services/ReceitasService";
 import { MAX_DESCRIPTION_LENGTH } from "../helpers/generalRules";
 
 /**
- * Tela que permite o cadastro de receitas
- * @returns Formulário de cadastro de receitas, com os botões "Salvar" e "Cancelar"
+ * Tela que permite o cadastro e edição de receitas (quando tela for carregada no modo edição, os valores a serem exibidos serão passados pela tela que estiver fazendo a chamada)
+ * @returns Formulário de cadastro ou edição de receitas, com os botões "Salvar" e "Cancelar"
  */
 const CreateEditIncome = () => {
+  /* ======================== Configurando o valor inicial dos campos quando tela é aberta ===================================== */
+  var valor = ""; //Valor da receita
+  var descricao = ""; //Descrição da receita
+  var data = ""; //Data da receita
+  var categoria = ""; //Categoria da receita
+  var conta = ""; //Conta na qual o valor da receita está entrando
+
+  /**
+   * Se o valor do location.state não for null, siginifica que a tela está sendo aberta no modo edição (pois o location.state armazena as informações da receita que deve ser editada)
+   */
+  const location = useLocation();
+  console.log(location);
+  if (location.state != null) {
+    valor = location.state.valorTela*100;
+    console.log(valor);
+    descricao = location.state.descricaoTela;
+
+    var dia = location.state.dataTela.split("-")[0];
+    var mes = location.state.dataTela.split("-")[1];
+    var ano = location.state.dataTela.split("-")[2];
+    data = `${ano}-${mes}-${dia}`;
+
+    categoria = location.state.idCategoriaTela;
+    conta = location.state.idContaTela;
+
+    var id = location.state.idReceita;
+  }
+
+  /* ======================== Variáveis de estado para os componentes da tela ===================================== */
   /**
    * Referência para o formulário de cadastro de receitas
    */
   const form = useRef();
 
-  /* ======================== Variáveis de estado para os componentes da tela ===================================== */
   /**
    * Campo "Valor"
    */
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(valor);
 
   /**
    * Campo "Descrição"
    */
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState(descricao);
 
   /**
    * Campo "Data"
    */
-  const [registerDate, setRegisterDate] = useState("");
+  const [registerDate, setRegisterDate] = useState(data);
 
   /**
    * Combobox "Categoria"
    */
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(categoria);
 
   /**
    * Combobox "Conta"
    */
-  const [account, setAccount] = useState("");
+  const [account, setAccount] = useState(conta);
 
   /**
    * Variável de estado para controlar a exibição da máscara de carregamento da tela quando usuário salva um novo registro
@@ -117,7 +145,7 @@ const CreateEditIncome = () => {
     fetchIncomeCategories();
   }, [currentUser, userToken]);
 
-  /* ======================== Cadastrando receitas através de requisições à API ===================================== */
+  /* ======================== Cadastrando e editando receitas através de requisições à API ===================================== */
 
   /**
    * Cadastra uma receita
@@ -165,10 +193,59 @@ const CreateEditIncome = () => {
     }
   };
 
-  /* ======================== Chamando a função de cadastro de receita quando usuário clica em Salvar ===================================== */
+  /**
+   * Edita uma receita
+   */
+  const editIncome = async () => {
+    try {
+      setLoading(true);
+      const resultado = await ReceitasService.editReceita(
+        userToken,
+        id,
+        value,
+        description,
+        account,
+        category,
+        registerDate,
+        currentUser.id
+      );
+      if (resultado.status === 204) {
+        setLoading(false);
+        toast.success("Receita alterada com sucesso.", {
+          position: "bottom-center",
+        });
+
+        location.state = null; //esvaziando o location.state para que a tela entre no modo de cadastro de nova receita
+
+        setValue("");
+        setDescription("");
+        setAccount("");
+        setCategory("");
+        setRegisterDate("");
+      } else {
+        setLoading(false);
+        toast.warning(
+          "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se a alteração foi feita com sucesso.",
+          {
+            position: "bottom-center",
+          }
+        );
+      }
+    } catch (error) {
+      setLoading(false);
+      toast.error(
+        `Houve um problema ao alterar a receita. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`,
+        {
+          position: "bottom-center",
+        }
+      );
+    }
+  };
+
+  /* ======================== Chamando a função de cadastro ou edição de receita quando usuário clica em Salvar ===================================== */
 
   /**
-   * Solicita o cadastro da receita, caso não haja problemas no preenchimento do formulário. Se algum campo estiver com problemas no preenchimento, será exibido um toast alertando o usuário
+   * Solicita o cadastro ou edição da receita, caso não haja problemas no preenchimento do formulário. Se algum campo estiver com problemas no preenchimento, será exibido um toast alertando o usuário
    * @param {Event} e - Evento de clique do usuário
    */
   const handleSubmit = (e) => {
@@ -187,7 +264,13 @@ const CreateEditIncome = () => {
       account !== "" &&
       category !== ""
     ) {
-      insertIncome();
+      if (location.state != null) {
+        // se location.state for diferente de null, significa que a tela foi aberta no modo edição (pois o location.state armazena as informações da receita que deve ser editada)
+        editIncome();
+      } else {
+        // se location.state for null, significa que a tela foi aberta no modo cadastro de nova receita
+        insertIncome();
+      }
     } else {
       toast.error("Todos os campos são de preenchimento obrigatório", {
         position: "bottom-center",
@@ -304,6 +387,7 @@ const CreateEditIncome = () => {
                 <select
                   className="browser-default"
                   name="account"
+                  id="account"
                   value={account}
                   onChange={onChangeAccount}
                 >
@@ -322,6 +406,7 @@ const CreateEditIncome = () => {
                 <select
                   className="browser-default"
                   name="category"
+                  id="category"
                   value={category}
                   onChange={onChangeCategory}
                 >

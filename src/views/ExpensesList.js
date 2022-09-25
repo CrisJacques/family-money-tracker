@@ -149,6 +149,7 @@ const ExpensesList = () => {
             {despesas.map((d) => (
               <ExpensesListRow
                 id={d.id}
+                key={d.id}
                 data={d.data}
                 descricao={d.descricao}
                 valor={d.valor}

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -16,7 +17,9 @@ import SecondaryButtonRowContainer from "../styles/SecondaryButtonRowContainer";
  * @param {String} descricao - Descrição da receita
  * @param {String} valor - Valor da receita
  * @param {String} nomeCategoriaReceita - Nome da categoria da receita
- * @param {String} conta - Nome da conta onde o valor da receita está entrando
+ * @param {String} idCategoria - Id numérico da categoria da receita
+ * @param {String} nomeConta - Nome da conta onde o valor da receita está entrando
+ * @param {String} idConta - Id numérico da conta onde o valor da receita está entrando
  * @param {String} deleteIncomes - Nome da função responsável por deletar as receitas
  * @returns Conteúdo de uma linha da tabela de receitas, com informações e botões que possibilitam ações de ver, editar e deletar a receita
  */
@@ -26,7 +29,9 @@ const IncomesListRow = ({
   descricao,
   valor,
   nomeCategoriaReceita,
-  conta,
+  idCategoria,
+  nomeConta,
+  idConta,
   deleteIncomes,
 }) => {
   /**
@@ -46,7 +51,24 @@ const IncomesListRow = ({
         >
           Ver
         </PrimaryButtonRowContainer>
-        <SecondaryButtonRowContainer>Editar</SecondaryButtonRowContainer>
+        <SecondaryButtonRowContainer>
+          <Link
+            to="/receitas"
+            style={{ color: "#00675b" }}
+            state={{
+              valorTela: valor,
+              descricaoTela: descricao,
+              dataTela: data,
+              categoriaTela: nomeCategoriaReceita,
+              idCategoriaTela: idCategoria,
+              contaTela: nomeConta,
+              idContaTela: idConta,
+              idReceita: id
+            }}
+          >
+            Editar
+          </Link>
+        </SecondaryButtonRowContainer>
         <SecondaryButtonRowContainer id={id} onClick={deleteIncomes}>
           Remover
         </SecondaryButtonRowContainer>
@@ -64,7 +86,7 @@ const IncomesListRow = ({
             <DialogContentText>{`Valor: R$ ${valor.toFixed(
               2
             )}`}</DialogContentText>
-            <DialogContentText>{`Conta: ${conta}`}</DialogContentText>
+            <DialogContentText>{`Conta: ${nomeConta}`}</DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button
