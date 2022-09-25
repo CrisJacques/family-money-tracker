@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import NumberFormat from "react-number-format";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -26,68 +26,100 @@ import DespesasFinanciamentoEmprestimoService from "../services/DespesasFinancia
 import { MAX_DESCRIPTION_LENGTH } from "../helpers/generalRules";
 
 /**
- * Tela de cadastro de despesas
- * @returns Formulário de cadastro de despesas, com os botões Salvar e Cancelar
+ * Tela que permite o cadastro e edição de despesas (quando tela for carregada no modo edição, parte dos valores a serem exibidos serão passados pela tela que estiver fazendo a chamada)
+ * @returns Formulário de cadastro ou edição de despesas, com os botões "Salvar" e "Cancelar"
  */
 const CreateEditExpense = () => {
+  /* ======================== Configurando o valor inicial dos campos quando tela é aberta ===================================== */
+  // Campos que existem em qualquer tipo de despesa
+  var valorInicial = ""; //Valor da despesa
+  var descricaoInicial = ""; //Descrição da despesa
+  var dataInicial = ""; //Data da despesa
+  var categoriaInicial = ""; //Categoria da despesa
+  var formaDePagamentoInicial = ""; //Forma de pagamento da despesa
+
+  // Campos que só existem em tipos de despesa específicos
+  var contaInicial = ""; // Forma de pagamento débito ou dinheiro
+  var cartaoDeCreditoInicial = ""; // Forma de pagamento cartão de crédito
+  var bancoInicial = ""; // Forma de pagamento financiamento ou empréstimo
+  var numParcelasInicial = ""; // Forma de pagamento cartão de crédito, financiamento ou empréstimo
+
   /**
-   * Referência para o formulário de cadastro de despesas
+   * Se o valor do location.state não for null, siginifica que a tela está sendo aberta no modo edição (pois o location.state armazena as informações da despesa que deve ser editada)
    */
-  const form = useRef();
-  
+  const location = useLocation();
+  if (location.state != null) {
+    console.log(location.state);
+    valorInicial = currencyFormatter(location.state.valorTela * 100); // é preciso multiplicar por 100 porque o currencyFormatter divide o valor passado por parâmetro por 100
+    descricaoInicial = location.state.descricaoTela;
+
+    var dia = location.state.dataTela.split("-")[0];
+    var mes = location.state.dataTela.split("-")[1];
+    var ano = location.state.dataTela.split("-")[2];
+    dataInicial = `${ano}-${mes}-${dia}`;
+
+    categoriaInicial = location.state.idCategoriaTela;
+    formaDePagamentoInicial = location.state.idFormaDePagamentoTela;
+
+    var id = location.state.idDespesa;
+  }
 
   /* ======================== Variáveis de estado para os componentes da tela ===================================== */
 
   /**
+   * Referência para o formulário de cadastro de despesas
+   */
+  const form = useRef();
+
+  /**
    * Campo "Valor"
    */
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(valorInicial);
 
   /**
    * Campo "Descrição"
    */
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState(descricaoInicial);
 
   /**
    * Campo "Data"
    */
-  const [registerDate, setRegisterDate] = useState("");
+  const [registerDate, setRegisterDate] = useState(dataInicial);
 
   /**
    * Combobox "Categoria"
    */
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(categoriaInicial);
 
   /**
    * Combobox "Forma de Pagamento"
    */
-  const [paymentType, setPaymentType] = useState("");
+  const [paymentType, setPaymentType] = useState(formaDePagamentoInicial);
 
   /**
    * Combobox "Conta"
    */
-  const [account, setAccount] = useState("");
+  const [account, setAccount] = useState(contaInicial);
 
   /**
    * Combobox "Cartão de crédito"
    */
-  const [creditCard, setCreditCard] = useState("");
+  const [creditCard, setCreditCard] = useState(cartaoDeCreditoInicial);
 
   /**
    * Combobox "Banco"
    */
-  const [bank, setBank] = useState("");
+  const [bank, setBank] = useState(bancoInicial);
 
   /**
    * Campo "Número de parcelas"
    */
-  const [numberInstallments, setNumberInstallments] = useState("");
+  const [numberInstallments, setNumberInstallments] = useState(numParcelasInicial);
 
   /**
    * Variável de estado para controlar a exibição da máscara de carregamento da tela quando usuário salva um novo registro
    */
   const [loading, setLoading] = useState(false);
-
 
   /* ======================== Armazenando em variáveis de estado informações vindas do backend para exibir nos comboboxes ===================================== */
 
@@ -116,7 +148,6 @@ const CreateEditExpense = () => {
    */
   const [bancos, setBancos] = useState([]);
 
-
   /* ==== Criando variáveis de estado para armazenar a decisão de quando exibir ou não determinados campos do formulário, de acordo com a forma de pagamento escolhida ===== */
 
   /**
@@ -139,7 +170,6 @@ const CreateEditExpense = () => {
    */
   const [exibirNumParcelas, setExibirNumParcelas] = useState(false);
 
-
   /* =========== Obtendo o usuário da store e armazenando seu token para poder passar no header das requisições que serão feitas ao backend =============== */
 
   /**
@@ -151,7 +181,6 @@ const CreateEditExpense = () => {
    * Unindo o tipo do token com o seu valor para ser utilizado no header das requisições
    */
   const userToken = `${currentUser.tokenType} ${currentUser.accessToken}`;
-
 
   /* ======================== Carregando informações do banco de dados para popular os comboboxes ===================================== */
 
@@ -228,7 +257,6 @@ const CreateEditExpense = () => {
     };
     fetchExpenseCategories();
   }, [currentUser, userToken]);
-
 
   /* ======================== Cadastrando despesas através de requisições à API ===================================== */
 
@@ -396,7 +424,6 @@ const CreateEditExpense = () => {
     }
   };
 
-
   /* ================ Chamando a função de cadastro de despesa de acordo com a forma de pagamento escolhida quando usuário clica em Salvar ========================= */
 
   /**
@@ -473,7 +500,6 @@ const CreateEditExpense = () => {
       }
     }
   };
-
 
   /* ====================== Atualizando o estado dos componentes na tela quando usuário interage com eles ========================================== */
 
@@ -586,7 +612,6 @@ const CreateEditExpense = () => {
     setNumberInstallments(numberInstallments);
   };
 
-
   /* ====================== Inserindo lógicas de validação e formatação de campos numéricos ========================================== */
 
   /**
@@ -617,7 +642,6 @@ const CreateEditExpense = () => {
       return value;
     }
   }
-
 
   /* ====================== Construção da tela de cadastro de despesas ========================================== */
 

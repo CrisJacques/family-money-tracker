@@ -26,27 +26,27 @@ import { MAX_DESCRIPTION_LENGTH } from "../helpers/generalRules";
  */
 const CreateEditIncome = () => {
   /* ======================== Configurando o valor inicial dos campos quando tela é aberta ===================================== */
-  var valor = ""; //Valor da receita
-  var descricao = ""; //Descrição da receita
-  var data = ""; //Data da receita
-  var categoria = ""; //Categoria da receita
-  var conta = ""; //Conta na qual o valor da receita está entrando
+  var valorInicial = ""; //Valor da receita
+  var descricaoInicial = ""; //Descrição da receita
+  var dataInicial = ""; //Data da receita
+  var categoriaInicial = ""; //Categoria da receita
+  var contaInicial = ""; //Conta na qual o valor da receita está entrando
 
   /**
    * Se o valor do location.state não for null, siginifica que a tela está sendo aberta no modo edição (pois o location.state armazena as informações da receita que deve ser editada)
    */
   const location = useLocation();
   if (location.state != null) {
-    valor = currencyFormatter(location.state.valorTela*100); // é preciso multiplicar por 100 porque o currencyFormatter divide o valor passado por parâmetro por 100
-    descricao = location.state.descricaoTela;
+    valorInicial = currencyFormatter(location.state.valorTela*100); // é preciso multiplicar por 100 porque o currencyFormatter divide o valor passado por parâmetro por 100
+    descricaoInicial = location.state.descricaoTela;
 
     var dia = location.state.dataTela.split("-")[0];
     var mes = location.state.dataTela.split("-")[1];
     var ano = location.state.dataTela.split("-")[2];
-    data = `${ano}-${mes}-${dia}`;
+    dataInicial = `${ano}-${mes}-${dia}`;
 
-    categoria = location.state.idCategoriaTela;
-    conta = location.state.idContaTela;
+    categoriaInicial = location.state.idCategoriaTela;
+    contaInicial = location.state.idContaTela;
 
     var id = location.state.idReceita;
   }
@@ -60,27 +60,27 @@ const CreateEditIncome = () => {
   /**
    * Campo "Valor"
    */
-  const [value, setValue] = useState(valor);
+  const [value, setValue] = useState(valorInicial);
 
   /**
    * Campo "Descrição"
    */
-  const [description, setDescription] = useState(descricao);
+  const [description, setDescription] = useState(descricaoInicial);
 
   /**
    * Campo "Data"
    */
-  const [registerDate, setRegisterDate] = useState(data);
+  const [registerDate, setRegisterDate] = useState(dataInicial);
 
   /**
    * Combobox "Categoria"
    */
-  const [category, setCategory] = useState(categoria);
+  const [category, setCategory] = useState(categoriaInicial);
 
   /**
    * Combobox "Conta"
    */
-  const [account, setAccount] = useState(conta);
+  const [account, setAccount] = useState(contaInicial);
 
   /**
    * Variável de estado para controlar a exibição da máscara de carregamento da tela quando usuário salva um novo registro

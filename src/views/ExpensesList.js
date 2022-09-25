@@ -150,12 +150,14 @@ const ExpensesList = () => {
               <ExpensesListRow
                 id={d.id}
                 key={d.id}
-                data={d.data}
+                data={d.stringData}
                 descricao={d.descricao}
                 valor={d.valor}
                 nomeCategoriaDespesa={d.nomeCategoriaDespesa}
+                idCategoriaDespesa={d.idCategoriaDespesa}
                 formaDePagamentoName={d.formaDePagamentoName}
                 formaDePagamentoDesc={d.formaDePagamentoDesc}
+                idFormaDePagamento={d.idFormaDePagamento}
                 deleteExpenses={deleteExpenses}
               />
             ))}

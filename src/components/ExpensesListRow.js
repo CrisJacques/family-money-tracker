@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -16,8 +17,10 @@ import SecondaryButtonRowContainer from "../styles/SecondaryButtonRowContainer";
  * @param {String} descricao - Descrição da despesa
  * @param {String} valor - Valor da despesa
  * @param {String} nomeCategoriaDespesa - Nome da categoria da despesa
+ * @param {String} idCategoriaDespesa - Identificador numérico da categoria da despesa
  * @param {String} formaDePagamentoName - Nome da forma de pagamento
  * @param {String} formaDePagamentoDesc - Descrição da forma de pagamento
+ * @param {String} idFormaDePagamento - Identificador numérico da forma de pagamento
  * @param {String} deleteExpenses - Nome da função responsável por deletar as despesas
  * @returns Conteúdo de uma linha da tabela de despesas, com informações e botões que possibilitam ações de ver, editar e deletar a despesa
  */
@@ -27,8 +30,10 @@ const ExpensesListRow = ({
   descricao,
   valor,
   nomeCategoriaDespesa,
+  idCategoriaDespesa,
   formaDePagamentoName,
   formaDePagamentoDesc,
+  idFormaDePagamento,
   deleteExpenses,
 }) => {
   /**
@@ -48,7 +53,22 @@ const ExpensesListRow = ({
         >
           Ver
         </PrimaryButtonRowContainer>
-        <SecondaryButtonRowContainer>Editar</SecondaryButtonRowContainer>
+        <SecondaryButtonRowContainer>
+          <Link
+            to="/despesas"
+            style={{ color: "#00675b" }}
+            state={{
+              valorTela: valor,
+              descricaoTela: descricao,
+              dataTela: data,
+              idCategoriaTela: idCategoriaDespesa,
+              idFormaDePagamentoTela: idFormaDePagamento,
+              idDespesa: id,
+            }}
+          >
+            Editar
+          </Link>
+        </SecondaryButtonRowContainer>
         <SecondaryButtonRowContainer
           id={`${id}-${formaDePagamentoName}`}
           onClick={deleteExpenses}
