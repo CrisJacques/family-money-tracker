@@ -36,10 +36,8 @@ const CreateEditIncome = () => {
    * Se o valor do location.state não for null, siginifica que a tela está sendo aberta no modo edição (pois o location.state armazena as informações da receita que deve ser editada)
    */
   const location = useLocation();
-  console.log(location);
   if (location.state != null) {
-    valor = location.state.valorTela*100;
-    console.log(valor);
+    valor = currencyFormatter(location.state.valorTela*100); // é preciso multiplicar por 100 porque o currencyFormatter divide o valor passado por parâmetro por 100
     descricao = location.state.descricaoTela;
 
     var dia = location.state.dataTela.split("-")[0];
