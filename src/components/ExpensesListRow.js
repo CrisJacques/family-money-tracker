@@ -63,6 +63,7 @@ const ExpensesListRow = ({
               dataTela: data,
               idCategoriaTela: idCategoriaDespesa,
               idFormaDePagamentoTela: idFormaDePagamento,
+              nomeFormaDePagamentoTela: formaDePagamentoName,
               idDespesa: id,
             }}
           >

@@ -57,4 +57,17 @@ export default class DespesasCreditoService {
       }
     );
   }
+  /**
+   * Retorna uma despesa cuja forma de pagamento é cartão de crédito
+   * @param {String} userToken - Token do usuário logado
+   * @param {number} id - Id da despesa
+   * @returns {Object} JSON com informações sobre resultado da requisição, incluindo o status code
+   */
+  static async getDespesaCredito(userToken, id) {
+    return axios.get(requestUrl(`despesas-credito/${id}`), {
+      headers: {
+        Authorization: `${userToken}`,
+      },
+    });
+  }
 }

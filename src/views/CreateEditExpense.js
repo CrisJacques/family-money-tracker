@@ -30,6 +30,18 @@ import { MAX_DESCRIPTION_LENGTH } from "../helpers/generalRules";
  * @returns Formulário de cadastro ou edição de despesas, com os botões "Salvar" e "Cancelar"
  */
 const CreateEditExpense = () => {
+  /* =========== Obtendo o usuário da store e armazenando seu token para poder passar no header das requisições que serão feitas ao backend =============== */
+
+  /**
+   * Armazenando as informações do usuário logado em uma variável
+   */
+  const { user: currentUser } = useSelector((state) => state.auth);
+
+  /**
+   * Unindo o tipo do token com o seu valor para ser utilizado no header das requisições
+   */
+  const userToken = `${currentUser.tokenType} ${currentUser.accessToken}`;
+
   /* ======================== Configurando o valor inicial dos campos quando tela é aberta ===================================== */
   // Campos que existem em qualquer tipo de despesa
   var valorInicial = ""; //Valor da despesa
@@ -44,8 +56,14 @@ const CreateEditExpense = () => {
   var bancoInicial = ""; // Forma de pagamento financiamento ou empréstimo
   var numParcelasInicial = ""; // Forma de pagamento cartão de crédito, financiamento ou empréstimo
 
+  // Decidindo que campos devem ser exibidos quando a tela é aberta
+  var exibirContaQuandoAbreTela = false;
+  var exibirCartaoCreditoQuandoAbreTela = false;
+  var exibirBancoQuandoAbreTela = false;
+  var exibirNumParcelasQuandoAbreTela = false;
+
   /**
-   * Se o valor do location.state não for null, siginifica que a tela está sendo aberta no modo edição (pois o location.state armazena as informações da despesa que deve ser editada)
+   * Se o valor do location.state não for null, siginifica que a tela está sendo aberta no modo edição (pois o location.state armazena parte das informações da despesa que deve ser editada)
    */
   const location = useLocation();
   if (location.state != null) {
@@ -114,7 +132,8 @@ const CreateEditExpense = () => {
   /**
    * Campo "Número de parcelas"
    */
-  const [numberInstallments, setNumberInstallments] = useState(numParcelasInicial);
+  const [numberInstallments, setNumberInstallments] =
+    useState(numParcelasInicial);
 
   /**
    * Variável de estado para controlar a exibição da máscara de carregamento da tela quando usuário salva um novo registro
@@ -153,34 +172,136 @@ const CreateEditExpense = () => {
   /**
    * Exibir ou não o campo "Conta"
    */
-  const [exibirConta, setExibirConta] = useState(false);
+  const [exibirConta, setExibirConta] = useState(exibirContaQuandoAbreTela);
 
   /**
    * Exibir ou não o campo "Cartão de crédito"
    */
-  const [exibirCartaoCredito, setExibirCartaoCredito] = useState(false);
+  const [exibirCartaoCredito, setExibirCartaoCredito] = useState(
+    exibirCartaoCreditoQuandoAbreTela
+  );
 
   /**
    * Exibir ou não o campo "Banco"
    */
-  const [exibirBanco, setExibirBanco] = useState(false);
+  const [exibirBanco, setExibirBanco] = useState(exibirBancoQuandoAbreTela);
 
   /**
    * Exibir ou não o campo "Número de parcelas"
    */
-  const [exibirNumParcelas, setExibirNumParcelas] = useState(false);
+  const [exibirNumParcelas, setExibirNumParcelas] = useState(
+    exibirNumParcelasQuandoAbreTela
+  );
 
-  /* =========== Obtendo o usuário da store e armazenando seu token para poder passar no header das requisições que serão feitas ao backend =============== */
-
-  /**
-   * Armazenando as informações do usuário logado em uma variável
-   */
-  const { user: currentUser } = useSelector((state) => state.auth);
-
-  /**
-   * Unindo o tipo do token com o seu valor para ser utilizado no header das requisições
-   */
-  const userToken = `${currentUser.tokenType} ${currentUser.accessToken}`;
+  /* ==================== Decidindo que campos devem ser exibidos de acordo com o tipo de despesa quando a tela é aberta em modo de edição ================================= */
+  // Se o valor do location.state não for null, siginifica que a tela está sendo aberta no modo edição (pois o location.state armazena parte das informações da despesa que deve ser editada)
+  useEffect(() => {
+    if (location.state != null) {
+      switch (location.state.nomeFormaDePagamentoTela) {
+        case "DINHEIRO":
+          setExibirConta(true);
+          const fetchDespesaDinheiro = async () => {
+            const respostaDespesa =
+              await DespesasDebitoDinheiroService.getDespesaDebitoDinheiro(
+                userToken,
+                id
+              );
+            setAccount(respostaDespesa.data.conta.id); // selecionando no combobox "Conta" a opção de conta da despesa que está sendo editada
+          };
+          fetchDespesaDinheiro();
+          break;
+        case "DEBITO":
+          setExibirConta(true);
+          const fetchDespesaDebito = async () => {
+            const respostaDespesa =
+              await DespesasDebitoDinheiroService.getDespesaDebitoDinheiro(
+                userToken,
+                id
+              );
+            setAccount(respostaDespesa.data.conta.id); // selecionando no combobox "Conta" a opção de conta da despesa que está sendo editada
+          };
+          fetchDespesaDebito();
+          break;
+        case "CARTAO_DE_CREDITO":
+          setExibirCartaoCredito(true);
+          setExibirNumParcelas(true);
+          const fetchDespesaCredito = async () => {
+            const respostaDespesa =
+              await DespesasCreditoService.getDespesaCredito(userToken, id);
+            setCreditCard(respostaDespesa.data.cartaoDeCredito.id); // selecionando no combobox "Cartão de Crédito" a opção de cartão de crédito da despesa que está sendo editada
+            setNumberInstallments(respostaDespesa.data.numeroParcelas); // inserindo no campo "Número de parcelas" o número de parcelas da despesa que está sendo editada
+          };
+          fetchDespesaCredito();
+          break;
+        case "FINANCIAMENTO":
+          setExibirBanco(true);
+          setExibirNumParcelas(true);
+          const fetchDespesaFinanciamento = async () => {
+            const respostaDespesa =
+              await DespesasFinanciamentoEmprestimoService.getDespesaFinanciamentoEmprestimo(
+                userToken,
+                id
+              );
+            setNumberInstallments(respostaDespesa.data.numeroParcelas); // inserindo no campo "Número de parcelas" o número de parcelas da despesa que está sendo editada
+            switch (respostaDespesa.data.banco) {
+              case "BANCO_DO_BRASIL":
+                setBank(0);
+                break;
+              case "CAIXA":
+                setBank(1);
+                break;
+              case "ITAU":
+                setBank(2);
+                break;
+              case "SANTANDER":
+                setBank(3);
+                break;
+              case "BRADESCO":
+                setBank(4);
+                break;
+              default:
+                setBank(5);
+            }
+          };
+          fetchDespesaFinanciamento();
+          break;
+        case "EMPRESTIMO":
+          setExibirBanco(true);
+          setExibirNumParcelas(true);
+          const fetchDespesaEmprestimo = async () => {
+            const respostaDespesa =
+              await DespesasFinanciamentoEmprestimoService.getDespesaFinanciamentoEmprestimo(
+                userToken,
+                id
+              );
+            setNumberInstallments(respostaDespesa.data.numeroParcelas); // inserindo no campo "Número de parcelas" o número de parcelas da despesa que está sendo editada
+            switch (respostaDespesa.data.banco) {
+              case "BANCO_DO_BRASIL":
+                setBank(0);
+                break;
+              case "CAIXA":
+                setBank(1);
+                break;
+              case "ITAU":
+                setBank(2);
+                break;
+              case "SANTANDER":
+                setBank(3);
+                break;
+              case "BRADESCO":
+                setBank(4);
+                break;
+              default:
+                setBank(5);
+            }
+          };
+          fetchDespesaEmprestimo();
+          break;
+        default:
+          console.log("Forma de pagamento inválida");
+      }
+    }
+  }, [location.state, id, userToken]);
 
   /* ======================== Carregando informações do banco de dados para popular os comboboxes ===================================== */
 

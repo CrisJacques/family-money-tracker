@@ -55,4 +55,17 @@ export default class DespesasFinanciamentoEmprestimoService {
       }
     );
   }
+  /**
+   * Retorna uma despesa cuja forma de pagamento é financiamento ou empréstimo
+   * @param {String} userToken - Token do usuário logado
+   * @param {number} id - Id da despesa
+   * @returns {Object} JSON com informações sobre resultado da requisição, incluindo o status code
+   */
+  static async getDespesaFinanciamentoEmprestimo(userToken, id) {
+    return axios.get(requestUrl(`despesas-financiamento-emprestimo/${id}`), {
+      headers: {
+        Authorization: `${userToken}`,
+      },
+    });
+  }
 }

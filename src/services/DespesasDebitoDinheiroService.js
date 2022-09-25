@@ -54,4 +54,17 @@ export default class DespesasDebitoDinheiroService {
       }
     );
   }
+  /**
+   * Retorna uma despesa cuja forma de pagamento é débito ou dinheiro
+   * @param {String} userToken - Token do usuário logado
+   * @param {number} id - Id da despesa
+   * @returns {Object} JSON com informações sobre resultado da requisição, incluindo o status code
+   */
+  static async getDespesaDebitoDinheiro(userToken, id) {
+    return axios.get(requestUrl(`despesas-debito-dinheiro/${id}`), {
+      headers: {
+        Authorization: `${userToken}`,
+      },
+    });
+  }
 }
