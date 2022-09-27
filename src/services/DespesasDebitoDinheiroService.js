@@ -88,7 +88,6 @@ export default class DespesasDebitoDinheiroService {
       paymentTypeOriginal === "DEBITO" ||
       paymentTypeOriginal === "DINHEIRO"
     ) {
-      console.log("BORA FAZER UM PUT");
       // Se a forma de pagamento original também for Débito ou Dinheiro, logo só é necessário fazer um PUT
       return axios.put(
         requestUrl(`despesas-debito-dinheiro/${id}`),
@@ -117,10 +116,6 @@ export default class DespesasDebitoDinheiroService {
       );
     } else if (paymentTypeOriginal === "CARTAO_DE_CREDITO") {
       // Se a forma de pagamento original for Cartão de Crédito, logo será necessário deletar a despesa original e criar uma nova despesa, agora com a forma de pagamento Débito ou Dinheiro
-      console.log(
-        "BORA DELETAR A DESPESA DE CARTÃO DE CRÉDITO E CRIAR UMA DE DÉBITO OU DINHEIRO"
-      );
-
       // Excluindo a despesa original cuja forma de pagamento é cartão de crédito
       DespesasCreditoService.deleteDespesaCredito(userToken, id);
 
@@ -137,11 +132,7 @@ export default class DespesasDebitoDinheiroService {
       );
     } else {
       // Se a forma de pagamento original for Financiamento ou Empréstimo, logo será necessário deletar a despesa original e criar uma nova despesa, agora com a forma de pagamento Débito ou Dinheiro
-      console.log(
-        "BORA DELETAR A DESPESA DE FINANCIAMENTO OU EMPRÉSTIMO E CRIAR UMA DE DÉBITO OU DINHEIRO"
-      );
-
-      // Excluindo a despesa original cuja forma de pagamento é cartão de crédito
+      // Excluindo a despesa original cuja forma de pagamento é Financiamento ou Empréstimo
       DespesasFinanciamentoEmprestimoService.deleteDespesaFinanciamentoEmprestimo(
         userToken,
         id
@@ -168,6 +159,19 @@ export default class DespesasDebitoDinheiroService {
    */
   static async getDespesaDebitoDinheiro(userToken, id) {
     return axios.get(requestUrl(`despesas-debito-dinheiro/${id}`), {
+      headers: {
+        Authorization: `${userToken}`,
+      },
+    });
+  }
+  /**
+   * Deleta uma despesa cuja forma de pagamento é débito ou dinheiro
+   * @param {String} userToken - Token do usuário logado
+   * @param {number} id - Id da despesa
+   * @returns {Object} JSON com informações sobre resultado da requisição, incluindo o status code
+   */
+  static async deleteDespesaDebitoDinheiro(userToken, id) {
+    return axios.delete(requestUrl(`despesas-debito-dinheiro/${id}`), {
       headers: {
         Authorization: `${userToken}`,
       },

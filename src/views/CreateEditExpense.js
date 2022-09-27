@@ -581,7 +581,66 @@ const CreateEditExpense = () => {
 
         /* Esconde novamente o campo específico desta forma de pagamento, voltando o formulário ao estado original */
         setExibirConta(false);
-        location.state = null; //esvaziando o location.state para que a tela entre no modo de cadastro de nova receita
+        location.state = null; //esvaziando o location.state para que a tela entre no modo de cadastro de nova despesa
+      } else {
+        setLoading(false);
+        toast.warning(
+          "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se a alteração foi feita com sucesso.",
+          {
+            position: "bottom-center",
+          }
+        );
+      }
+    } catch (error) {
+      setLoading(false);
+      toast.error(
+        `Houve um problema ao alterar a despesa. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`,
+        {
+          position: "bottom-center",
+        }
+      );
+    }
+  };
+
+  /**
+   * Edita uma despesa cuja forma de pagamento é cartão de crédito
+   */
+  const editExpenseCredit = async () => {
+    console.log("EDITANDO DESPESA CRÉDITO");
+    try {
+      setLoading(true);
+      const resultado = await DespesasCreditoService.updateDespesaCredito(
+        id,
+        userToken,
+        value,
+        description,
+        creditCard,
+        numberInstallments,
+        category,
+        registerDate,
+        paymentType,
+        location.state.nomeFormaDePagamentoTela,
+        currentUser.id
+      );
+      if (resultado.status === 204 || resultado.status === 201) {
+        setLoading(false);
+        toast.success("Despesa alterada com sucesso.", {
+          position: "bottom-center",
+        });
+
+        /* Se despesa é alterada com sucesso, limpa todos os campos da tela para facilitar a inserção de novas despesas */
+        setValue("");
+        setDescription("");
+        setPaymentType("");
+        setCategory("");
+        setRegisterDate("");
+        setCreditCard("");
+        setNumberInstallments("");
+
+        /* Esconde novamente os campos específicos desta forma de pagamento, voltando o formulário ao estado original */
+        setExibirCartaoCredito(false);
+        setExibirNumParcelas(false);
+        location.state = null; //esvaziando o location.state para que a tela entre no modo de cadastro de nova despesa
       } else {
         setLoading(false);
         toast.warning(
@@ -637,7 +696,7 @@ const CreateEditExpense = () => {
             account !== ""
           ) {
             if (location.state != null) {
-              // se location.state for diferentre de null, significa que a tela está sendo aberta no modo edição de despesa
+              // se location.state for diferente de null, significa que a tela está sendo aberta no modo edição de despesa
               editExpenseDebitCash();
             } else {
               insertExpenseDebitCash();
@@ -657,7 +716,12 @@ const CreateEditExpense = () => {
             numberInstallments !== "" &&
             registerDate !== ""
           ) {
-            insertExpenseCreditCard();
+            if (location.state != null) {
+              // se location.state for diferente de null, significa que a tela está sendo aberta no modo edição de despesa
+              editExpenseCredit();
+            } else {
+              insertExpenseCreditCard();
+            }
           } else {
             toast.error("Todos os campos são de preenchimento obrigatório", {
               position: "bottom-center",
