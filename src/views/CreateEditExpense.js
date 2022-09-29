@@ -603,6 +603,65 @@ const CreateEditExpense = () => {
   };
 
   /**
+   * Edita uma despesa cuja forma de pagamento é Financiamento ou Empréstimo
+   */
+  const editExpenseFinancingLoan = async () => {
+    console.log("EDITANDO DESPESA FINANCIAMENTO EMPRESITMO");
+    try {
+      setLoading(true);
+      const resultado =
+        await DespesasFinanciamentoEmprestimoService.updateDespesaFinanciamentoEmprestimo(
+          id,
+          userToken,
+          value,
+          description,
+          bank,
+          numberInstallments,
+          category,
+          registerDate,
+          paymentType,
+          location.state.nomeFormaDePagamentoTela,
+          currentUser.id
+        );
+      if (resultado.status === 204 || resultado.status === 201) {
+        setLoading(false);
+        toast.success("Despesa alterada com sucesso.", {
+          position: "bottom-center",
+        });
+
+        /* Se despesa é alterada com sucesso, limpa todos os campos da tela para facilitar a inserção de novas despesas */
+        setValue("");
+        setDescription("");
+        setPaymentType("");
+        setCategory("");
+        setRegisterDate("");
+        setBank("");
+        setNumberInstallments("");
+
+        /* Esconde novamente os campos específicos desta forma de pagamento, voltando o formulário ao estado original */
+        setExibirBanco(false);
+        setExibirNumParcelas(false);
+        location.state = null; //esvaziando o location.state para que a tela entre no modo de cadastro de nova despesa
+      } else {
+        setLoading(false);
+        toast.warning(
+          "Requisição foi enviada, mas status de retorno não foi o esperado. Por favor, verifique se a alteração foi feita com sucesso.",
+          {
+            position: "bottom-center",
+          }
+        );
+      }
+    } catch (error) {
+      setLoading(false);
+      toast.error(
+        `Houve um problema ao alterar a despesa. Por favor, revise as informações inseridas e tente novamente. (Erro: ${error.message})`,
+        {
+          position: "bottom-center",
+        }
+      );
+    }
+  };
+  /**
    * Edita uma despesa cuja forma de pagamento é cartão de crédito
    */
   const editExpenseCredit = async () => {
@@ -737,7 +796,12 @@ const CreateEditExpense = () => {
             numberInstallments !== "" &&
             registerDate !== ""
           ) {
-            insertExpenseFinancingLoan();
+            if (location.state != null) {
+              // se location.state for diferente de null, significa que a tela está sendo aberta no modo edição de despesa
+              editExpenseFinancingLoan();
+            } else {
+              insertExpenseFinancingLoan();
+            }
           } else {
             toast.error("Todos os campos são de preenchimento obrigatório", {
               position: "bottom-center",
