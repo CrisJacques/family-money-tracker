@@ -63,7 +63,7 @@ export default class ReceitasService {
    * @param {number} idCurrentUser - Id do usuário logado
    * @returns {Object} JSON com informações sobre resultado da requisição, incluindo o status code
    */
-   static async editReceita(
+  static async editReceita(
     userToken,
     id,
     value,
@@ -121,6 +121,29 @@ export default class ReceitasService {
         Authorization: `${userToken}`,
       },
     });
+  }
+  /**
+   * Lista os valores totais de receitas por categoria para o período selecionado
+   * @param {String} userToken - Token do usuário logado
+   * @param {String} startDate - Data inicial do período a ser buscado (formato dd/mm/aaaa)
+   * @param {String} endDate - Data final do período a ser buscado (formato dd/mm/aaaa)
+   * @returns {Object} JSON com as categorias de receitas e os valores totais por categoria
+   */
+  static getTotaisPorCategoriaPeriodoSelecionado(
+    userToken,
+    startDate,
+    endDate
+  ) {
+    return axios.get(
+      requestUrl(
+        `receitas/total-por-categoria?start=${startDate}&end=${endDate}`
+      ),
+      {
+        headers: {
+          Authorization: `${userToken}`,
+        },
+      }
+    );
   }
   /**
    * Lista as receitas pertencentes ao período informado por parâmetro

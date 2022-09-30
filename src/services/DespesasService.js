@@ -30,6 +30,29 @@ export default class DespesasService {
     });
   }
   /**
+   * Lista os valores totais de despesas por categoria para o período selecionado
+   * @param {String} userToken - Token do usuário logado
+   * @param {String} startDate - Data inicial do período a ser buscado (formato dd/mm/aaaa)
+   * @param {String} endDate - Data final do período a ser buscado (formato dd/mm/aaaa)
+   * @returns {Object} JSON com as categorias de despesas e os valores totais por categoria
+   */
+  static getTotaisPorCategoriaPeriodoSelecionado(
+    userToken,
+    startDate,
+    endDate
+  ) {
+    return axios.get(
+      requestUrl(
+        `despesas/total-por-categoria?start=${startDate}&end=${endDate}`
+      ),
+      {
+        headers: {
+          Authorization: `${userToken}`,
+        },
+      }
+    );
+  }
+  /**
    * Lista as despesas pertencentes ao período informado por parâmetro
    * @param {String} userToken - Token do usuário logado
    * @param {String} startDate - Data inicial do período a ser buscado (formato dd/mm/aaaa)
@@ -38,9 +61,7 @@ export default class DespesasService {
    */
   static getDespesasPorPeriodo(userToken, startDate, endDate) {
     return axios.get(
-      requestUrl(
-        `despesas?start=${startDate}&end=${endDate}&por_periodo=true`
-      ),
+      requestUrl(`despesas?start=${startDate}&end=${endDate}&por_periodo=true`),
       {
         headers: {
           Authorization: `${userToken}`,
@@ -54,11 +75,14 @@ export default class DespesasService {
    * @param {String} id - Identificador da despesa
    * @param {String} formaDePagamento - Nome da forma de pagamento da despesa
    */
-     static removeDespesa(userToken, id, formaDePagamento) {
-      return axios.delete(requestUrl(`despesas/${id}?forma_pagamento=${formaDePagamento}`), {
+  static removeDespesa(userToken, id, formaDePagamento) {
+    return axios.delete(
+      requestUrl(`despesas/${id}?forma_pagamento=${formaDePagamento}`),
+      {
         headers: {
           Authorization: `${userToken}`,
         },
-      });
-    }
+      }
+    );
+  }
 }

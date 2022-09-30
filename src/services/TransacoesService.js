@@ -29,4 +29,46 @@ export default class TransacoesService {
       },
     });
   }
+  /**
+   * Lista os valores totais de despesas e receitas para o período selecionado, junto com o saldo resultante
+   * @param {String} userToken - Token do usuário logado
+   * @param {String} dataInicial - Data inicial do período selecionado
+   * @param {String} dataFinal - Data final do período selecionado
+   * @returns {Object} JSON contendo o valor total de despesas, o total de receitas e o saldo resultante para o período selecionado
+   */
+  static getTotaisPeriodoSelecionadoComSaldo(
+    userToken,
+    dataInicial,
+    dataFinal
+  ) {
+    return axios.get(
+      requestUrl(
+        `transacoes/total-geral?start=${dataInicial}&end=${dataFinal}&saldo=true`
+      ),
+      {
+        headers: {
+          Authorization: `${userToken}`,
+        },
+      }
+    );
+  }
+  /**
+   * Lista os valores totais de despesas e receitas para o período selecionado
+   * @param {String} userToken - Token do usuário logado
+   * @param {String} dataInicial - Data inicial do período selecionado
+   * @param {String} dataFinal - Data final do período selecionado
+   * @returns {Object} JSON contendo o valor total de despesas e o total de receitas
+   */
+  static getTotaisPeriodoSelecionado(userToken, dataInicial, dataFinal) {
+    return axios.get(
+      requestUrl(
+        `transacoes/total-geral?start=${dataInicial}&end=${dataFinal}`
+      ),
+      {
+        headers: {
+          Authorization: `${userToken}`,
+        },
+      }
+    );
+  }
 }
