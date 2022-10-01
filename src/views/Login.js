@@ -3,6 +3,13 @@ import { useDispatch } from "react-redux";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -12,6 +19,7 @@ import LoginPageContainer from "../styles/LoginPageContainer";
 import LoginFormContainer from "../styles/LoginFormContainer";
 import InputFieldContainer from "../styles/InputFieldContainer";
 import PrimaryButtonContainer from "../styles/PrimaryButtonContainer";
+import SecondaryButtonContainer from "../styles/SecondaryButtonContainer";
 
 import LoginHeader from "../components/LoginHeader";
 import RequiredFieldAlert from "../components/RequiredFieldAlert";
@@ -59,6 +67,11 @@ const Login = () => {
    * Variável de estado para controlar a exibição da máscara de carregamento da tela quando usuário solicita o login
    */
   const [loading, setLoading] = useState(false);
+
+  /**
+   * Variável de estado do diálogo de cadastro de novo usuário
+   */
+  const [openDialogNewUser, setOpenDialogNewUser] = useState(false);
 
   /* ====================== Dispatch das actions necessárias ========================================== */
 
@@ -140,6 +153,15 @@ const Login = () => {
     }
   };
 
+  /* ======================= Solicitando a criação de um novo usuário ============================ */
+  const createUser = () => {
+    setOpenDialogNewUser(false);
+    console.log(document.getElementById("completeName").value);
+    console.log(document.getElementById("email").value);
+    console.log(document.getElementById("password").value);
+    console.log(document.getElementById("groupName").value);
+  };
+
   /* ====================== Construção da tela de login ========================================== */
 
   /**
@@ -183,7 +205,83 @@ const Login = () => {
           </div>
           <div style={{ "text-align": "center" }}>
             <PrimaryButtonContainer>Entrar</PrimaryButtonContainer>
+            <SecondaryButtonContainer
+              onClick={() => {
+                setOpenDialogNewUser(true);
+              }}
+            >
+              Criar Conta
+            </SecondaryButtonContainer>
           </div>
+          <Dialog
+            open={openDialogNewUser}
+            onClose={() => {
+              setOpenDialogNewUser(false);
+            }}
+          >
+            <DialogTitle>{"Criar Conta"}</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Preencha as informações abaixo para criar uma conta no Family
+                Money Tracker
+              </DialogContentText>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="completeName"
+                label="Nome completo"
+                type="text"
+                fullWidth
+                variant="standard"
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="email"
+                label="E-mail"
+                type="email"
+                fullWidth
+                variant="standard"
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="password"
+                label="Senha"
+                type="password"
+                fullWidth
+                variant="standard"
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="groupName"
+                label="Nome do grupo"
+                type="text"
+                fullWidth
+                variant="standard"
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={() => {
+                  setOpenDialogNewUser(false);
+                }}
+                autoFocus
+              >
+                Cancelar
+              </Button>
+              <Button
+                onClick={() => {
+                  createUser();
+                }}
+                color="primary"
+                autoFocus
+              >
+                Criar
+              </Button>
+            </DialogActions>
+          </Dialog>
           <CheckButton style={{ display: "none" }} ref={checkBtn} />
         </Form>
       </LoginFormContainer>
