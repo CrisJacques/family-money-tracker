@@ -26,6 +26,8 @@ import RequiredFieldAlert from "../components/RequiredFieldAlert";
 import InputLabel from "../components/InputLabel";
 import LoadingLoginMask from "../components/LoadingLoginMask";
 
+import UsuariosService from "../services/UsuariosService";
+
 /**
  * Validação que exibe uma mensagem quando o usuário deixa de preencher algum campo e clica em Entrar
  * @param {String} value - Valor preenchido no campo
@@ -153,13 +155,86 @@ const Login = () => {
     }
   };
 
+  /**
+   * Gera toasts com mensagens mais amigáveis em caso de falha na criação do usuário
+   * @param {String} errorMessage - Mensagem de erro resultante da requisição de criação de usuário
+   */
+  const showToastMessageCreateUser = (errorMessage) => {
+    if (errorMessage === "Network Error") {
+      toast.error(
+        "Aplicação está indisponível no momento. Por favor, tente novamente mais tarde.",
+        {
+          position: "bottom-center",
+        }
+      );
+    } else {
+      toast.error(
+        "Erro desconhecido na criação do usuário. Por favor, verifique se o email inserido é válido e tente novamente.",
+        {
+          position: "bottom-center",
+        }
+      );
+    }
+  };
+
   /* ======================= Solicitando a criação de um novo usuário ============================ */
-  const createUser = () => {
-    setOpenDialogNewUser(false);
-    console.log(document.getElementById("completeName").value);
-    console.log(document.getElementById("email").value);
-    console.log(document.getElementById("password").value);
-    console.log(document.getElementById("groupName").value);
+  /**
+   * Cria um novo usuário (por enquanto, ele será sempre um administrador dentro do grupo "A Grande Familia" (grupo de id 1))
+   */
+  const createUser = async () => {
+    if (
+      document.getElementById("completeName").value.length > 20 ||
+      document.getElementById("email").value.length > 100 ||
+      document.getElementById("password").value.length > 20
+    ) {
+      toast.error(
+        "Há campos com número de caracteres maior do que o permitido. Por favor, verifique as informações inseridas e tente novamente.",
+        {
+          position: "bottom-center",
+        }
+      );
+    } else if (
+      document.getElementById("completeName").value.length === 0 ||
+      document.getElementById("email").value.length === 0 ||
+      document.getElementById("password").value.length === 0
+    ) {
+      toast.error(
+        "Há campos vazios. Por favor, verifique as informações inseridas e tente novamente.",
+        {
+          position: "bottom-center",
+        }
+      );
+    } else {
+      try {
+        setOpenDialogNewUser(false);
+        setLoading(true);
+        const novoUsuario = await UsuariosService.insertUsuario(
+          document.getElementById("completeName").value,
+          document.getElementById("email").value,
+          document.getElementById("password").value,
+          1
+        );
+        setLoading(false);
+        if (novoUsuario.status === 201) {
+          toast.success(
+            "Usuário criado com sucesso. Agora você pode fazer login.",
+            {
+              position: "bottom-center",
+            }
+          );
+        } else {
+          toast.warning(
+            "Não foi possível verificar se usuário foi criado com sucesso. Por favor, verifique se você consegue fazer login.",
+            {
+              position: "bottom-center",
+            }
+          );
+        }
+      } catch (error) {
+        setLoading(false);
+        showToastMessageCreateUser(error);
+      }
+    }
   };
 
   /* ====================== Construção da tela de login ========================================== */
@@ -229,7 +304,7 @@ const Login = () => {
                 autoFocus
                 margin="dense"
                 id="completeName"
-                label="Nome completo"
+                label="Nome ou apelido (máximo 20 caracteres)"
                 type="text"
                 fullWidth
                 variant="standard"
@@ -238,7 +313,7 @@ const Login = () => {
                 autoFocus
                 margin="dense"
                 id="email"
-                label="E-mail"
+                label="E-mail (máximo 100 caracteres)"
                 type="email"
                 fullWidth
                 variant="standard"
@@ -247,17 +322,8 @@ const Login = () => {
                 autoFocus
                 margin="dense"
                 id="password"
-                label="Senha"
+                label="Senha (máximo 20 caracteres)"
                 type="password"
-                fullWidth
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                margin="dense"
-                id="groupName"
-                label="Nome do grupo"
-                type="text"
                 fullWidth
                 variant="standard"
               />
