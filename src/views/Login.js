@@ -155,28 +155,6 @@ const Login = () => {
     }
   };
 
-  /**
-   * Gera toasts com mensagens mais amigáveis em caso de falha na criação do usuário
-   * @param {String} errorMessage - Mensagem de erro resultante da requisição de criação de usuário
-   */
-  const showToastMessageCreateUser = (errorMessage) => {
-    if (errorMessage === "Network Error") {
-      toast.error(
-        "Aplicação está indisponível no momento. Por favor, tente novamente mais tarde.",
-        {
-          position: "bottom-center",
-        }
-      );
-    } else {
-      toast.error(
-        "Erro desconhecido na criação do usuário. Por favor, verifique se o email inserido é válido e tente novamente.",
-        {
-          position: "bottom-center",
-        }
-      );
-    }
-  };
-
   /* ======================= Solicitando a criação de um novo usuário ============================ */
   /**
    * Cria um novo usuário (por enquanto, ele será sempre um administrador dentro do grupo "A Grande Familia" (grupo de id 1))
@@ -232,7 +210,9 @@ const Login = () => {
         }
       } catch (error) {
         setLoading(false);
-        showToastMessageCreateUser(error);
+        toast.error("Já existe um usuário com esse nome e/ou email.", {
+          position: "bottom-center",
+        });
       }
     }
   };
