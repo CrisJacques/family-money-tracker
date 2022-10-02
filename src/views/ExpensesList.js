@@ -33,6 +33,11 @@ const ExpensesList = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
 
   /**
+   * Variável de estado para armazenar se usuário é admin de grupo ou não
+   */
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  /**
    * Unindo o tipo do token com o seu valor para ser utilizado no header das requisições
    */
   const userToken = `${currentUser.tokenType} ${currentUser.accessToken}`;
@@ -74,6 +79,16 @@ const ExpensesList = () => {
     const endDatePeriod = e.target.value;
     setEndDatePeriod(endDatePeriod);
   };
+
+  /* ================ Verificando se usuário é admin de grupo cada vez que aplicação é carregada e quando a variável currentUser mudar de valor =============== */
+
+  useEffect(() => {
+    if (currentUser) {
+      setIsAdmin(currentUser.roles.includes("ADMIN_GRUPO"));
+    } else {
+      setIsAdmin(false);
+    }
+  }, [currentUser]);
 
   /* ====================== Funções que populam a tabela de transações e que executam as ações dos botões de cada transação ========================================== */
 
@@ -159,6 +174,7 @@ const ExpensesList = () => {
                 formaDePagamentoDesc={d.formaDePagamentoDesc}
                 idFormaDePagamento={d.idFormaDePagamento}
                 deleteExpenses={deleteExpenses}
+                userIsAdmin={isAdmin}
               />
             ))}
           </tbody>

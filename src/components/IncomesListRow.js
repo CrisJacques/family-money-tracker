@@ -21,6 +21,7 @@ import SecondaryButtonRowContainer from "../styles/SecondaryButtonRowContainer";
  * @param {String} nomeConta - Nome da conta onde o valor da receita está entrando
  * @param {String} idConta - Id numérico da conta onde o valor da receita está entrando
  * @param {String} deleteIncomes - Nome da função responsável por deletar as receitas
+ * @param {boolean} userIsAdmin - Indica se usuário logado é admininstrador de grupo
  * @returns Conteúdo de uma linha da tabela de receitas, com informações e botões que possibilitam ações de ver, editar e deletar a receita
  */
 const IncomesListRow = ({
@@ -33,6 +34,7 @@ const IncomesListRow = ({
   nomeConta,
   idConta,
   deleteIncomes,
+  userIsAdmin,
 }) => {
   /**
    * Variável de estado do diálogo de detalhes da receita
@@ -51,27 +53,31 @@ const IncomesListRow = ({
         >
           Ver
         </PrimaryButtonRowContainer>
-        <SecondaryButtonRowContainer>
-          <Link
-            to="/receitas"
-            style={{ color: "#00675b" }}
-            state={{
-              valorTela: valor,
-              descricaoTela: descricao,
-              dataTela: data,
-              categoriaTela: nomeCategoriaReceita,
-              idCategoriaTela: idCategoria,
-              contaTela: nomeConta,
-              idContaTela: idConta,
-              idReceita: id
-            }}
-          >
-            Editar
-          </Link>
-        </SecondaryButtonRowContainer>
-        <SecondaryButtonRowContainer id={id} onClick={deleteIncomes}>
-          Remover
-        </SecondaryButtonRowContainer>
+        {userIsAdmin && (
+          <SecondaryButtonRowContainer>
+            <Link
+              to="/receitas"
+              style={{ color: "#00675b" }}
+              state={{
+                valorTela: valor,
+                descricaoTela: descricao,
+                dataTela: data,
+                categoriaTela: nomeCategoriaReceita,
+                idCategoriaTela: idCategoria,
+                contaTela: nomeConta,
+                idContaTela: idConta,
+                idReceita: id,
+              }}
+            >
+              Editar
+            </Link>
+          </SecondaryButtonRowContainer>
+        )}
+        {userIsAdmin && (
+          <SecondaryButtonRowContainer id={id} onClick={deleteIncomes}>
+            Remover
+          </SecondaryButtonRowContainer>
+        )}
         <Dialog
           open={open}
           onClose={() => {

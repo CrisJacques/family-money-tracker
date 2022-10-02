@@ -22,6 +22,7 @@ import SecondaryButtonRowContainer from "../styles/SecondaryButtonRowContainer";
  * @param {String} formaDePagamentoDesc - Descrição da forma de pagamento
  * @param {String} idFormaDePagamento - Identificador numérico da forma de pagamento
  * @param {String} deleteExpenses - Nome da função responsável por deletar as despesas
+ * @param {boolean} userIsAdmin - Indica se usuário logado é admininstrador de grupo
  * @returns Conteúdo de uma linha da tabela de despesas, com informações e botões que possibilitam ações de ver, editar e deletar a despesa
  */
 const ExpensesListRow = ({
@@ -35,11 +36,13 @@ const ExpensesListRow = ({
   formaDePagamentoDesc,
   idFormaDePagamento,
   deleteExpenses,
+  userIsAdmin,
 }) => {
   /**
    * Variável de estado do diálogo de detalhes da despesa
    */
   const [open, setOpen] = useState(false);
+
   return (
     <tr>
       <td>{data}</td>
@@ -53,29 +56,33 @@ const ExpensesListRow = ({
         >
           Ver
         </PrimaryButtonRowContainer>
-        <SecondaryButtonRowContainer>
-          <Link
-            to="/despesas"
-            style={{ color: "#00675b" }}
-            state={{
-              valorTela: valor,
-              descricaoTela: descricao,
-              dataTela: data,
-              idCategoriaTela: idCategoriaDespesa,
-              idFormaDePagamentoTela: idFormaDePagamento,
-              nomeFormaDePagamentoTela: formaDePagamentoName,
-              idDespesa: id,
-            }}
+        {userIsAdmin && (
+          <SecondaryButtonRowContainer>
+            <Link
+              to="/despesas"
+              style={{ color: "#00675b" }}
+              state={{
+                valorTela: valor,
+                descricaoTela: descricao,
+                dataTela: data,
+                idCategoriaTela: idCategoriaDespesa,
+                idFormaDePagamentoTela: idFormaDePagamento,
+                nomeFormaDePagamentoTela: formaDePagamentoName,
+                idDespesa: id,
+              }}
+            >
+              Editar
+            </Link>
+          </SecondaryButtonRowContainer>
+        )}
+        {userIsAdmin && (
+          <SecondaryButtonRowContainer
+            id={`${id}-${formaDePagamentoName}`}
+            onClick={deleteExpenses}
           >
-            Editar
-          </Link>
-        </SecondaryButtonRowContainer>
-        <SecondaryButtonRowContainer
-          id={`${id}-${formaDePagamentoName}`}
-          onClick={deleteExpenses}
-        >
-          Remover
-        </SecondaryButtonRowContainer>
+            Remover
+          </SecondaryButtonRowContainer>
+        )}
         <Dialog
           open={open}
           onClose={() => {
