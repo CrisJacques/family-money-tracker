@@ -67,7 +67,6 @@ const CreateEditExpense = () => {
    */
   const location = useLocation();
   if (location.state != null) {
-    console.log(location.state);
     valorInicial = currencyFormatter(location.state.valorTela * 100); // é preciso multiplicar por 100 porque o currencyFormatter divide o valor passado por parâmetro por 100
     descricaoInicial = location.state.descricaoTela;
 
@@ -298,7 +297,6 @@ const CreateEditExpense = () => {
           fetchDespesaEmprestimo();
           break;
         default:
-          console.log("Forma de pagamento inválida");
       }
     }
   }, [location.state, id, userToken]);
@@ -549,7 +547,6 @@ const CreateEditExpense = () => {
    * Edita uma despesa cuja forma de pagamento é dinheiro ou débito
    */
   const editExpenseDebitCash = async () => {
-    console.log("EDITANDO DESPESA DÉBITO OU DINHEIRO");
     try {
       setLoading(true);
       const resultado =
@@ -606,7 +603,6 @@ const CreateEditExpense = () => {
    * Edita uma despesa cuja forma de pagamento é Financiamento ou Empréstimo
    */
   const editExpenseFinancingLoan = async () => {
-    console.log("EDITANDO DESPESA FINANCIAMENTO EMPRESITMO");
     try {
       setLoading(true);
       const resultado =
@@ -665,7 +661,6 @@ const CreateEditExpense = () => {
    * Edita uma despesa cuja forma de pagamento é cartão de crédito
    */
   const editExpenseCredit = async () => {
-    console.log("EDITANDO DESPESA CRÉDITO");
     try {
       setLoading(true);
       const resultado = await DespesasCreditoService.updateDespesaCredito(
