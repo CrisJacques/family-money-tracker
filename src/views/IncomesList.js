@@ -7,6 +7,7 @@ import TransactionListHeader from "../components/TransactionListHeader";
 import PageTitleWithButton from "../components/PageTitleWithButton";
 import DateFilterSelector from "../components/DateFilterSelector";
 import IncomesListRow from "../components/IncomesListRow";
+import LoadingSectionMask from "../components/LoadingSectionMask";
 
 import convertDateFormat from "../helpers/convertDateFormat";
 
@@ -43,6 +44,10 @@ const IncomesList = () => {
   const userToken = `${currentUser.tokenType} ${currentUser.accessToken}`;
 
   /* ======================== Variáveis de estado para os componentes da tela ===================================== */
+  /**
+   * Máscara de carregamento da página
+   */
+  const [loading, setLoading] = useState(false);
 
   /**
    * Campo da data de início do período a ser buscado
@@ -97,12 +102,14 @@ const IncomesList = () => {
    */
   useEffect(() => {
     const fetchReceitas = async () => {
+      setLoading(true);
       const resposta = await ReceitasService.getReceitasPorPeriodo(
         userToken,
         convertDateFormat(lastFiveDays),
         convertDateFormat(today)
       );
       setReceitas(resposta.data);
+      setLoading(false);
     };
     fetchReceitas();
   }, [currentUser, userToken, lastFiveDays, today]);
@@ -111,12 +118,14 @@ const IncomesList = () => {
    * Carrega a lista de receitas do período selecionado pelo usuário
    */
   const fetchReceitasDoPeriodo = async () => {
+    setLoading(true);
     const resposta = await ReceitasService.getReceitasPorPeriodo(
       userToken,
       convertDateFormat(startDatePeriod),
       convertDateFormat(endDatePeriod)
     );
     setReceitas(resposta.data);
+    setLoading(false);
   };
 
   /**
@@ -129,10 +138,10 @@ const IncomesList = () => {
       e.target.id
     );
     if (resultado.status === 204) {
+      fetchReceitasDoPeriodo();
       toast.success("Receita removida com sucesso.", {
         position: "bottom-center",
       });
-      fetchReceitasDoPeriodo();
     } else {
       toast.error("Houve um problema ao remover a receita.", {
         position: "bottom-center",
@@ -143,41 +152,51 @@ const IncomesList = () => {
   /* ====================== Construção da tela de lista de receitas ========================================== */
   return (
     <div>
-      <PageTitleWithButton
-        title="Lista de Receitas"
-        buttonName="Nova Receita"
-        addressPage="receitas"
-      />
-      <DateFilterSelector
-        startValue={startDatePeriod}
-        startOnChange={onChangeStartDatePeriod}
-        endValue={endDatePeriod}
-        endOnChange={onChangeEndDatePeriod}
-        onClickOk={fetchReceitasDoPeriodo}
-      />
-      <PageContentSectionContainer>
-        <ToastContainer theme="colored" />
-        <table className="responsive-table">
-          <TransactionListHeader />
-          <tbody>
-            {receitas.map((r) => (
-              <IncomesListRow
-                id={r.id}
-                key={r.id}
-                data={r.data}
-                descricao={r.descricao}
-                valor={r.valor}
-                nomeCategoriaReceita={r.nomeCategoriaReceita}
-                idCategoria={r.idCategoriaReceita}
-                nomeConta={r.conta.nome}
-                idConta={r.conta.id}
-                deleteIncomes={deleteIncomes}
-                userIsAdmin={isAdmin}
-              />
-            ))}
-          </tbody>
-        </table>
-      </PageContentSectionContainer>
+      {loading && (
+        <div>
+          <LoadingSectionMask />{" "}
+          {/*Mostra uma máscara de carregamento sobre toda a tela enquanto não terminar de carregar as informações, garantindo uma experiência melhor ao usuário.*/}
+        </div>
+      )}
+      {!loading && (
+        <div>
+          <ToastContainer theme="colored" />
+          <PageTitleWithButton
+            title="Lista de Receitas"
+            buttonName="Nova Receita"
+            addressPage="receitas"
+          />
+          <DateFilterSelector
+            startValue={startDatePeriod}
+            startOnChange={onChangeStartDatePeriod}
+            endValue={endDatePeriod}
+            endOnChange={onChangeEndDatePeriod}
+            onClickOk={fetchReceitasDoPeriodo}
+          />
+          <PageContentSectionContainer>
+            <table className="responsive-table">
+              <TransactionListHeader />
+              <tbody>
+                {receitas.map((r) => (
+                  <IncomesListRow
+                    id={r.id}
+                    key={r.id}
+                    data={r.data}
+                    descricao={r.descricao}
+                    valor={r.valor}
+                    nomeCategoriaReceita={r.nomeCategoriaReceita}
+                    idCategoria={r.idCategoriaReceita}
+                    nomeConta={r.conta.nome}
+                    idConta={r.conta.id}
+                    deleteIncomes={deleteIncomes}
+                    userIsAdmin={isAdmin}
+                  />
+                ))}
+              </tbody>
+            </table>
+          </PageContentSectionContainer>
+        </div>
+      )}
     </div>
   );
 };
