@@ -7,6 +7,7 @@ import TransactionListHeader from "../components/TransactionListHeader";
 import PageTitleWithButton from "../components/PageTitleWithButton";
 import DateFilterSelector from "../components/DateFilterSelector";
 import ExpensesListRow from "../components/ExpensesListRow";
+import LoadingSectionMask from "../components/LoadingSectionMask";
 
 import convertDateFormat from "../helpers/convertDateFormat";
 
@@ -44,6 +45,10 @@ const ExpensesList = () => {
 
   /* ======================== Variáveis de estado para os componentes da tela ===================================== */
 
+  /**
+   * Máscara de carregamento da página
+   */
+  const [loading, setLoading] = useState(false);
   /**
    * Campo da data de início do período a ser buscado
    */
@@ -97,12 +102,14 @@ const ExpensesList = () => {
    */
   useEffect(() => {
     const fetchDespesas = async () => {
+      setLoading(true);
       const resposta = await DespesasService.getDespesasPorPeriodo(
         userToken,
         convertDateFormat(lastFiveDays),
         convertDateFormat(today)
       );
       setDespesas(resposta.data);
+      setLoading(false);
     };
     fetchDespesas();
   }, [currentUser, userToken, lastFiveDays, today]);
@@ -111,12 +118,14 @@ const ExpensesList = () => {
    * Carrega a lista de despesas do período selecionado pelo usuário
    */
   const fetchDespesasDoPeriodo = async () => {
+    setLoading(true);
     const resposta = await DespesasService.getDespesasPorPeriodo(
       userToken,
       convertDateFormat(startDatePeriod),
       convertDateFormat(endDatePeriod)
     );
     setDespesas(resposta.data);
+    setLoading(false);
   };
 
   /**
@@ -130,6 +139,7 @@ const ExpensesList = () => {
       e.target.id.split("-")[1]
     );
     if (resultado.status === 204) {
+      fetchDespesasDoPeriodo();
       toast.success("Despesa removida com sucesso.", {
         position: "bottom-center",
       });
@@ -144,42 +154,52 @@ const ExpensesList = () => {
   /* ====================== Construção da tela de lista de despesas ========================================== */
   return (
     <div>
-      <PageTitleWithButton
-        title="Lista de Despesas"
-        buttonName="Nova Despesa"
-        addressPage="despesas"
-      />
-      <DateFilterSelector
-        startValue={startDatePeriod}
-        startOnChange={onChangeStartDatePeriod}
-        endValue={endDatePeriod}
-        endOnChange={onChangeEndDatePeriod}
-        onClickOk={fetchDespesasDoPeriodo}
-      />
-      <PageContentSectionContainer>
-        <ToastContainer theme="colored" />
-        <table className="responsive-table">
-          <TransactionListHeader />
-          <tbody>
-            {despesas.map((d) => (
-              <ExpensesListRow
-                id={d.id}
-                key={d.id}
-                data={d.stringData}
-                descricao={d.descricao}
-                valor={d.valor}
-                nomeCategoriaDespesa={d.nomeCategoriaDespesa}
-                idCategoriaDespesa={d.idCategoriaDespesa}
-                formaDePagamentoName={d.formaDePagamentoName}
-                formaDePagamentoDesc={d.formaDePagamentoDesc}
-                idFormaDePagamento={d.idFormaDePagamento}
-                deleteExpenses={deleteExpenses}
-                userIsAdmin={isAdmin}
-              />
-            ))}
-          </tbody>
-        </table>
-      </PageContentSectionContainer>
+      {loading && (
+        <div>
+          <LoadingSectionMask />{" "}
+          {/*Mostra uma máscara de carregamento sobre toda a tela enquanto não terminar de carregar as informações, garantindo uma experiência melhor ao usuário.*/}
+        </div>
+      )}
+      {!loading && (
+        <div>
+          <PageTitleWithButton
+            title="Lista de Despesas"
+            buttonName="Nova Despesa"
+            addressPage="despesas"
+          />
+          <DateFilterSelector
+            startValue={startDatePeriod}
+            startOnChange={onChangeStartDatePeriod}
+            endValue={endDatePeriod}
+            endOnChange={onChangeEndDatePeriod}
+            onClickOk={fetchDespesasDoPeriodo}
+          />
+          <PageContentSectionContainer>
+            <ToastContainer theme="colored" />
+            <table className="responsive-table">
+              <TransactionListHeader />
+              <tbody>
+                {despesas.map((d) => (
+                  <ExpensesListRow
+                    id={d.id}
+                    key={d.id}
+                    data={d.stringData}
+                    descricao={d.descricao}
+                    valor={d.valor}
+                    nomeCategoriaDespesa={d.nomeCategoriaDespesa}
+                    idCategoriaDespesa={d.idCategoriaDespesa}
+                    formaDePagamentoName={d.formaDePagamentoName}
+                    formaDePagamentoDesc={d.formaDePagamentoDesc}
+                    idFormaDePagamento={d.idFormaDePagamento}
+                    deleteExpenses={deleteExpenses}
+                    userIsAdmin={isAdmin}
+                  />
+                ))}
+              </tbody>
+            </table>
+          </PageContentSectionContainer>
+        </div>
+      )}
     </div>
   );
 };
