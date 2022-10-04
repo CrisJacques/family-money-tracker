@@ -33,24 +33,24 @@ Até o momento, as seguintes funcionalidades foram desenvolvidas e já estão di
     - [x] Administrador do sistema
     - [x] Administrador de grupo
     - [x] Usuário comum
-  - Por enquanto, a maior diferença entre esses perfis é quais opções eles conseguem acessar no menu principal do sistema.
-  - Nesta versão, ainda não é possível criar novos usuários. Para fins de testes, foram cadastrados 3 usuários no banco de dados, um de cada perfil.
+- [x] Cadastro de novos usuários:
+  - Nesta versão, é possível apenas criar usuários de perfil Administrador de grupo, para fins de testes. Todos os novos usuários serão adicionados ao grupo "A Grande Família" (ou seja, a criação de novos grupos de usuários não foi implementada nesta versão).
   - A tela de login do sistema é mostrada na imagem a seguir:
   
   ![image](https://user-images.githubusercontent.com/66973973/168686914-e21de287-714c-42db-91a1-080610b2c75d.png)
 
 
-- [x] Cadastro de receitas
-  - [x] Aplicação já permite o cadastro de receitas (ou seja, dinheiro que entra nas contas da família, por exemplo salários, renda extra, etc)
-  - Por enquanto, ainda não é possível cadastrar contas nem categorias de receitas além das já cadastradas no banco de dados para fins de testes e demonstrações.
+- [x] CRUD de receitas
+  - [x] Aplicação permite o cadastro, visualização, edição e exclusão de receitas (ou seja, dinheiro que entra nas contas da família, por exemplo salários, renda extra, etc)
+  - Usuários administradores de grupo podem criar, editar, visualizar e excluir receitas. Já usuários comuns apenas podem criar e visualizar receitas.
   - A tela de cadastro de receitas é mostrada na imagem a seguir:
   
   ![image](https://user-images.githubusercontent.com/66973973/168687228-7efa5459-594f-40ad-aada-bbfef520432c.png)
 
 
-- [x] Cadastro de despesas
-  - [x] Aplicação já permite o cadastro de despesas, contemplando diversas formas de pagamento (débito, dinheiro, cartão de crédito, financiamento e empréstimo)
-  - Por enquanto, ainda não é possível cadastrar cartões de crédito nem categorias de despesas além das já cadastradas no banco de dados para fins de testes e demonstrações.
+- [x] CRUD de despesas
+  - [x] Aplicação permite o cadastro, visualização, edição e exclusão de despesas, contemplando diversas formas de pagamento (débito, dinheiro, cartão de crédito, financiamento e empréstimo)
+  - Usuários administradores de grupo podem criar, editar, visualizar e excluir despesas. Já usuários comuns apenas podem criar e visualizar despesas.
   - A tela de cadastro de despesas é mostrada na imagem a seguir:
   
   ![image](https://user-images.githubusercontent.com/66973973/168687472-8a854044-321a-4636-92a2-811c30c2f04a.png)
@@ -64,6 +64,13 @@ Até o momento, as seguintes funcionalidades foram desenvolvidas e já estão di
     - A tela inicial da aplicação é mostrada na imagem a seguir:
     
     ![image](https://user-images.githubusercontent.com/66973973/168687768-431b08cd-0b6c-4737-9b53-faf3413bb8b7.png)
+    
+- [x] Listagem de despesas para um período selecionado pelo usuário 
+- [x] Listagem de receitas para um período selecionado pelo usuário 
+- [x] Relatório de resumo de despesas e receitas para um período selecionado pelo usuário 
+	- [x] Despesas e receitas do período
+	- [x] Somatório de despesas e receitas por categoria, com gráficos ilustrando a parcela do todo que cada categoria representa
+	- [x] Somatório total de despesas e receitas para o período selecionado, informando também o saldo resultante
 
 
 ---
@@ -119,6 +126,7 @@ As seguintes ferramentas foram usadas na construção do projeto:
 -   **[Recharts](https://recharts.org/en-US/)**
 -   **[Axios](https://axios-http.com/ptbr/docs/intro)**
 -   **[Styled Components](https://styled-components.com/)** 
+-   **[Material UI](https://mui.com/pt/)** 
 
 ---
 
